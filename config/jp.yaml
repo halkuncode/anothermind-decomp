@@ -1,0 +1,26 @@
+version: jp
+build_path: build/jp
+asm_path: asm/jp
+asset_path: assets/jp
+src_path: src
+ld_script_path: build/jp
+generated_sym_path: build/jp
+align: 4
+overlays:
+  - name: main
+    disk_path: disk/jp/SLPS_016.55
+    sha1: 5f4f77b1eb743e92564008b24a98efa8e8d317d6
+    base_path: main
+    symbol_addrs_path:
+      - config/symbols.main.jp.txt
+    migrate_rodata_to_functions: true
+    vram_start: 0x80010000
+    gp_value: 0x80061a1c
+    segments:
+      - [0x800, rodata]
+      - [0x2FAC, c]
+      - [0x39FD8, data]
+      - [0x61C1C, sdata]
+      - [0x61FB8, sbss]
+      - [0x62370, bss]
+      - [0xE53B0, c]

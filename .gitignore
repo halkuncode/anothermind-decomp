@@ -1,3 +1,4 @@
 disk/*
 !disk/.gitkeep
-
+asm/
+build/

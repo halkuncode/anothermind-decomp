@@ -6,6 +6,7 @@ src_path: src
 ld_script_path: build/jp
 generated_sym_path: build/jp
 align: 4
+subalign: 4
 overlays:
   - name: main
     disk_path: disk/jp/SLPS_016.55

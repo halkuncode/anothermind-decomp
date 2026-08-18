@@ -45,5 +45,6 @@ bin/cc1-psx-272: bin/cc1-psx-272.gz
 	touch $@
 	chmod +x $@
 
+# just the one file for now may need to make this /$*.gz later
 bin/cc1-psx-272.gz: bin/cc1-psx-272.gz.sha256
-	wget -O $@ https://github.com/Xeeynamo/ff7-decomp/releases/download/init/cc1-psx-272.gz
+	wget -O $@ https://github.com/halkuncode/anothermind-decomp/releases/download/init/cc1-psx-272.gz

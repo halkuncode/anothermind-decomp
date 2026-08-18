@@ -22,6 +22,6 @@ overlays:
       - [0x2FAC, c]
       - [0x39FD8, data]
       - [0x5221C, sdata]
-      - [0x523B8, sbss]
+      - [0x527B8, sbss]
       - [0x52970, bss]
       - [0xD53B0, c]

@@ -306,11 +306,18 @@ def add_splat_config(file_name: str):
                 else:
                     name = f"{offset:X}"
 
+
             if kind == "data":
                 add_s(cfg, f"data/{name}.data")
 
             elif kind == "rodata":
                 add_s(cfg, f"data/{name}.rodata")
+
+            elif kind == "sdata":
+                add_s(cfg, f"data/{name}.sdata")
+
+            elif kind == "sbss":
+                add_s(cfg, f"data/{name}.sbss")
 
             elif kind == "bss":
                 add_s(cfg, f"data/{name}.bss")
@@ -320,7 +327,7 @@ def add_splat_config(file_name: str):
 
             elif kind == "c" or kind == ".data":
                 add_c(cfg, name)
-
+				
     if progress_report:
         return
 

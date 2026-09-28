@@ -17,11 +17,22 @@ overlays:
     migrate_rodata_to_functions: true
     vram_start: 0x80010000
     gp_value: 0x80061a1c
-    segments:
-      - [0x800, rodata]
-      - [0x2FAC, c]
-      - [0x39FD8, data]
-      - [0x5221C, sdata]
-      - [0x527B8, sbss]
-      - [0x52970, bss]
-      - [0xD53B0, c]
+    code_segments:
+      - name: main
+        start: 0x800
+        vram: 0x80010000
+        subsegments:
+          - [0x800, rodata]
+          - [0x2FAC, c, 2FAC]
+          - [0x39FD8, data]
+          - [0x5221C, sdata]
+          - [0x527B8, sbss]
+          - [0x527C0, bss]
+      - name: engine
+        start: 0xD53B0
+        vram: 0x800E4BB0
+        subsegments:
+          - [0xD53B0, rodata]
+          - [0xD5CE8, c, D5CE8]
+          - [0xFD390, data]
+          - [0xFD9B0, bss]

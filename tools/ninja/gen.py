@@ -332,33 +332,28 @@ def add_splat_config(file_name: str):
         return
 
     output_name = f"{build_path(cfg)}/{basename(cfg)}.elf"
+    syms_ld_path = f"{build_path(cfg)}/{basename(cfg)}.syms.ld"
+    own_files = cfg["options"]["symbol_addrs_path"]
 
-    # Export symbols from the main executable.
-    # This will become useful when Another Mind gains overlays/modules.
-    sym_export = "config/sym_export.jp.txt"
-
-    if is_main:
-        nw.build(
-            rule="sym-export",
-            outputs=[sym_export],
-            inputs=[output_name],
-        )
-
-    # At the moment Another Mind has no manually-defined external
-    # symbols and no other overlays consuming main's symbols.
-    sym_paths = [
-        f'-T {cfg["options"]["undefined_syms_auto_path"]}',
-    ]
+    nw.build(
+        rule="sym-ld",
+        outputs=[syms_ld_path],
+        inputs=list(objs),
+        implicit=own_files + [ld_path(cfg)],
+        variables={
+            "own": " ".join(f"--own {p}" for p in own_files),
+        },
+    )
 
     nw.build(
         rule="psx-ld",
         outputs=[output_name],
         inputs=[ld_path(cfg)],
-        implicit=objs,
+        implicit=objs + [syms_ld_path],
         variables={
             "map_path": f"{build_path(cfg)}/{basename(cfg)}.map",
             "obj_paths": objs,
-            "symbol_path": " ".join(sym_paths),
+            "symbol_path": f'-T {cfg["options"]["undefined_syms_auto_path"]} -T {syms_ld_path}',
         },
     )
 
@@ -451,9 +446,10 @@ with open("build.ninja", "w") as f:
     )
 
     nw.rule(
-        "sym-export",
-        command=".venv/bin/python3 tools/symbols.py $in > $out",
-        description="sym export $in",
+        "sym-ld",
+        command=".venv/bin/python3 tools/symbols.py ld -o $out $own $in",
+        description="sym ld $out",
+        restat=True,
     )
 
     nw.rule(
@@ -462,6 +458,16 @@ with open("build.ninja", "w") as f:
         description="check",
     )
 
+    if not progress_report and os.path.isfile(check_path):
+        nw.build(
+            rule="check",
+            outputs=["build/check.dummy"],
+            inputs=[
+                line.strip().split(" ")[2]
+                for line in open(check_path, "r").readlines()
+                if line
+            ],
+        )
 
     # Keep this as a list so additional Another Mind modules can
     # eventually be added here without changing the build architecture.

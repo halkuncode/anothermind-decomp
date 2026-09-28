@@ -55,7 +55,15 @@ func makeObjdiffConfig(b BuildConfig) objdiffConfig {
 		categories = append(categories, objdiffProgressCategory{
 			ID: o.Name,
 		})
-		for _, src := range o.Segments {
+		var allSegments [][]any
+		if len(o.CodeSegments) > 0 {
+			for _, cs := range o.CodeSegments {
+				allSegments = append(allSegments, cs.Subsegments...)
+			}
+		} else {
+			allSegments = o.Segments
+		}
+		for _, src := range allSegments {
 			if len(src) < 2 {
 				continue
 			}

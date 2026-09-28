@@ -80,17 +80,36 @@ func makeSplatConfig(b BuildConfig, o Overlay) (SplatConfig, error) {
 		header := []any{0x800, "header"}
 		segments = append(segments, header)
 	}
-	seg := SplatSegment{
-		Name:        o.Name,
-		Type:        "code",
-		Start:       start,
-		Vram:        o.VramStart,
-		BssSize:     o.BssSize,
-		Align:       b.Align,
-		Subalign:    b.Align,
-		Subsegments: o.Segments,
+	subalign := b.Subalign
+	if subalign == 0 {
+		subalign = b.Align
 	}
-	segments = append(segments, seg)
+	if len(o.CodeSegments) > 0 {
+		for _, cs := range o.CodeSegments {
+			seg := SplatSegment{
+				Name:        cs.Name,
+				Type:        "code",
+				Start:       cs.Start,
+				Vram:        cs.Vram,
+				Align:       b.Align,
+				Subalign:    subalign,
+				Subsegments: cs.Subsegments,
+			}
+			segments = append(segments, seg)
+		}
+	} else {
+		seg := SplatSegment{
+			Name:        o.Name,
+			Type:        "code",
+			Start:       start,
+			Vram:        o.VramStart,
+			BssSize:     o.BssSize,
+			Align:       b.Align,
+			Subalign:    subalign,
+			Subsegments: o.Segments,
+		}
+		segments = append(segments, seg)
+	}
 	segments = append(segments, []int64{stat.Size()})
 	return SplatConfig{
 		Sha1: o.Sha1,
@@ -116,7 +135,7 @@ func makeSplatConfig(b BuildConfig, o Overlay) (SplatConfig, error) {
 			DisassembleAll:                 o.Name == "main", // for some reason, `main` doesn't build without
 			GlobalVramStart:                o.VramStart,
 			GPValue:                        o.GPValue,
-			SectionOrder:                   []string{".rodata", ".text", ".data", ".sdata", ".bss"},
+			SectionOrder:                   []string{".rodata", ".text", ".data", ".sdata", ".sbss", ".bss"},
 			LdGenerateSymbolPerDataSegment: true,
 			LdBssIsNoLoad:                  o.Name != "main" && o.BssSize > 0,
 		},

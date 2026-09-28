@@ -6,19 +6,27 @@ import (
 	"path/filepath"
 )
 
+type CodeSegment struct {
+	Name        string  `yaml:"name"`
+	Start       int     `yaml:"start"`
+	Vram        int64   `yaml:"vram"`
+	Subsegments [][]any `yaml:"subsegments"`
+}
+
 type Overlay struct {
-	Name                     string   `yaml:"name"`
-	DiskPath                 string   `yaml:"disk_path"`
-	Compression              string   `yaml:"compression"`
-	Sha1                     string   `yaml:"sha1"`
-	Sha1Decompressed         string   `yaml:"sha1_decompressed"`
-	BasePath                 string   `yaml:"base_path"`
-	SymbolAddrsPath          []string `yaml:"symbol_addrs_path"`
-	MigrateRodataToFunctions bool     `yaml:"migrate_rodata_to_functions"`
-	VramStart                int64    `yaml:"vram_start"`
-	GPValue                  int64    `yaml:"gp_value"`
-	BssSize                  int64    `yaml:"bss_size"`
-	Segments                 [][]any  `yaml:"segments"`
+	Name                     string        `yaml:"name"`
+	DiskPath                 string        `yaml:"disk_path"`
+	Compression              string        `yaml:"compression"`
+	Sha1                     string        `yaml:"sha1"`
+	Sha1Decompressed         string        `yaml:"sha1_decompressed"`
+	BasePath                 string        `yaml:"base_path"`
+	SymbolAddrsPath          []string      `yaml:"symbol_addrs_path"`
+	MigrateRodataToFunctions bool          `yaml:"migrate_rodata_to_functions"`
+	VramStart                int64         `yaml:"vram_start"`
+	GPValue                  int64         `yaml:"gp_value"`
+	BssSize                  int64         `yaml:"bss_size"`
+	Segments                 [][]any       `yaml:"segments"`
+	CodeSegments             []CodeSegment `yaml:"code_segments,omitempty"`
 }
 
 type BuildConfig struct {
@@ -30,6 +38,7 @@ type BuildConfig struct {
 	LdScriptPath     string    `yaml:"ld_script_path"`
 	GeneratedSymPath string    `yaml:"generated_sym_path"`
 	Align            int       `yaml:"align"`
+	Subalign         int       `yaml:"subalign"`
 	Overlays         []Overlay `yaml:"overlays"`
 }
 

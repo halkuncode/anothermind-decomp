@@ -9,7 +9,7 @@ import yaml
 
 
 CPP_FLAGS = "-Iinclude -Iinclude/psxsdk -DUSE_INCLUDE_ASM"
-LD_FLAGS = ""
+LD_FLAGS = "--no-warn-rwx-segments"
 
 nw: ninja_syntax.Writer = None
 objs: list[str] = []

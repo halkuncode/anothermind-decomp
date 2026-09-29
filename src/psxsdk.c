@@ -1,28 +1,28 @@
 #include "common.h"
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80038C6C);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", InitGeom);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80038CF4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetRotMatrix);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80038D24);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetTransMatrix);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetGeomOffset);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetGeomScreen);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80038D74);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _patch_gte);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80038E20);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80038E54);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", VSync);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80038FCC);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", ResetCallback);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80039094);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", InterruptCallback);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_800390C4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", DMACallback);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", VSyncCallback);
 
@@ -32,11 +32,11 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", StopCallback);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", RestartCallback);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_800391B8);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CheckCallback);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", GetIntrMask);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_800391E0);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetIntrMask);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_800391F8);
 
@@ -50,7 +50,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80039688);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80039700);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80039724);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", StartIntrVSync);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003977C);
 
@@ -58,7 +58,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_800397E8);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80039814);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80039844);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", StartIntrDMA);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80039890);
 
@@ -66,13 +66,13 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80039A10);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80039ABC);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80039AE4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", StSetRing);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80039B14);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdGetToc);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80039B38);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdGetToc2);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80039D64);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdInit);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80039DF4);
 
@@ -82,17 +82,17 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80039E58);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80039E80);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80039EB4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdStatus);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80039EC4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdMode);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdLastCom);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80039EE4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdLastPos);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdReset);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80039F5C);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdFlush);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdSetDebug);
 
@@ -100,57 +100,57 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdComstr);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdIntstr);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80039FF8);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdSync);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003A018);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdReady);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003A038);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdSyncCallback);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003A04C);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdReadyCallback);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003A060);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdControl);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003A19C);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdControlF);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003A2D0);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdControlB);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003A41C);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdMix);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003A43C);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdGetSector);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003A45C);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdGetSector2);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003A47C);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdDataCallback);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003A4A0);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdDataSync);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003A4C0);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdIntToPos);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003A5C4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdPosToInt);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003A644);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003ABA0);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CD_sync);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003AE20);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CD_ready);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003B0E8);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CD_cw);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003B4F4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CD_vol);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003B57C);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CD_flush);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003B650);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CD_initvol);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CD_initintr);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003B78C);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CD_init);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003B96C);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CD_datasync);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003BAD4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CD_getsector);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003BBD4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CD_getsector2);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CD_set_test_parmnum);
 
@@ -174,35 +174,35 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003C744);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003C758);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003C774);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CdRead2);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003C7F8);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003C824);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", StClearRing);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", StUnSetRing);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003C904);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", Data_ready_callback);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", StGetBackloc);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003C9F4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", StSetStream);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003CA84);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", StFreeRing);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003CB34);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", Init_ring_status);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003CB74);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", StGetNext);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", StSetMask);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003CC54);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", StCdInterrupt);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003D570);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003D59C);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003D744);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", DecDCTReset);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", DecDCTGetEnv);
 
@@ -210,9 +210,9 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", DecDCTPutEnv);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", DecDCTBufSize);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003D8A8);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", DecDCTin);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003D924);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", DecDCTout);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", DecDCTinSync);
 
@@ -220,7 +220,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", DecDCToutSync);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", DecDCTinCallback);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003D9E0);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", DecDCToutCallback);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003DA04);
 
@@ -238,31 +238,31 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003DD50);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", DecDCTvlcSize);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003DE04);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", DecDCTvlc);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E154);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", FlushCache);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E17C);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E194);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SystemError);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E1A4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", DeliverEvent);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E1B4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", OpenEvent);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E1C4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", CloseEvent);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E1E4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", EnableEvent);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E1F4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", DisableEvent);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E204);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", ReturnFromException);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E214);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", ResetEntryInt);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E224);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", HookEntryInt);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E234);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", UnDeliverEvent);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", EnterCriticalSection);
 
@@ -270,119 +270,119 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", ExitCriticalSection);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetSp);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E274);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", Open);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E2D4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", ChangeClearPAD);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E2E4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", ChangeClearRCnt);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E2F4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetRCnt);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E390);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", GetRCnt);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E3C8);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", StartRCnt);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E3F8);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", StopRCnt);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", ResetRCnt);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E464);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", Firstfile);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E600);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E704);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", Firstfile2);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", Puts_A63);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E734);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", setjmp);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E744);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", strcat);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E754);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", strcmp);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E764);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", strncmp);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E774);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", strcpy);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E784);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", memset);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E794);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", printf);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E7A4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", LoadTPage);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E88C);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", LoadClut);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E8F0);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", LoadClut2);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003E954);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetDefDrawEnv);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003EA08);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetDefDispEnv);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003EA44);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", GsGetWorkBase);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003EA74);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetDumpFnt);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003EAB4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", FntLoad);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003EB54);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", FntOpen);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003EE0C);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", FntFlush);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003F128);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", FntPrint);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003F4F4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", strlen);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", ResetGraph);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003F678);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetGraphDebug);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetGraphQueue);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003F778);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", GetGraphDebug);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", DrawSyncCallback);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003F7E8);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetDispMask);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003F880);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", DrawSync);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003F8E8);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003FA04);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", ClearImage);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003FA94);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", ClearImage2);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003FB2C);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", LoadImage);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", StoreImage);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003FBEC);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", MoveImage);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003FCA4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", ClearOTag);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003FD6C);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", ClearOTagR);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", DrawPrim);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003FE74);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", DrawOTag);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8003FEE4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", PutDrawEnv);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", DrawOTagEnv);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", GetDrawEnv);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_800400B0);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", PutDispEnv);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_800405A8);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", GetDispEnv);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", GetODE);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetTexWindow);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80040644);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetDrawArea);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetDrawOffset);
 
@@ -390,7 +390,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetPriority);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetDrawStp);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80040754);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetDrawMode);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetDrawEnv);
 
@@ -446,7 +446,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", LoadImage2);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", StoreImage2);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80042280);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", MoveImage2);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", DrawOTag2);
 
@@ -454,13 +454,13 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_800424C0);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_800424E8);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80042514);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", GPU_cw);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80042524);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", memcpy);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80042534);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", OpenTIM);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80042544);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", ReadTIM);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", OpenTMD);
 
@@ -472,11 +472,11 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_800429A8);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80042B1C);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80043DB4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", GetTPage);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80043DF4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", GetClut);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80043E14);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", AddPrim);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", TermPrim);
 
@@ -498,15 +498,15 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetTilePrimitive);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetLineF2);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80043FB4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetLineF3);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80043FD4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetDrawTPage);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80044004);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", PCopen);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", PCclose);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80044034);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", PCcreat);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", Start);
 
@@ -514,19 +514,19 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", __main);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", __do_global_dtors);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_800441D4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", InitHeap);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", PCinit);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_800441F0);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", PCread);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_800442B0);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _SN_write);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_800442C8);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _card_info);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80044328);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _card_write);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80044338);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _new_card);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", StartMemoryCardSystem);
 
@@ -534,7 +534,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_800443EC);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetInitPadFlag);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80044424);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", ReadInitPadFlag);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", PAD_init);
 
@@ -560,9 +560,9 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", StopPAD2);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", PAD_init2);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80044758);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SysEnqIntRP);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80044768);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SysDeqIntRP);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", EnablePAD);
 
@@ -572,9 +572,9 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _patch_pad);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _remove_ChgclrPAD);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80044888);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", InitCARD2);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80044898);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", StartCARD2);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", StopCARD2);
 
@@ -582,19 +582,19 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_800448E4);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80044928);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80044950);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _patch_card);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_800449E4);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _patch_card2);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80044A54);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _copy_memcard_patch);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80044A88);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80044B08);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _SpuInit);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80044BF0);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SpuStart);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80044C68);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _spu_init);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80044EE8);
 
@@ -602,15 +602,15 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _spu_FiDMA);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _spu_Fr_);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8004520C);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _spu_t);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_8004548C);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _spu_Fw);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _spu_Fr);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80045574);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _spu_FsetRXX);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_800455B8);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _spu_FsetRXXa);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _spu_FgetRXXa);
 
@@ -620,7 +620,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_800456F0);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80045718);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80045740);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _spu_Fw1ts);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetSpuDmaCallback);
 
@@ -628,23 +628,23 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SsUtReverbOff);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", QuitSpu);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80045878);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SpuInitMalloc);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_800458D8);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SpuSetNoiseClock);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80045928);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SpuSetReverb);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _SpuIsInAllocateArea);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80045A78);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _SpuIsInAllocateArea_);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80045B08);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SpuSetIRQ);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80045C48);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80045C68);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SpuSetIRQAddr);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80045CA8);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SpuSetIRQCallback);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _SpuCallback);
 
@@ -652,21 +652,21 @@ INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SpuRead);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SpuWriteWithCallbackCheck);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80045DD8);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SpuSetTransferStartAddr);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80045E38);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SpuSetTransferMode);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SetSpuTransferCallback);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80045E98);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SpuGetVoiceEnvelope);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80045EB8);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SpuSetReverbModeType);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80046088);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", _spu_setReverbAttr);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80046558);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", SpuClearReverbWorkArea);
 
-INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_800466F8);
+INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", WaitEvent);
 
 INCLUDE_ASM("asm/jp/nonmatchings/psxsdk", func_80046708);
 

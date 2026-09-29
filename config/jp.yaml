@@ -30,7 +30,6 @@ overlays:
           - [0x9C60, c, cd_stream]
           - [0xC664, c, script]
           - [0x1E648, c, akao]
-          - [0x24340, c, graphics]
           - [0x2946C, c, psxsdk]
           - [0x36F48, c, movie_hw]
           - [0x39FD8, data]

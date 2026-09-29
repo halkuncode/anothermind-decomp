@@ -1,8 +1,26 @@
 #include "common.h"
 
-void func_800127AC(void) { M2C_BREAK(1); }
+void abort(void) { M2C_BREAK(1); }
 
-INCLUDE_ASM("asm/jp/nonmatchings/2FAC", main);
+extern void func_80039064(void);   
+extern void func_80039158(void);  
+extern void func_8003F504(s32);  
+extern void func_800457D8(void);
+extern void func_8010CB70(void);
+
+void main(void)
+{
+    func_80039158();
+    func_80039064();
+    func_8003F504(0);
+    func_800457D8();
+    func_8010CB70();
+    while (1)
+        ;
+}
+
+
+INCLUDE_ASM("asm/jp/nonmatchings/2FAC", func_800127F8);
 
 INCLUDE_ASM("asm/jp/nonmatchings/2FAC", func_8001285C);
 
@@ -1900,7 +1918,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/2FAC", func_80044034);
 
 INCLUDE_ASM("asm/jp/nonmatchings/2FAC", func_80044054);
 
-INCLUDE_ASM("asm/jp/nonmatchings/2FAC", func_800440FC);
+INCLUDE_ASM("asm/jp/nonmatchings/2FAC", __main);
 
 INCLUDE_ASM("asm/jp/nonmatchings/2FAC", func_8004416C);
 

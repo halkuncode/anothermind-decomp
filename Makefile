@@ -26,6 +26,13 @@ submit:
 	@./mako.sh format
 	@git add config/ include/ src/
 
+FILE ?= src/2FAC.c
+
+.PHONY: ctx
+ctx:
+	python3 tools/m2ctx.py $(FILE)
+
+
 .PHONY: check
 check: build
 	sha1sum disk/jp/SLPS_016.55 build/jp/main.exe
@@ -44,7 +51,7 @@ disk/%.iso:
 	bchunk "disk/$*.bin" "disk/$*.cue" "$@"
 	mv "disk/$*.iso01.iso" "$@"
 disk/jp: disk/Another\ Mind\ (Japan).iso
-	7z x "$<" -o$@
+	7z x "$<" -y -o$@
 
 
 build/jp/%.o: %

@@ -1,2 +1,6 @@
 D_7FFFFF = 0x007FFFFF;
 main = 0x800127B8;
+func_800127F8 = 0x800127F8;
+__main = 0x800440FC;
+
+abort = 0x800127AC;

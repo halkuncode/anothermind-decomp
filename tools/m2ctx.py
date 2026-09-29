@@ -70,7 +70,9 @@ def main():
     )
     parser.add_argument(
         "c_file",
-        help="""File from which to create context""",
+        nargs="?",
+        default="src/2FAC.c",
+        help="""File from which to create context (default: src/2FAC.c)""",
     )
     args = parser.parse_args()
 

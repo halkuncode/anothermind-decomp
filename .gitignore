@@ -22,3 +22,4 @@ undefined_syms_auto.*.txt
 build.ninja
 objdiff.json
 /permute*
+ctx.c

@@ -121,11 +121,15 @@ class Function(object):
         return code
 
     def _infer_src_path(self) -> Optional[Path]:
-        inferred_c_files = [
-            file
-            for file in self.src_dir.rglob(f"{self.abspath.parent.name}.c")
-            if self.overlay in file.parts or self.overlay in file.name
-        ]
+        inferred_c_files = list(self.src_dir.rglob(f"{self.abspath.parent.name}.c"))
+        if self.overlay:
+            filtered = [
+                f
+                for f in inferred_c_files
+                if self.overlay in f.parts or self.overlay in f.name
+            ]
+            if filtered:
+                inferred_c_files = filtered
         return next(
             (path for path in inferred_c_files if self.name in path.read_text()), None
         )

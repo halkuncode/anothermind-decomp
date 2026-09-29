@@ -11,7 +11,7 @@ overlays:
   - name: main
     disk_path: disk/jp/SLPS_016.55
     sha1: 5f4f77b1eb743e92564008b24a98efa8e8d317d6
-    base_path: main
+    base_path: ""
     symbol_addrs_path:
       - config/symbols.main.jp.txt
     migrate_rodata_to_functions: true

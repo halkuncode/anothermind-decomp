@@ -36,8 +36,12 @@ typedef unsigned int *unk_ptr;
 
 #define LEN(x) ((s32)(sizeof(x) / sizeof(*(x))))
 
+#if defined(M2CTX) || defined(PERMUTER)
+#define M2C_BREAK(x) ((void)0)
+#else
 #ifndef M2C_BREAK
 #define M2C_BREAK(x) __asm__ volatile("break %0" : : "i"((x) << 10))
+#endif
 #endif
 
 #endif

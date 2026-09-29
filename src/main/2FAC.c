@@ -1,6 +1,6 @@
 #include "common.h"
 
-INCLUDE_ASM("asm/jp/main/nonmatchings/2FAC", func_800127AC);
+void func_800127AC(void) { M2C_BREAK(1); }
 
 INCLUDE_ASM("asm/jp/main/nonmatchings/2FAC", main);
 

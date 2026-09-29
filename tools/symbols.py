@@ -6,7 +6,7 @@ import subprocess
 import sys
 
 ASSIGN_RE = re.compile(r"^\s*(\w+)\s*=\s*(0x[0-9A-Fa-f]+)\s*;")
-AUTO_RE = re.compile(r"^(func|D|jtbl)_([0-9A-Fa-f]{1,8})(_\d+)?$")
+AUTO_RE = re.compile(r"^((?:func|D|jtbl)_|\.L)([0-9A-Fa-f]{1,8})(_\d+)?$")
 
 
 def parse_symbol_file(path: str) -> list[tuple[str, int, str]]:

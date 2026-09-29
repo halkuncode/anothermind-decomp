@@ -75,7 +75,8 @@ func makeSplatConfig(b BuildConfig, o Overlay) (SplatConfig, error) {
 	}
 	start := 0
 	var segments []any
-	if o.Name == "main" {
+	isMain := o.Name == "main" || o.Name == "another"
+	if isMain {
 		start = 0x800
 		header := []any{0x800, "header"}
 		segments = append(segments, header)
@@ -132,12 +133,12 @@ func makeSplatConfig(b BuildConfig, o Overlay) (SplatConfig, error) {
 			FindFileBoundaries:             false,
 			UseLegacyIncludeAsm:            false,
 			MigrateRodataToFunctions:       o.MigrateRodataToFunctions,
-			DisassembleAll:                 o.Name == "main", // for some reason, `main` doesn't build without
+			DisassembleAll:                 isMain, // for some reason, `main` doesn't build without
 			GlobalVramStart:                o.VramStart,
 			GPValue:                        o.GPValue,
 			SectionOrder:                   []string{".rodata", ".text", ".data", ".sdata", ".sbss", ".bss"},
 			LdGenerateSymbolPerDataSegment: true,
-			LdBssIsNoLoad:                  o.Name != "main" && o.BssSize > 0,
+			LdBssIsNoLoad:                  !isMain && o.BssSize > 0,
 		},
 		Segments: segments,
 	}, nil

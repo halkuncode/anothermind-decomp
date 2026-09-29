@@ -36,7 +36,7 @@ endif
 
 .PHONY: check
 check: build
-	sha1sum disk/jp/SLPS_016.55 build/jp/main.exe
+	sha1sum disk/jp/SLPS_016.55 build/jp/another.exe
 
 
 

@@ -83,7 +83,7 @@ make check
 | `make all` | Default target. Extracts disc data and builds the executable (`disk` + `build`). |
 | `make requirements` | Creates the Python virtual environment (`.venv`) and installs `requirements.txt`. |
 | `make disk` | Converts BIN/CUE to ISO using `bchunk` and extracts game assets and `SLPS_016.55` with `7z`. |
-| `make build` | Ensures compiler toolchain is ready, generates ninja rules, and builds `build/jp/main.exe`. |
+| `make build` | Ensures compiler toolchain is ready, generates ninja rules, and builds `build/jp/another.exe`. |
 | `make check` | Runs `make build` and validates SHA-1 checksums against the retail `SLPS_016.55`. |
 | `make clean` | Cleans up build artifacts, ninja logs, and intermediate object files. |
 | `make rebuild` | Runs a clean build (`make clean` followed by `make build`). |

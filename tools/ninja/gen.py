@@ -196,6 +196,7 @@ def add_s(cfg: any, file_name: str):
         rule=f"{platform(cfg)}-as",
         outputs=[out_path],
         inputs=[in_path],
+        order_only=[ld_path(cfg)],
     )
 
     nw.build(
@@ -224,6 +225,7 @@ def add_c(cfg: any, file_name: str):
             "include/common.h",
             "include/game.h",
         ],
+        order_only=[ld_path(cfg)],
         variables={
             "cc1": compiler_flags.cc1,
             "as_flags": compiler_flags.as_flags,
@@ -278,7 +280,7 @@ def add_splat_config(file_name: str):
 
     objs.clear()
 
-    is_main = basename(cfg) == "main"
+    is_main = basename(cfg) in ("main", "another")
 
     # The PS-X EXE header is represented by a small assembly object.
     if platform(cfg) == "psx" and is_main:
@@ -468,7 +470,17 @@ with open("build.ninja", "w") as f:
 
     # Keep this as a list so additional Another Mind modules can
     # eventually be added here without changing the build architecture.
-    for ovl in [
-        "main",
-    ]:
-        add_splat_config(os.path.join(work_dir, f"{ovl}.yaml"))
+    version = os.path.basename(work_dir)
+    cfg_file = f"config/{version}.yaml"
+    overlays = []
+    if os.path.isfile(cfg_file):
+        with open(cfg_file) as f:
+            c = yaml.safe_load(f)
+            overlays = [o["name"] for o in c.get("overlays", [])]
+    if not overlays:
+        overlays = ["another", "main"]
+
+    for ovl in overlays:
+        yaml_path = os.path.join(work_dir, f"{ovl}.yaml")
+        if os.path.isfile(yaml_path):
+            add_splat_config(yaml_path)

@@ -8,12 +8,12 @@ generated_sym_path: build/jp
 align: 4
 subalign: 4
 overlays:
-  - name: main
+  - name: another
     disk_path: disk/jp/SLPS_016.55
     sha1: 5f4f77b1eb743e92564008b24a98efa8e8d317d6
     base_path: ""
     symbol_addrs_path:
-      - config/symbols.main.jp.txt
+      - config/symbols.another.jp.txt
     migrate_rodata_to_functions: true
     vram_start: 0x80010000
     gp_value: 0x80061a1c
@@ -29,7 +29,7 @@ overlays:
           - [0x8268, c, title]
           - [0x9C60, c, cd_stream]
           - [0xC664, c, script]
-          - [0x1E648, c, sound]
+          - [0x1E648, c, akao]
           - [0x24340, c, graphics]
           - [0x2946C, c, psxsdk]
           - [0x36F48, c, movie_hw]

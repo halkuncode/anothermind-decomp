@@ -7,7 +7,6 @@ from dataclasses import dataclass
 import ninja_syntax
 import yaml
 
-
 CPP_FLAGS = "-Iinclude -Iinclude/psxsdk -DUSE_INCLUDE_ASM"
 LD_FLAGS = "--no-warn-rwx-segments"
 
@@ -306,7 +305,6 @@ def add_splat_config(file_name: str):
                 else:
                     name = f"{offset:X}"
 
-
             if kind == "data":
                 add_s(cfg, f"data/{name}.data")
 
@@ -327,7 +325,7 @@ def add_splat_config(file_name: str):
 
             elif kind == "c" or kind == ".data":
                 add_c(cfg, name)
-				
+
     if progress_report:
         return
 
@@ -475,4 +473,3 @@ with open("build.ninja", "w") as f:
         "main",
     ]:
         add_splat_config(os.path.join(work_dir, f"{ovl}.yaml"))
-	

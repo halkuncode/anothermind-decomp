@@ -15,6 +15,17 @@ rebuild:
 	@./mako.sh clean
 	@./mako.sh build
 
+.PHONY: format
+format:
+	@./mako.sh format
+
+.PHONY: submit
+submit:
+	@./mako.sh clean
+	@./mako.sh build
+	@./mako.sh format
+	@git add config/ include/ src/
+
 .PHONY: check
 check: build
 	sha1sum disk/jp/SLPS_016.55 build/jp/main.exe

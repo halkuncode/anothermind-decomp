@@ -200,15 +200,13 @@ INCLUDE_ASM("asm/jp/main/nonmatchings/E53B0", func_8010C45C);
 
 INCLUDE_ASM("asm/jp/main/nonmatchings/E53B0", func_8010C530);
 
-void func_8010C5F4(void) {
-}
+void func_8010C5F4(void) {}
 
 INCLUDE_ASM("asm/jp/main/nonmatchings/E53B0", func_8010C5FC);
 
 INCLUDE_ASM("asm/jp/main/nonmatchings/E53B0", func_8010C648);
 
-void func_8010C704(void) {
-}
+void func_8010C704(void) {}
 
 INCLUDE_ASM("asm/jp/main/nonmatchings/E53B0", func_8010C70C);
 

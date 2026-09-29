@@ -87,8 +87,10 @@ func pythonFormat() error {
 		"tools/symbols.py",
 		"tools/ninja/gen.py",
 	} {
-		if err := deps.Black(path); err != nil {
-			return err
+		if _, err := os.Stat(path); err == nil {
+			if err := deps.Black(path); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

@@ -104,14 +104,18 @@ func Black(args ...string) error {
 	}
 	return (&exec.Cmd{
 		Path: blackPath,
-		Args: append([]string{binPath, "tools/ninja/gen.py"}, args...),
+		Args: append([]string{blackPath}, args...),
 	}).Run()
 }
 
 func ClangFormat(args ...string) error {
 	binPath := "bin/clang-format"
-	if err := downloadFromGithubIfNotExists("Xeeynamo/ff7-decomp", "init", filepath.Base(binPath)+".gz", binPath); err != nil {
-		return err
+	if _, err := os.Stat(binPath); os.IsNotExist(err) {
+		if path, err := exec.LookPath("clang-format"); err == nil {
+			binPath = path
+		} else if err := downloadFromGithubIfNotExists("Xeeynamo/ff7-decomp", "init", filepath.Base(binPath)+".gz", binPath); err != nil {
+			return err
+		}
 	}
 	return (&exec.Cmd{
 		Path:   binPath,

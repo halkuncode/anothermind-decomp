@@ -26,10 +26,11 @@ submit:
 	@./mako.sh format
 	@git add config/ include/ src/
 
-FILE ?= src/2FAC.c
-
 .PHONY: ctx
 ctx:
+ifndef FILE
+	$(error Please specify a file: make ctx FILE=src/<file.c>)
+endif
 	python3 tools/m2ctx.py $(FILE)
 
 

@@ -16,8 +16,8 @@ This game is in Japanese and was never released outside Japan.
 
 | | |
 |:---:|:---:|
-| <img src="docs/pics/ss1.png" width="360" alt="Screenshot 1"> | <img src="docs/pics/ss2.jpg" width="360" alt="Screenshot 2"> |
-| <img src="docs/pics/ss3.jpg" width="360" alt="Screenshot 3"> | <img src="docs/pics/ss4.jpg" width="360" alt="Screenshot 4"> |
+| <img src="docs/pics/ss1.png" width="320" alt="Screenshot 1"> | <img src="docs/pics/ss2.jpg" width="320" alt="Screenshot 2"> |
+| <img src="docs/pics/ss3.jpg" width="320" alt="Screenshot 3"> | <img src="docs/pics/ss4.jpg" width="320" alt="Screenshot 4"> |
 
 ---
 
@@ -89,8 +89,7 @@ make check
 | `make rebuild` | Runs a clean build (`make clean` followed by `make build`). |
 | `make format` | Formats all C codebase files using `clang-format`. |
 | `make submit` | Runs `make clean`, `make build`, `make format`, and stages `config/`, `include/`, and `src/` with `git add`. |
-| `make ctx` | Generates `ctx.c` context file (used for [decomp.me](https://decomp.me) or `m2c`). Defaults to `src/2FAC.c`. |
-| `make ctx FILE=<path>` | Generates `ctx.c` for a specific C file (e.g. `make ctx FILE=src/D5CE8.c`). |
+| `make ctx FILE=<path>` | Generates `ctx.c` context file (used for [decomp.me](https://decomp.me) or `m2c`) for a C file (e.g. `make ctx FILE=src/main.c`). |
 
 ---
 
@@ -106,9 +105,9 @@ This replaces `INCLUDE_ASM` in the corresponding C file with decompiled C code f
 ### 2. Generate Context for decomp.me
 Generate a preprocessed context file (`ctx.c`) to import into [decomp.me](https://decomp.me):
 ```shell
-make ctx
-# Or for a specific file:
-make ctx FILE=src/2FAC.c
+make ctx FILE=src/main.c
+# Or invoke m2ctx directly:
+python3 tools/m2ctx.py src/main.c
 ```
 *(The generated `ctx.c` is automatically ignored by Git).*
 

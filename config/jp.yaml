@@ -23,7 +23,7 @@ overlays:
         vram: 0x80010000
         subsegments:
           - [0x800, rodata]
-          - [0x2FAC, c, 2FAC]
+          - [0x2FAC, c, main]
           - [0x39FD8, data]
           - [0x5221C, sdata]
           - [0x527B8, sbss]

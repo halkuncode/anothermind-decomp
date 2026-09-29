@@ -19,6 +19,8 @@ extern void DisplayCdFileDebugStatus(void);
 extern void DisplayMovieDebugPanel(void);
 extern void DisplayPadDebugPanel(void);
 
+extern s32 g_DebugLockState;
+
 void abort(void) { M2C_BREAK(1); }
 
 extern void DoGame(void);
@@ -58,11 +60,7 @@ void DisplaySystemDebugPanel(void) {
     DisplayPadDebugPanel();
 }
 
-extern s32 g_DebugLockState;
-
 s32 GetDebugLockState(void) { return g_DebugLockState; }
-
-
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/main", LockoutDebug);
 

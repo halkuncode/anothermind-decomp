@@ -1,3 +1,4 @@
+//! PSYQ=4.0
 #include "common.h"
 #include <libetc.h>
 #include <libgpu.h>
@@ -17,7 +18,30 @@ void main(void) {
         ;
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/main", ResetToReleaseMode);
+
+//INCLUDE_ASM("asm/jp/nonmatchings/main/main", ResetToReleaseMode);
+
+
+extern s32 IsDebugDisabled();
+extern void LoadCdPosTablefromCd(void);
+extern void LockoutDebug(s32);
+extern void ResetCdTransferReadyFlag(void);
+extern void ResetMovieDecoderState(void);
+extern void ResetVibrationSystem(void);
+extern void ShowSquaresoftLogo(void);
+
+void ResetToReleaseMode(void) {
+    LockoutDebug(0);
+    ResetCdTransferReadyFlag();
+    LoadCdPosTablefromCd();
+    if (IsDebugDisabled() == -1) {
+        ShowSquaresoftLogo();
+        LockoutDebug(1);
+    }
+    ResetMovieDecoderState();
+    ResetVibrationSystem();
+}
+
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/main", UpdateSystemPerFrame);
 

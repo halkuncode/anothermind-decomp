@@ -24,11 +24,11 @@ typedef mytype s32;
 
 // Comments like /* this */ are only used to mark struct offsets or enum values. In addition, extern values must be
 // declared by their offset in the .map file they come from.
-extern s32 g_publicVarFromSomewhereElse;
-s32 g_publicVarFromThisFile;
+extern s32 g_PublicVarFromSomewhereElse;
+s32 g_PublicVarFromThisFile;
 static mytype private_var; // short comment
 
-static void functionLocalOnlyToTheSourcFile(s32 param) {
+static void FunctionLocalOnlyToTheSourcFile(s32 param) {
     int localVar;
     ...
 }

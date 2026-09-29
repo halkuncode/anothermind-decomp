@@ -1,6 +1,23 @@
-# Another Mind decomp (PS1)
+# Another Mind Decompilation Project
 
-A byte-matching decompilation project for *Another Mind* (Japan) on the PlayStation 1 (`SLPS_016.55`).
+<p align="center">
+  <img src="docs/pics/Another_Mind_Coverart.png" alt="Another Mind Cover Art" width="320">
+</p>
+
+### A byte-matching decompilation project for Squaresoft's FMV visual novel *Another Mind* for the PlayStation 1.
+
+---
+
+Set in modern-day Japan, you awaken as a voice inside the mind of 16-year-old high school student Hitomi Hayama. Together, you are thrust into the center of a mystery involving a murder, suicide attempts, and an attempted bombing. 
+
+You communicate with Hitomi using an innovative dialogue system—constructing your own sentences out of context-sensitive keywords and phrases provided by the game, rather than simply choosing from predetermined options.
+
+This game is in Japanese and was never released outside Japan.
+
+| | |
+|:---:|:---:|
+| <img src="docs/pics/ss1.png" width="360" alt="Screenshot 1"> | <img src="docs/pics/ss2.jpg" width="360" alt="Screenshot 2"> |
+| <img src="docs/pics/ss3.jpg" width="360" alt="Screenshot 3"> | <img src="docs/pics/ss4.jpg" width="360" alt="Screenshot 4"> |
 
 ---
 
@@ -41,13 +58,7 @@ make requirements
 ```
 
 ### 4. Provide the Game Disc
-Create the `disk/` directory and place your Japanese retail disc image inside:
-
-```shell
-mkdir -p disk
-```
-
-Place the following files in `disk/`:
+Place your Japanese retail disc image files into the `disk/` directory:
 - `disk/Another Mind (Japan).bin`
 - `disk/Another Mind (Japan).cue`
 

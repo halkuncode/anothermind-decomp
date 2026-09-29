@@ -117,6 +117,53 @@ def strip_dead_epilogue(lines: list) -> list:
     return clean_lines
 
 
+_GP_ACCESS_RE = re.compile(
+    r"^(\s*(?:lw|sw|lh|lhu|sh|lb|lbu|sb)\s+\$[a-z0-9]+),\s*([A-Za-z0-9_]+)(\s*#.*)?$"
+)
+
+
+def load_gp_symbols() -> set[str]:
+    gp_symbols = set()
+    root = Path(__file__).resolve().parent.parent
+    sym_file = root / "config" / "symbols.another.jp.txt"
+    if sym_file.exists():
+        with open(sym_file) as f:
+            for line in f:
+                line = line.strip()
+                if "=" in line and ";" in line:
+                    name, val = line.split("=")
+                    name = name.strip()
+                    val = val.replace(";", "").strip()
+                    try:
+                        addr = int(val, 16)
+                        if 0x80059A1C <= addr <= 0x80069A1B:
+                            gp_symbols.add(name)
+                    except ValueError:
+                        pass
+    return gp_symbols
+
+
+def is_gp_symbol(symbol: str, gp_symbols: set[str]) -> bool:
+    if symbol in gp_symbols:
+        return True
+    if symbol.startswith("D_80061") or symbol.startswith("D_80062"):
+        return True
+    return False
+
+
+def rewrite_gp_rel(text: str, gp_symbols: set[str]) -> str:
+    lines = text.splitlines(keepends=True)
+    new_lines = []
+    for line in lines:
+        m = _GP_ACCESS_RE.match(line)
+        if m and is_gp_symbol(m.group(2), gp_symbols):
+            comm = m.group(3) if m.group(3) else ""
+            new_lines.append(f"{m.group(1)},%gp_rel({m.group(2)})($gp){comm}\n")
+        else:
+            new_lines.append(line)
+    return "".join(new_lines)
+
+
 def main():
     in_text = sys.stdin.read()
     lines = in_text.splitlines(keepends=True)
@@ -134,9 +181,12 @@ def main():
     if proc.stderr:
         sys.stderr.write(proc.stderr)
     if proc.stdout:
-        sys.stdout.write(proc.stdout)
+        gp_symbols = load_gp_symbols()
+        out_text = rewrite_gp_rel(proc.stdout, gp_symbols)
+        sys.stdout.write(out_text)
 
     sys.exit(proc.returncode)
+
 
 
 if __name__ == "__main__":

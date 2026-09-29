@@ -29,6 +29,11 @@ VERSION_DEF = []
 
 
 def import_c_file(in_file) -> str:
+    if not os.path.exists(in_file):
+        if os.path.exists(os.path.join(root_dir, "src", in_file)):
+            in_file = os.path.join(root_dir, "src", in_file)
+        elif os.path.exists(os.path.join("src", in_file)):
+            in_file = os.path.join("src", in_file)
     in_file = os.path.relpath(in_file, root_dir)
     cpp_command = ["gcc", "-E", "-P", "-dM", *CPP_FLAGS, in_file]
     cpp_command2 = ["gcc", "-E", "-P", *CPP_FLAGS, *VERSION_DEF, in_file]

@@ -399,7 +399,7 @@ with open("build.ninja", "w") as f:
             "$in"
             " | iconv --from-code=UTF-8 --to-code=Shift-JIS"
             " | bin/$cc1 -quiet -mcpu=3000 -mgas -fno-builtin $cc_flags"
-            " | python3 tools/maspsx/maspsx.py $as_flags"
+            " | python3 tools/maspsx.py $as_flags"
             " | mipsel-linux-gnu-as "
             "-Iinclude "
             "-march=r3000 "

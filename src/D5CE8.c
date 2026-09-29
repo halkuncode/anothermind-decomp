@@ -406,4 +406,4 @@ INCLUDE_ASM("asm/jp/nonmatchings/D5CE8", func_8010CAAC);
 
 INCLUDE_ASM("asm/jp/nonmatchings/D5CE8", func_8010CB14);
 
-INCLUDE_ASM("asm/jp/nonmatchings/D5CE8", func_8010CB70);
+INCLUDE_ASM("asm/jp/nonmatchings/D5CE8", DoGame);

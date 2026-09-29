@@ -1,6 +1,10 @@
 D_7FFFFF = 0x007FFFFF;
+abort = 0x800127AC;
 main = 0x800127B8;
 func_800127F8 = 0x800127F8;
+ResetCallback = 0x80039064;
+StopCallback = 0x80039158;
+ResetGraph = 0x8003F504;
 __main = 0x800440FC;
-
-abort = 0x800127AC;
+SsUtReverbOff = 0x800457D8;
+DoGame = 0x8010CB70;

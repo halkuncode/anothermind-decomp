@@ -1,23 +1,21 @@
 #include "common.h"
+#include <libetc.h>
+#include <libgpu.h>
+#include <libsnd.h>
 
 void abort(void) { M2C_BREAK(1); }
 
-extern void func_80039064(void);   
-extern void func_80039158(void);  
-extern void func_8003F504(s32);  
-extern void func_800457D8(void);
-extern void func_8010CB70(void);
+extern void DoGame(void);
 
-void main(void)
-{
-    func_80039158();
-    func_80039064();
-    func_8003F504(0);
-    func_800457D8();
-    func_8010CB70();
-    while (1);
+void main(void) {
+  StopCallback();
+  ResetCallback();
+  ResetGraph(0);
+  SsUtReverbOff();
+  DoGame();
+  while (1)
+    ;
 }
-
 
 INCLUDE_ASM("asm/jp/nonmatchings/main", func_800127F8);
 
@@ -1425,7 +1423,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main", func_80038E54);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main", func_80038FCC);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main", func_80039064);
+INCLUDE_ASM("asm/jp/nonmatchings/main", ResetCallback);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main", func_80039094);
 
@@ -1435,7 +1433,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main", func_800390F4);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main", func_80039128);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main", func_80039158);
+INCLUDE_ASM("asm/jp/nonmatchings/main", StopCallback);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main", func_80039188);
 
@@ -1741,7 +1739,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main", func_8003F128);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main", func_8003F4F4);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main", func_8003F504);
+INCLUDE_ASM("asm/jp/nonmatchings/main", ResetGraph);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main", func_8003F678);
 
@@ -2031,7 +2029,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main", func_80045740);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main", func_800457A8);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main", func_800457D8);
+INCLUDE_ASM("asm/jp/nonmatchings/main", SsUtReverbOff);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main", func_800457F8);
 

@@ -179,6 +179,30 @@ def parse_cdlookup_fallback() -> dict:
     return mapping
 
 
+def extract_zzs_author(data: bytes) -> str:
+    """
+    Extracts author name from script bytecode.
+    Squaresoft Another Mind script compiler puts opcode 0x29 (Cmd_aurthor)
+    followed by an 8-byte ASCII author string at the start of the script bytecode.
+    """
+    if len(data) >= 10:
+        labels = struct.unpack(">H", data[8:10])[0]
+        start = 10 + labels * 2
+        for i in range(start, min(len(data) - 8, start + 128)):
+            if data[i] == 0x29:
+                chunk = data[i+1 : i+9].rstrip(b"\x00").rstrip(b" ")
+                if len(chunk) >= 3 and all(b in b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-" for b in chunk):
+                    return chunk.decode("ascii")
+
+    for i in range(len(data) - 8):
+        if data[i] == 0x29:
+            chunk = data[i+1 : i+9].rstrip(b"\x00").rstrip(b" ")
+            if len(chunk) >= 3 and all(b in b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-" for b in chunk):
+                return chunk.decode("ascii")
+
+    return None
+
+
 def process_file_task(task_args):
     src_path, dst_path, is_compressed = task_args
     try:
@@ -190,12 +214,19 @@ def process_file_task(task_args):
         else:
             out_bytes = raw
 
+        # Check if ZZS script has an author header
+        if dst_path.endswith(".ZZS"):
+            author = extract_zzs_author(out_bytes)
+            if author:
+                dst_path = os.path.join(os.path.dirname(dst_path), author, os.path.basename(dst_path))
+
         os.makedirs(os.path.dirname(dst_path), exist_ok=True)
         with open(dst_path, "wb") as f:
             f.write(out_bytes)
-        return True, None
+        st = os.stat(dst_path)
+        return True, dst_path, st.st_size, st.st_mtime
     except Exception as e:
-        return False, f"Error processing {src_path}: {e}"
+        return False, src_path, 0, str(e)
 
 
 def main():
@@ -252,6 +283,12 @@ def main():
             tasks.append((src_file, dst_file, is_comp))
             group_counts[g] += 1
 
+    # Clean up any loose scripts in scripts root before extraction
+    scripts_dir = os.path.join(args.out_dir, "scripts")
+    if os.path.exists(scripts_dir):
+        import shutil
+        shutil.rmtree(scripts_dir)
+
     print(f"Extracting {len(tasks)} files into '{args.out_dir}' across {os.cpu_count() or 4} cores...")
     t0 = time.time()
 
@@ -260,16 +297,39 @@ def main():
 
     t1 = time.time()
 
-    errors = [err for ok, err in results if not ok]
+    manifest = {}
+    errors = []
+    for ok, dst_or_src, sz, mtime_or_err in results:
+        if ok:
+            rel = os.path.relpath(dst_or_src, args.out_dir)
+            manifest[rel] = {"size": sz, "mtime": mtime_or_err}
+        else:
+            errors.append(f"Error processing {dst_or_src}: {mtime_or_err}")
+
     if errors:
         for err in errors[:10]:
             print(err)
         print(f"Encountered {len(errors)} errors during extraction.")
         sys.exit(1)
 
+    import json
+    with open(os.path.join(args.out_dir, ".extracted_manifest.json"), "w") as fp:
+        json.dump(manifest, fp)
+
     print(f"\nSuccessfully extracted and decompressed {len(tasks)} assets in {t1 - t0:.2f}s:")
     for g, folder in enumerate(GROUP_NAMES):
         print(f"  - {args.out_dir}/{folder}/: {group_counts[g]} files")
+
+    # Report script author breakdown
+    if os.path.exists(scripts_dir):
+        author_dirs = [d for d in os.listdir(scripts_dir) if os.path.isdir(os.path.join(scripts_dir, d))]
+        loose_files = [f for f in os.listdir(scripts_dir) if os.path.isfile(os.path.join(scripts_dir, f))]
+        print(f"\nScripts organized by author ({len(author_dirs)} author folders):")
+        for ad in sorted(author_dirs):
+            count = len(os.listdir(os.path.join(scripts_dir, ad)))
+            print(f"  - scripts/{ad}/: {count} files")
+        if loose_files:
+            print(f"  - scripts/ (root): {len(loose_files)} files")
 
 
 if __name__ == "__main__":

@@ -259,6 +259,11 @@ def main():
             disc_name = item["disc_name"]
             extracted_name = item["extracted_name"]
             src_asset_path = os.path.join(group_dir, extracted_name)
+            if not os.path.exists(src_asset_path):
+                import glob
+                matches = glob.glob(os.path.join(group_dir, "**", extracted_name), recursive=True)
+                if matches:
+                    src_asset_path = matches[0]
 
             is_compressed_type = disc_name.endswith((".TIZ", ".ANZ", ".ZZZ", ".BIZ"))
 

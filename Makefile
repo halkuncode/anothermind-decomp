@@ -8,6 +8,17 @@ build: bin/cc1-psx-272
 .PHONY: clean
 clean:
 	@./mako.sh clean
+	@rm -rf docs/html
+
+.PHONY: doc
+doc:
+	@if command -v doxygen >/dev/null 2>&1; then \
+		echo "Generating documentation with Doxygen..."; \
+		doxygen docs/Doxyfile; \
+		echo "Documentation generated in docs/html/index.html"; \
+	else \
+		echo "doxygen is not installed. Please install doxygen to generate documentation."; \
+	fi
 
 
 .PHONY: rebuild

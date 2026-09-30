@@ -1,0 +1,42 @@
+# Doxyfile for Another Mind Decompilation
+
+PROJECT_NAME           = "Another Mind"
+PROJECT_BRIEF          = "PlayStation Decompilation"
+OUTPUT_DIRECTORY       = docs
+
+# Input sources
+INPUT                  = src include
+FILE_PATTERNS          = *.c *.h
+RECURSIVE              = YES
+EXCLUDE_PATTERNS       = */asm/* */build/* */bin/* */disk/* */tools/*
+
+# C language settings
+OPTIMIZE_OUTPUT_FOR_C  = YES
+JAVADOC_AUTOBRIEF      = YES
+EXTRACT_ALL            = YES
+EXTRACT_STATIC         = YES
+EXTRACT_LOCAL_CLASSES  = YES
+
+# Preprocessing
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = YES
+EXPAND_ONLY_PREDEF     = YES
+PREDEFINED             = USE_INCLUDE_ASM \
+                         "INCLUDE_ASM(folder, func)=" \
+                         "M2C_BREAK(code)="
+
+# Output format
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+HTML_FILE_EXTENSION    = .html
+GENERATE_LATEX         = NO
+GENERATE_MAN           = NO
+GENERATE_RTF           = NO
+GENERATE_XML           = NO
+
+# Diagnostics
+QUIET                  = YES
+WARNINGS               = YES
+WARN_IF_UNDOCUMENTED   = NO
+WARN_IF_DOC_ERROR      = YES
+WARN_NO_PARAMDOC       = NO

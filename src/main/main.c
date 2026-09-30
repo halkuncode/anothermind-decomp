@@ -19,8 +19,20 @@ extern void DisplayCdFileDebugStatus(void);
 extern void DisplayMovieDebugPanel(void);
 extern void DisplayPadDebugPanel(void);
 
+/**
+ * @brief Global debug lockout state flag.
+ *
+ * Controls whether debug screens and developer menus are locked out (disabled).
+ * When non-zero, debug features are locked out during release execution.
+ */
 extern s32 g_DebugLockState;
 
+/**
+ * @brief Aborts program execution immediately.
+ *
+ * Triggers a hardware breakpoint (MIPS break instruction) to halt execution
+ * and signal an unrecoverable abnormal termination.
+ */
 void abort(void) { M2C_BREAK(1); }
 
 extern void DoGame(void);
@@ -60,6 +72,11 @@ void DisplaySystemDebugPanel(void) {
     DisplayPadDebugPanel();
 }
 
+/**
+ * @brief Retrieves the current debug lockout state.
+ *
+ * @return Current value of @ref g_DebugLockState (non-zero if debug features are locked out, 0 otherwise).
+ */
 s32 GetDebugLockState(void) { return g_DebugLockState; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/main", LockoutDebug);

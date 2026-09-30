@@ -4,7 +4,7 @@
   <img src="docs/pics/Another_Mind_Coverart.png" alt="Another Mind Cover Art" width="320">
 </p>
 
-### A decompilation project for Squaresoft's FMV visual novel *Another Mind* for the PlayStation 1.
+### A decompilation of Squaresoft's FMV visual novel *Another Mind* for the PlayStation 1.
 
 ---
 

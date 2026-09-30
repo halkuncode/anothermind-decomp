@@ -66,17 +66,25 @@ Place your Japanese retail disc image files into the `disk/` directory:
 - `disk/Another Mind (Japan).bin`
 - `disk/Another Mind (Japan).cue`
 
-### 5. Extract Disc Data
-Extract the game files and executable (`SLPS_016.55`):
+### 5. Extract Disc Data and Assets
+Extract the game files, executable (`SLPS_016.55`), and decompress assets:
 ```shell
 make disk
 ```
+This extracts `disk/jp/` and automatically decompresses all game assets into `assets/jp/progdata/` organized by logical groups.
 
 ### 6. Build and Verify
 Compile the project and verify byte-matching checksums:
 ```shell
 make check
 ```
+
+### 7. Build Playable Disc Image
+Rebuild a playable PlayStation ISO from the compiled executable and assets:
+```shell
+make cd
+```
+This compiles `build/jp/another.exe`, packs assets from `assets/jp/progdata/` (recompressing any modified files), recalculates `CDPOS.DAT`, and outputs `disk/another_build.iso`.
 
 ---
 
@@ -86,9 +94,11 @@ make check
 | :--- | :--- |
 | `make all` | Default target. Extracts disc data and builds the executable (`disk` + `build`). |
 | `make requirements` | Creates the Python virtual environment (`.venv`) and installs `requirements.txt`. |
-| `make disk` | Converts BIN/CUE to ISO using `bchunk` and extracts game assets and `SLPS_016.55` with `7z`. |
+| `make disk` | Converts BIN/CUE to ISO using `bchunk`, extracts `disk/jp/` with `7z`, and extracts assets into `assets/jp/progdata/`. |
+| `make assets` | Extracts and decompresses all game assets from `disk/jp/PROGDATA/` into `assets/jp/progdata/`. |
 | `make build` | Ensures compiler toolchain is ready, generates ninja rules, and builds `build/jp/another.exe`. |
 | `make check` | Runs `make build` and validates SHA-1 checksums against the retail `SLPS_016.55`. |
+| `make cd` | Compiles the executable and builds a playable CD image (`disk/another_build.iso`) with updated `CDPOS.DAT`. |
 | `make clean` | Cleans up build artifacts, ninja logs, intermediate object files, and generated docs. |
 | `make docs` | Generates HTML documentation using Doxygen into `docs/html/index.html` (optional, requires `doxygen`). |
 | `make rebuild` | Runs a clean build (`make clean` followed by `make build`). |

@@ -43,7 +43,7 @@ git submodule update --init --recursive
 sudo add-apt-repository ppa:longsleep/golang-backports
 sudo apt update
 sudo apt install golang-go ninja-build 7zip bchunk binutils-mipsel-linux-gnu gcc-mipsel-linux-gnu
-# Optional: install doxygen to generate documentation with `make doc`
+# Optional: install doxygen to generate documentation with `make docs`
 sudo apt install doxygen
 ```
 
@@ -51,7 +51,7 @@ sudo apt install doxygen
 ```shell
 sudo pacman -S go ninja 7zip bchunk
 yay -S mipsel-linux-gnu-binutils mipsel-linux-gnu-gcc
-# Optional: install doxygen to generate documentation with `make doc`
+# Optional: install doxygen to generate documentation with `make docs`
 sudo pacman -S doxygen
 ```
 
@@ -90,7 +90,7 @@ make check
 | `make build` | Ensures compiler toolchain is ready, generates ninja rules, and builds `build/jp/another.exe`. |
 | `make check` | Runs `make build` and validates SHA-1 checksums against the retail `SLPS_016.55`. |
 | `make clean` | Cleans up build artifacts, ninja logs, intermediate object files, and generated docs. |
-| `make doc` | Generates HTML documentation using Doxygen into `docs/html/index.html` (optional, requires `doxygen`). |
+| `make docs` | Generates HTML documentation using Doxygen into `docs/html/index.html` (optional, requires `doxygen`). |
 | `make rebuild` | Runs a clean build (`make clean` followed by `make build`). |
 | `make format` | Formats all C codebase files using `clang-format`. |
 | `make submit` | Runs `make clean`, `make build`, `make format`, and stages `config/`, `include/`, and `src/` with `git add`. |
@@ -134,6 +134,6 @@ make check
 ### 5. Generate Documentation (Optional)
 The codebase uses Doxygen-formatted comments. Doxygen is completely optional and not required to build or contribute, but if you have `doxygen` installed, you can generate local HTML documentation:
 ```shell
-make doc
+make docs
 ```
 The documentation will be generated in `docs/html/index.html` (untracked by Git). The configuration file is tracked at `docs/Doxyfile`.

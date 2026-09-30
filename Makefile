@@ -10,8 +10,8 @@ clean:
 	@./mako.sh clean
 	@rm -rf docs/html
 
-.PHONY: doc
-doc:
+.PHONY: docs doc
+docs:
 	@if command -v doxygen >/dev/null 2>&1; then \
 		echo "Generating documentation with Doxygen..."; \
 		doxygen docs/Doxyfile; \
@@ -19,6 +19,8 @@ doc:
 	else \
 		echo "doxygen is not installed. Please install doxygen to generate documentation."; \
 	fi
+
+doc: docs
 
 
 .PHONY: rebuild

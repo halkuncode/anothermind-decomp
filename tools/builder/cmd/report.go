@@ -1,20 +1,23 @@
 package cmd
 
 import (
-	"github.com/spf13/cobra"
 	"github.com/halkuncode/anothermind-decomp/tools/builder/builder"
+	"github.com/spf13/cobra"
 )
 
 var reportCmd = &cobra.Command{
-	Use:           "report <version> <report.json>",
-	Short:         "Generates a progress report",
-	SilenceErrors: true,
-	Args:          cobra.ExactArgs(2),
+	Use:   "report [version] [output.json]",
+	Short: "Generates a decompilation progress report",
+	Args:  cobra.MaximumNArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if err := builder.Report(args[0], args[1]); err != nil {
-			return err
+		if len(args) == 2 {
+			return builder.ReportJSON(args[0], args[1])
 		}
-		return nil
+		version := ""
+		if len(args) == 1 {
+			version = args[0]
+		}
+		return builder.Report(version)
 	},
 }
 

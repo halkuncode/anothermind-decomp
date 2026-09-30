@@ -1,23 +1,26 @@
 package cmd
 
 import (
-	"github.com/spf13/cobra"
 	"github.com/halkuncode/anothermind-decomp/tools/builder/rank"
+	"github.com/spf13/cobra"
 )
 
+var topCount int
+
 var rankCmd = &cobra.Command{
-	Use:           "rank <source_path>",
-	Short:         "Rank non-decompiled functions from easiest to hardest",
-	SilenceErrors: true,
-	Args:          cobra.ExactArgs(1),
+	Use:   "rank [source_path]",
+	Short: "Rank non-decompiled functions from easiest to hardest",
+	Args:  cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if err := rank.Rank(args[0], 0); err != nil {
-			return err
+		path := ""
+		if len(args) > 0 {
+			path = args[0]
 		}
-		return nil
+		return rank.Rank(path, topCount)
 	},
 }
 
 func init() {
+	rankCmd.Flags().IntVarP(&topCount, "top", "n", 5, "Number of top easiest functions to display (0 for all)")
 	rootCmd.AddCommand(rankCmd)
 }

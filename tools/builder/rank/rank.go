@@ -14,55 +14,101 @@ import (
 )
 
 type entry struct {
-	score float32
-	name  string
+	score        float32
+	instructions int
+	name         string
+	path         string
 }
 
-func Rank(path string, minThreshold float32) error {
-	path = strings.TrimPrefix(path, "src/")
-	path = strings.TrimSuffix(path, ".c")
-	if !strings.HasPrefix(path, "asm/") {
-		path = filepath.Join("asm", builder.Version(), path)
+func Rank(target string, topCount int) error {
+	version := builder.Version()
+	asmBase := filepath.Join("asm", version, "nonmatchings")
+
+	if _, err := os.Stat(asmBase); os.IsNotExist(err) {
+		return fmt.Errorf("assembly directory '%s' not found. Please run './mako.sh build' first", asmBase)
 	}
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		targetedPath := filepath.Join(filepath.Dir(path), "nonmatchings", filepath.Base(path))
-		if _, err := os.Stat(targetedPath); !os.IsNotExist(err) {
-			path = targetedPath
-		}
-	} else {
-		targetedPath := filepath.Join(path, "nonmatchings")
-		if _, err := os.Stat(targetedPath); !os.IsNotExist(err) {
-			path = targetedPath
+
+	searchPath := asmBase
+	if target != "" {
+		target = strings.TrimPrefix(target, "src/")
+		target = strings.TrimSuffix(target, ".c")
+
+		candidate1 := filepath.Join(asmBase, target)
+		candidate2 := filepath.Join("asm", version, target)
+		candidate3 := target
+
+		if info, err := os.Stat(candidate1); err == nil && info.IsDir() {
+			searchPath = candidate1
+		} else if info, err := os.Stat(candidate2); err == nil && info.IsDir() {
+			searchPath = candidate2
+		} else if _, err := os.Stat(candidate3); err == nil {
+			searchPath = candidate3
+		} else {
+			return fmt.Errorf("could not find nonmatching assembly for '%s' (checked %s)", target, candidate1)
 		}
 	}
+
 	var entries []entry
-	if err := filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(searchPath, func(path string, _ os.FileInfo, err error) error {
 		if err != nil {
 			return err
-		}
-		if !strings.Contains(path, "nonmatchings") {
-			return nil
 		}
 		if !strings.HasSuffix(path, ".s") {
 			return nil
 		}
-		score, err := rankFunction(path)
+		if !strings.Contains(path, "nonmatchings") {
+			return nil
+		}
+		score, instrs, err := rankFunction(path)
 		if err != nil {
 			return err
 		}
-		if score < minThreshold {
+		if instrs == 0 {
 			return nil
 		}
-		entries = append(entries, entry{score, filepath.Base(path)})
+		rel, _ := filepath.Rel(".", path)
+		entries = append(entries, entry{
+			score:        score,
+			instructions: instrs,
+			name:         strings.TrimSuffix(filepath.Base(path), ".s"),
+			path:         rel,
+		})
 		return nil
-	}); err != nil {
+	})
+	if err != nil {
 		return err
 	}
+
+	if len(entries) == 0 {
+		fmt.Println("No nonmatching functions found.")
+		return nil
+	}
+
 	sort.Slice(entries, func(i, j int) bool {
-		return entries[i].score < entries[j].score
+		if entries[i].instructions != entries[j].instructions {
+			return entries[i].instructions < entries[j].instructions
+		}
+		if entries[i].score != entries[j].score {
+			return entries[i].score < entries[j].score
+		}
+		return entries[i].name < entries[j].name
 	})
-	for _, entry := range entries {
-		fmt.Printf("%.3f: %s\n", entry.score, entry.name)
+
+	count := len(entries)
+	if topCount > 0 && topCount < count {
+		count = topCount
+	}
+
+	header := fmt.Sprintf("Top %d easiest nonmatching functions", count)
+	if target != "" {
+		header += fmt.Sprintf(" in %s", target)
+	}
+	fmt.Printf("%s (out of %d total):\n", header, len(entries))
+	fmt.Printf("%-5s  %-6s  %-6s  %-30s  %s\n", "Rank", "Score", "Instrs", "Function", "Path")
+	fmt.Println(strings.Repeat("-", 80))
+	for i := 0; i < count; i++ {
+		e := entries[i]
+		fmt.Printf("%-5d  %-6.3f  %-6d  %-30s  %s\n", i+1, e.score, e.instructions, e.name, e.path)
 	}
 	return nil
 }
@@ -99,8 +145,7 @@ func decompilationDifficultyScore(instructions, branches, jumps, labels int) flo
 	return float32(difficulty)
 }
 
-func rankFunction(path string) (float32, error) {
-	// Extract function name from file
+func rankFunction(path string) (float32, int, error) {
 	filename := filepath.Base(path)
 	funcName := strings.TrimSuffix(filename, ".s")
 
@@ -111,17 +156,15 @@ func rankFunction(path string) (float32, error) {
 		strings.HasSuffix(funcName, ".bss") ||
 		strings.HasSuffix(funcName, ".rodata") ||
 		funcName == "header" {
-		return 0, nil
+		return 0, 0, nil
 	}
 
-	// Open and read file
 	file, err := os.Open(path)
 	if err != nil {
-		return 0, err
+		return 0, 0, err
 	}
 	defer file.Close()
 
-	// Compile regex patterns
 	branchPattern := regexp.MustCompile(`\b(beq|bne|bnez|beqz|blez|bgtz|bltz|bgez|blt|bgt|ble|bge|bltzal|bgezal)\b`)
 	jumpJalPattern := regexp.MustCompile(`\bjal\b`)
 	jumpJPattern := regexp.MustCompile(`\bj\b`)
@@ -133,7 +176,6 @@ func rankFunction(path string) (float32, error) {
 	jumpCount := 0
 	labelCount := 0
 
-	// Read file content to check for rodata-only files
 	scanner := bufio.NewScanner(file)
 	var content strings.Builder
 	for scanner.Scan() {
@@ -141,22 +183,20 @@ func rankFunction(path string) (float32, error) {
 		content.WriteString("\n")
 	}
 	if err := scanner.Err(); err != nil {
-		return 0, err
+		return 0, 0, err
 	}
 
 	contentStr := content.String()
 
 	// Skip files that only contain rodata (no actual code)
 	if strings.Contains(contentStr, ".section .rodata") && !strings.Contains(contentStr, "glabel") {
-		return 0, nil
+		return 0, 0, nil
 	}
 
-	// Parse line by line
 	scanner = bufio.NewScanner(strings.NewReader(contentStr))
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
 
-		// Skip empty lines, glabel, endlabel, and comments
 		if line == "" ||
 			strings.HasPrefix(line, "glabel") ||
 			strings.HasPrefix(line, "endlabel") ||
@@ -164,22 +204,18 @@ func rankFunction(path string) (float32, error) {
 			continue
 		}
 
-		// Count local labels
 		if labelPattern.MatchString(line) {
 			labelCount++
 			continue
 		}
 
-		// Count instructions
 		if instructionPattern.MatchString(line) {
 			instructionCount++
 
-			// Check for branches
 			if branchPattern.MatchString(line) {
 				branchCount++
 			}
 
-			// Check for jumps
 			if jumpJalPattern.MatchString(line) || jumpJPattern.MatchString(line) {
 				jumpCount++
 			}
@@ -187,15 +223,13 @@ func rankFunction(path string) (float32, error) {
 	}
 
 	if err := scanner.Err(); err != nil {
-		return 0, err
+		return 0, 0, err
 	}
 
-	// Skip functions with 0 instructions (data sections)
 	if instructionCount == 0 {
-		return 0, nil
+		return 0, 0, nil
 	}
 
-	// Calculate difficulty score
 	score := decompilationDifficultyScore(instructionCount, branchCount, jumpCount, labelCount)
-	return score, nil
+	return score, instructionCount, nil
 }

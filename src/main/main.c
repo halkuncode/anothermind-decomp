@@ -19,13 +19,8 @@ extern void DisplayCdFileDebugStatus(void);
 extern void DisplayMovieDebugPanel(void);
 extern void DisplayPadDebugPanel(void);
 
-/**
- * @brief Global debug lockout state flag.
- *
- * Controls whether debug screens and developer menus are locked out (disabled).
- * When non-zero, debug features are locked out during release execution.
- */
-extern s32 g_DebugLockState;
+
+extern s32 g_DebugLockState; //!< Global debug lockout state flag.
 
 /**
  * @brief Aborts program execution immediately.

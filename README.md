@@ -4,15 +4,15 @@
   <img src="docs/pics/Another_Mind_Coverart.png" alt="Another Mind Cover Art" width="320">
 </p>
 
-### A byte-matching decompilation project for Squaresoft's FMV visual novel *Another Mind* for the PlayStation 1.
+### A decompilation project for Squaresoft's FMV visual novel *Another Mind* for the PlayStation 1.
 
 ---
 
 Set in modern-day Japan, you awaken as a voice inside the mind of 16-year-old high school student Hitomi Hayama. Together, you are thrust into the center of a mystery involving a murder, suicide attempts, and an attempted bombing. 
 
-You communicate with Hitomi using an innovative dialogue system—constructing your own sentences out of context-sensitive keywords and phrases provided by the game, rather than simply choosing from predetermined options.
+You communicate with Hitomi using an innovative dialogue system, constructing your own sentences out of context-sensitive keywords and phrases provided by the game, rather than simply choosing from predetermined options.
 
-This game is in Japanese and was never released outside Japan.
+This game was never released outside Japan.
 
 | | |
 |:---:|:---:|

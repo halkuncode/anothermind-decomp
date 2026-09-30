@@ -1,5 +1,6 @@
 #include "common.h"
 
+extern u8 g_ControllerTypeId;
 extern s32 g_CurrVibrationMode;
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", RunNameEntryScreen);
@@ -94,7 +95,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", IsVibrationActive);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", func_800161A0);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", func_800161F0);
+u8 GetControllerType(void) { return g_ControllerTypeId >> 4; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", func_80016200);
 

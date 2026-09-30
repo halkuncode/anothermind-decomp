@@ -2,6 +2,8 @@
 #include "common.h"
 #include "akao.h"
 
+extern s32 g_AudioInitialized;
+
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", InitSoundDriver);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", ShutdownSoundSystem);
@@ -100,7 +102,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", CutSoundEffect);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", DecompressWaveMusic);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002EA90);
+s32 IsAudioInitialized(void) { return g_AudioInitialized; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", InstallAkaoProgramFromBuffer);
 

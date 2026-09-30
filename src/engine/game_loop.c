@@ -1,4 +1,11 @@
+//! PSYQ=4.0
 #include "common.h"
+
+typedef struct PortraitSlot {
+    /* 0x00 */ u8 pad00[2];
+    /* 0x02 */ s16 state;          // or u16 (written with 3 here)
+    /* 0x04 */ u8 pad04[0x44 - 4]; // total size 0x44 (68 bytes)
+} PortraitSlot;
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_80102DC8);
 
@@ -110,7 +117,8 @@ INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010C7DC);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010C820);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010C870);
+// This changes the Portrait slot to state (expresion?) 3
+void func_8010C870(PortraitSlot* slot) { slot->state = 3; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010C87C);
 

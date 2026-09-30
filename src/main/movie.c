@@ -3,10 +3,19 @@
 typedef struct ControllerState {
     /* 0x00 */ u8 pad28[0x28];
     /* 0x28 */ u32 vibrationBuffer;
-    /* 0x2C */ u8 pad2C[8];
+    /* 0x2C */ u32 configBuffer;
+    /* 0x30 */ u8 pad30[4];
     /* 0x34 */ u8 vibrationBufferLength;
-    /* 0x35 */ u8 pad35[0xF0 - 0x35];
+    /* 0x35 */ u8 pad35;
+    /* 0x36 */ u8 configBufferLength;
+    /* 0x37 */ u8 configMode;
 } ControllerState;
+
+typedef struct MovieAttribute {
+    /* 0x00 */ u8 pad0[0x37];
+    /* 0x37 */ u8 currCmdType;
+    /* 0x38 */ u8 savedCmdType;
+} MovieAttribute;
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/movie", func_80046748);
 
@@ -56,12 +65,16 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/movie", WaitForControllerReady);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/movie", WaitForControllerAckBit);
 
-void WriteVibrationData(ControllerState* controller, s32 vibebuff, s8 vibebuffLen) {
+void SetVibrationData(ControllerState* controller, s32 vibebuff, s8 vibebuffLen) {
     controller->vibrationBuffer = vibebuff;
     controller->vibrationBufferLength = vibebuffLen;
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/movie", func_800479E4);
+void SetControllerConfig(ControllerState* controller, s8 mode, s32 buffer, s8 length) {
+    controller->configMode = mode;
+    controller->configBuffer = buffer;
+    controller->configBufferLength = length;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/movie", func_800479F4);
 
@@ -115,7 +128,13 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/movie", func_80048D48);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/movie", func_80048DB0);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/movie", SaveAndClearMovieCommandCode);
+void SaveAndClearMovieCommandCode(MovieAttribute* state) {
+    u8 savedCommandType;
+
+    savedCommandType = state->currCmdType;
+    state->currCmdType = 0U;
+    state->savedCmdType = savedCommandType;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/movie", func_80048EB4);
 
@@ -125,7 +144,8 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/movie", func_800491EC);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/movie", func_80049224);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/movie", func_80049248);
+//BIOS syscall in assembly
+INCLUDE_ASM("asm/jp/nonmatchings/main/movie", BIOS_bzero);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/movie", SetupMovieIRQFunctionPointers);
 

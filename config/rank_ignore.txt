@@ -4,5 +4,7 @@
 # External PSX SDK library code
 psxsdk
 
-# Pseudo-functions / data stubs
+# Pseudo-functions / data stubs / assembly syscall stubs
 func_80038C64
+BIOS_bzero
+func_80049248

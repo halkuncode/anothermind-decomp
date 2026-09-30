@@ -101,7 +101,9 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", StopScriptedMovieDecoder);
 
 s32 IsMovieDecoderActive(void) { return g_MovieDecoderActive; }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", GetCurrentMovieFrame);
+extern s32 g_CurrentFrameNum;
+
+s32 GetCurrentMovieFrame(void) { return g_CurrentFrameNum; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", PlayDefaultMovieSegment);
 

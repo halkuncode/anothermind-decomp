@@ -185,7 +185,7 @@ def load_gp_symbols() -> set[str]:
                     val = val.replace(";", "").strip()
                     try:
                         addr = int(val, 16)
-                        if 0x80059A1C <= addr <= 0x80069A1B:
+                        if 0x80059A1C <= addr <= 0x80062170:
                             gp_symbols.add(name)
                     except ValueError:
                         pass
@@ -195,7 +195,7 @@ def load_gp_symbols() -> set[str]:
 def is_gp_symbol(symbol: str, gp_symbols: set[str]) -> bool:
     if symbol in gp_symbols:
         return True
-    if symbol.startswith("D_80061") or symbol.startswith("D_80062"):
+    if symbol.startswith("D_80061") or symbol.startswith("D_800620") or symbol.startswith("D_800621"):
         return True
     return False
 

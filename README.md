@@ -147,3 +147,7 @@ The codebase uses Doxygen-formatted comments. Doxygen is completely optional and
 make docs
 ```
 The documentation will be generated in `docs/html/index.html` (untracked by Git). The configuration file is tracked at `docs/Doxyfile`.
+
+### 6. Asset & Disc Documentation
+- [Asset Filename Conventions](docs/asset_filenames.md): Detailed breakdown of asset naming conventions, directory structure, compression schemes, and actor animation codes.
+- [CD Lookup & Sector Map](docs/cdlookup.md): Complete index of all 3,120 game assets mapped to CDPOS indices, LBA sectors, sizes, and group classifications.

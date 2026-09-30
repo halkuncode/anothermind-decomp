@@ -7,6 +7,7 @@ organized by CDPOS.DAT groups.
 
 import argparse
 import os
+import re
 import struct
 import sys
 import time
@@ -203,6 +204,116 @@ def extract_zzs_author(data: bytes) -> str:
     return None
 
 
+def get_background_subfolder(fname: str) -> str:
+    """Categorizes background TIM image into chapter subfolders."""
+    base = os.path.splitext(fname)[0]
+    if base.startswith("TA2049"):
+        return "chapter_02"
+    m = re.match(r"^M(\d{2})_\d+", base)
+    if m:
+        return f"chapter_{int(m.group(1)):02d}"
+    if base.startswith("M4S2_") or base.startswith("S4_"):
+        return "chapter_04"
+    m = re.search(r"(\d{4,5})", base)
+    if m:
+        num = int(m.group(1))
+        chap = num // 1000
+        if chap > 0:
+            return f"chapter_{chap:02d}"
+    return "chapter_00_common"
+
+
+ANIM_CHAR_NAMES = {
+    "H": "hitomi",
+    "HN": "hitomi_night",
+    "M": "masato",
+    "MY": "mayumi",
+    "S": "shun",
+    "N": "nurse",
+    "NA": "nanami",
+    "KR": "kurata",
+    "RI": "ritsuko",
+    "RE": "reiko",
+    "AR": "arai",
+    "AK": "akane",
+    "KN": "kaneko",
+    "HI": "hitoshi",
+    "KI": "kitani",
+    "Y": "yoshida",
+    "SM": "shimada",
+    "SH": "sahara",
+    "KB": "kiba",
+    "MD": "mukai",
+    "HH": "hiura",
+    "OK": "okada",
+    "KA": "kazuo",
+    "BRI": "bri",
+    "NJ": "nj",
+    "KG": "kg",
+    "NN": "nn",
+    "RK": "rk",
+    "RY": "ry",
+    "ST": "st",
+    "JU": "ju",
+    "OS": "os",
+    "BL": "bl",
+    "KAN": "kan",
+    "SK": "sk",
+    "U": "u",
+    "YK": "yk",
+    "B": "b",
+    "BN": "bn",
+    "CA": "ca",
+    "IS": "is",
+    "P": "p",
+    "SUE": "sue",
+    "WA": "wa",
+    "KE": "ke",
+    "common": "common",
+}
+
+
+def get_animation_subfolder(fname: str) -> str:
+    """Categorizes animation ANM/TIM files into character subfolders named by character."""
+    base = os.path.splitext(fname)[0]
+    if base in ("NOISE", "NULL"):
+        code = "common"
+    elif base.startswith("R_MY"):
+        code = "MY"
+    else:
+        m = re.match(r"^([A-Za-z]+)", base)
+        code = m.group(1).upper() if m else "common"
+    return ANIM_CHAR_NAMES.get(code, code.lower())
+
+
+def get_audio_subfolder(fname: str) -> str:
+    """Categorizes audio files into effect, music, and wave subfolders."""
+    base = os.path.basename(fname).upper()
+    if base.startswith("EFFECT"):
+        return "effect"
+    elif base.startswith("MUSIC") or base.startswith("SONG"):
+        return "music"
+    elif base.startswith("WAVE"):
+        return "wave"
+    return ""
+
+
+def get_menu_subfolder(fname: str) -> str:
+    """Categorizes menu subsystem assets into functional subfolders."""
+    base = os.path.basename(fname).upper()
+    if base.startswith("SROLL"):
+        return "credits"
+    elif base.startswith("NEWS") or base.startswith("D"):
+        return "news"
+    elif base.startswith("MB_"):
+        return "memory_card"
+    elif base.startswith("WEEK") or base == "SYODATA.BIN":
+        return "schedule"
+    elif base.startswith("T_") or base == "RING.TIM":
+        return "terminal"
+    return "investigation"
+
+
 def process_file_task(task_args):
     src_path, dst_path, is_compressed = task_args
     try:
@@ -219,6 +330,19 @@ def process_file_task(task_args):
             author = extract_zzs_author(out_bytes)
             if author:
                 dst_path = os.path.join(os.path.dirname(dst_path), author, os.path.basename(dst_path))
+        elif dst_path.endswith(".TIM") and "backgrounds" in dst_path:
+            sub = get_background_subfolder(os.path.basename(dst_path))
+            dst_path = os.path.join(os.path.dirname(dst_path), sub, os.path.basename(dst_path))
+        elif (dst_path.endswith(".ANM") or dst_path.endswith(".TIM")) and "animations" in dst_path:
+            sub = get_animation_subfolder(os.path.basename(dst_path))
+            dst_path = os.path.join(os.path.dirname(dst_path), sub, os.path.basename(dst_path))
+        elif "audio" in dst_path:
+            sub = get_audio_subfolder(os.path.basename(dst_path))
+            if sub:
+                dst_path = os.path.join(os.path.dirname(dst_path), sub, os.path.basename(dst_path))
+        elif "menus" in dst_path:
+            sub = get_menu_subfolder(os.path.basename(dst_path))
+            dst_path = os.path.join(os.path.dirname(dst_path), sub, os.path.basename(dst_path))
 
         os.makedirs(os.path.dirname(dst_path), exist_ok=True)
         with open(dst_path, "wb") as f:
@@ -283,11 +407,18 @@ def main():
             tasks.append((src_file, dst_file, is_comp))
             group_counts[g] += 1
 
-    # Clean up any loose scripts in scripts root before extraction
+    # Clean up any loose scripts, backgrounds, animations, audio, or menus before extraction
+    for clean_folder in ["scripts", "backgrounds", "animations", "audio", "menus"]:
+        d = os.path.join(args.out_dir, clean_folder)
+        if os.path.exists(d):
+            import shutil
+            shutil.rmtree(d)
+
     scripts_dir = os.path.join(args.out_dir, "scripts")
-    if os.path.exists(scripts_dir):
-        import shutil
-        shutil.rmtree(scripts_dir)
+    bg_dir = os.path.join(args.out_dir, "backgrounds")
+    anim_dir = os.path.join(args.out_dir, "animations")
+    audio_dir = os.path.join(args.out_dir, "audio")
+    menus_dir = os.path.join(args.out_dir, "menus")
 
     print(f"Extracting {len(tasks)} files into '{args.out_dir}' across {os.cpu_count() or 4} cores...")
     t0 = time.time()
@@ -320,6 +451,17 @@ def main():
     for g, folder in enumerate(GROUP_NAMES):
         print(f"  - {args.out_dir}/{folder}/: {group_counts[g]} files")
 
+    # Report menu breakdown
+    if os.path.exists(menus_dir):
+        menu_subdirs = [d for d in os.listdir(menus_dir) if os.path.isdir(os.path.join(menus_dir, d))]
+        loose_menu = [f for f in os.listdir(menus_dir) if os.path.isfile(os.path.join(menus_dir, f))]
+        print(f"\nMenus organized into categories ({len(menu_subdirs)} subfolders):")
+        for md in sorted(menu_subdirs):
+            count = len(os.listdir(os.path.join(menus_dir, md)))
+            print(f"  - menus/{md}/: {count} files")
+        if loose_menu:
+            print(f"  - menus/ (root): {len(loose_menu)} files")
+
     # Report script author breakdown
     if os.path.exists(scripts_dir):
         author_dirs = [d for d in os.listdir(scripts_dir) if os.path.isdir(os.path.join(scripts_dir, d))]
@@ -330,6 +472,39 @@ def main():
             print(f"  - scripts/{ad}/: {count} files")
         if loose_files:
             print(f"  - scripts/ (root): {len(loose_files)} files")
+
+    # Report background chapter breakdown
+    if os.path.exists(bg_dir):
+        chap_dirs = [d for d in os.listdir(bg_dir) if os.path.isdir(os.path.join(bg_dir, d))]
+        loose_bg = [f for f in os.listdir(bg_dir) if os.path.isfile(os.path.join(bg_dir, f))]
+        print(f"\nBackgrounds organized by chapter ({len(chap_dirs)} chapter folders):")
+        for cd in sorted(chap_dirs):
+            count = len(os.listdir(os.path.join(bg_dir, cd)))
+            print(f"  - backgrounds/{cd}/: {count} files")
+        if loose_bg:
+            print(f"  - backgrounds/ (root): {len(loose_bg)} files")
+
+    # Report animation character breakdown
+    if os.path.exists(anim_dir):
+        char_dirs = [d for d in os.listdir(anim_dir) if os.path.isdir(os.path.join(anim_dir, d))]
+        loose_anim = [f for f in os.listdir(anim_dir) if os.path.isfile(os.path.join(anim_dir, f))]
+        print(f"\nAnimations organized by character ({len(char_dirs)} character folders):")
+        for cd in sorted(char_dirs):
+            count = len(os.listdir(os.path.join(anim_dir, cd)))
+            print(f"  - animations/{cd}/: {count} files")
+        if loose_anim:
+            print(f"  - animations/ (root): {len(loose_anim)} files")
+
+    # Report audio breakdown
+    if os.path.exists(audio_dir):
+        audio_subdirs = [d for d in os.listdir(audio_dir) if os.path.isdir(os.path.join(audio_dir, d))]
+        loose_audio = [f for f in os.listdir(audio_dir) if os.path.isfile(os.path.join(audio_dir, f))]
+        print(f"\nAudio organized into categories ({len(audio_subdirs)} subfolders):")
+        for sd in sorted(audio_subdirs):
+            count = len(os.listdir(os.path.join(audio_dir, sd)))
+            print(f"  - audio/{sd}/: {count} files")
+        if loose_audio:
+            print(f"  - audio/ (root): {len(loose_audio)} files")
 
 
 if __name__ == "__main__":

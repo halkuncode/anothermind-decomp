@@ -910,3 +910,7 @@ WaitWithDialogueUI = 0x8010C9E4;
 PlayDialogueMessage = 0x8010CA44;
 PlaySystemMessage = 0x8010CAAC;
 DoGame = 0x8010CB70;
+
+g_CdTransferReady = 0x80062094;
+
+s_cdFileName  = 0x8004B470;

@@ -5,7 +5,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var topCount int
+var (
+	topCount int
+	excludes []string
+)
 
 var rankCmd = &cobra.Command{
 	Use:   "rank [source_path]",
@@ -16,11 +19,12 @@ var rankCmd = &cobra.Command{
 		if len(args) > 0 {
 			path = args[0]
 		}
-		return rank.Rank(path, topCount)
+		return rank.Rank(path, topCount, excludes)
 	},
 }
 
 func init() {
 	rankCmd.Flags().IntVarP(&topCount, "top", "n", 5, "Number of top easiest functions to display (0 for all)")
+	rankCmd.Flags().StringSliceVarP(&excludes, "exclude", "x", nil, "Exclude functions, directories, or patterns (comma-separated or repeatable)")
 	rootCmd.AddCommand(rankCmd)
 }

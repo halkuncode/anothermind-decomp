@@ -1,4 +1,6 @@
+//! PSYQ=4.0
 #include "common.h"
+#include "akao.h"
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", InitSoundDriver);
 
@@ -434,7 +436,10 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_A4_PitchBendSlide);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_DA_PortamentoOn);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_DB_PortamentoOff);
+void AkaoOp_DB_PortamentoOff(AkaoChannel* track)
+{
+    track->portamentoSteps = 0;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_D8_FineTuningAbsolute);
 
@@ -476,7 +481,10 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_C2_ReverbOn);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_C3_ReverbOff);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_CC_LegatoOn);
+void AkaoOp_CC_LegatoOn(AkaoChannel* track)
+{
+    track->sfxMask = AKAO_SFX_LEGATO;
+}
 
 void AkaoOp_CD_LegatoOff(void) {}
 

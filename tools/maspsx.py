@@ -30,6 +30,7 @@ MASPSX_SCRIPT = Path(__file__).resolve().parent / "maspsx" / "maspsx.py"
 _SP_RESTORE_RE = re.compile(r"^\s*(?:addu|addiu)\s+\$sp,\s*\$sp,\s*\S+")
 _LW_RA_RE      = re.compile(r"^\s*lw\s+\$31,\s*\d+\(\$sp\)")
 _J_RA_RE       = re.compile(r"^\s*j\s+\$31\s*$")
+_LA_RE         = re.compile(r"^\s*la\s+(\$[a-z0-9]+),\s*([A-Za-z0-9_]+)")
 
 
 def _is_code_line(line: str) -> bool:
@@ -87,6 +88,54 @@ def epilogue_delay_slot_swap(lines: list) -> list:
                   + after)
         n = len(result)
         i += 1  # keep scanning; don't re-examine swapped lines
+    return result
+
+
+def leaf_la_delay_slot_swap(lines: list) -> list:
+    """When a leaf function returns a symbol address via `la $reg, <sym>` followed by
+    `j $31`, ASPSX splits `la` and places `addiu` into the jump delay slot.
+    We transform:
+        la   $reg, <sym>
+        j    $31
+    Into:
+        lui  $reg, %hi(<sym>)
+        .set noreorder
+        j    $31
+        addiu $reg, $reg, %lo(<sym>)
+        .set reorder
+    """
+    result = list(lines)
+    n = len(result)
+    i = 0
+    while i < n:
+        if not _is_code_line(result[i]):
+            i += 1
+            continue
+        m = _LA_RE.match(result[i].strip())
+        if not m:
+            i += 1
+            continue
+        reg, sym = m.group(1), m.group(2)
+        j = i + 1
+        while j < n and not _is_code_line(result[j]):
+            j += 1
+        if j < n and _J_RA_RE.match(result[j].strip()):
+            j_line = result[j]
+            indent = re.match(r"^(\s*)", j_line).group(1)
+            lui_line       = f"{indent}lui\t{reg},%hi({sym})\n"
+            noreorder_line = f"{indent}.set\tnoreorder\n"
+            addiu_line     = f"{indent}addiu\t{reg},{reg},%lo({sym})\n"
+            reorder_line   = f"{indent}.set\treorder\n"
+
+            result = (result[:i]
+                      + [lui_line]
+                      + result[i + 1:j]
+                      + [noreorder_line, j_line, addiu_line, reorder_line]
+                      + result[j + 1:])
+            n = len(result)
+            i = j + 3
+            continue
+        i += 1
     return result
 
 
@@ -169,6 +218,7 @@ def main():
     lines = in_text.splitlines(keepends=True)
     lines = strip_dead_epilogue(lines)
     lines = epilogue_delay_slot_swap(lines)
+    lines = leaf_la_delay_slot_swap(lines)
     filtered_text = "".join(lines)
 
     proc = subprocess.run(

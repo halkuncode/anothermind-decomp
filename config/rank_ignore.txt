@@ -1,0 +1,8 @@
+# Functions, directories, or patterns to exclude from decompilation ranking (`./mako.sh rank`).
+# Lines starting with # are comments.
+
+# External PSX SDK library code
+psxsdk
+
+# Pseudo-functions / data stubs
+func_80038C64

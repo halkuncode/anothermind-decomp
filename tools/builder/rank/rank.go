@@ -20,13 +20,15 @@ type entry struct {
 	path         string
 }
 
-func Rank(target string, topCount int) error {
+func Rank(target string, topCount int, cliExcludes []string) error {
 	version := builder.Version()
 	asmBase := filepath.Join("asm", version, "nonmatchings")
 
 	if _, err := os.Stat(asmBase); os.IsNotExist(err) {
 		return fmt.Errorf("assembly directory '%s' not found. Please run './mako.sh build' first", asmBase)
 	}
+
+	ignoreRules := loadIgnoreRules(cliExcludes)
 
 	searchPath := asmBase
 	if target != "" {
@@ -48,6 +50,8 @@ func Rank(target string, topCount int) error {
 		}
 	}
 
+	activeIncludeAsm, _ := loadActiveIncludeAsm()
+
 	var entries []entry
 	err := filepath.Walk(searchPath, func(path string, _ os.FileInfo, err error) error {
 		if err != nil {
@@ -59,6 +63,24 @@ func Rank(target string, topCount int) error {
 		if !strings.Contains(path, "nonmatchings") {
 			return nil
 		}
+
+		funcName := strings.TrimSuffix(filepath.Base(path), ".s")
+		rel, _ := filepath.Rel(".", path)
+		if isIgnored(rel, funcName, ignoreRules) {
+			return nil
+		}
+
+		// Skip functions that are no longer referenced by INCLUDE_ASM (already decompiled in C)
+		if len(activeIncludeAsm) > 0 && !activeIncludeAsm[funcName] {
+			return nil
+		}
+
+		// Skip functions that already exist in matchings
+		matchCandidate := filepath.Join("asm", version, strings.Replace(rel, "nonmatchings", "matchings", 1))
+		if _, err := os.Stat(matchCandidate); err == nil {
+			return nil
+		}
+
 		score, instrs, err := rankFunction(path)
 		if err != nil {
 			return err
@@ -66,11 +88,10 @@ func Rank(target string, topCount int) error {
 		if instrs == 0 {
 			return nil
 		}
-		rel, _ := filepath.Rel(".", path)
 		entries = append(entries, entry{
 			score:        score,
 			instructions: instrs,
-			name:         strings.TrimSuffix(filepath.Base(path), ".s"),
+			name:         funcName,
 			path:         rel,
 		})
 		return nil
@@ -210,6 +231,11 @@ func rankFunction(path string) (float32, int, error) {
 		}
 
 		if instructionPattern.MatchString(line) {
+			rest := strings.TrimSpace(instructionPattern.ReplaceAllString(line, ""))
+			if strings.HasPrefix(rest, ".") || strings.Contains(line, "invalid instruction") {
+				continue
+			}
+
 			instructionCount++
 
 			if branchPattern.MatchString(line) {
@@ -232,4 +258,95 @@ func rankFunction(path string) (float32, int, error) {
 
 	score := decompilationDifficultyScore(instructionCount, branchCount, jumpCount, labelCount)
 	return score, instructionCount, nil
+}
+
+func loadIgnoreRules(cliExcludes []string) []string {
+	var rules []string
+	rules = append(rules, cliExcludes...)
+
+	ignoreFiles := []string{
+		filepath.Join("config", "rank_ignore.txt"),
+		".rankignore",
+	}
+
+	for _, ignoreFile := range ignoreFiles {
+		file, err := os.Open(ignoreFile)
+		if err != nil {
+			continue
+		}
+		scanner := bufio.NewScanner(file)
+		for scanner.Scan() {
+			line := strings.TrimSpace(scanner.Text())
+			if line == "" || strings.HasPrefix(line, "#") {
+				continue
+			}
+			rules = append(rules, line)
+		}
+		file.Close()
+	}
+
+	return rules
+}
+
+func isIgnored(path string, funcName string, rules []string) bool {
+	cleanPath := filepath.ToSlash(path)
+	for _, rule := range rules {
+		rule = strings.TrimSpace(rule)
+		if rule == "" {
+			continue
+		}
+		// Exact function name match
+		if funcName == rule {
+			return true
+		}
+		// Match path segments or substring (e.g. "psxsdk", "main/psxsdk")
+		cleanRule := strings.Trim(filepath.ToSlash(rule), "/")
+		if cleanRule != "" {
+			if strings.Contains(cleanPath, "/"+cleanRule+"/") ||
+				strings.HasSuffix(cleanPath, "/"+cleanRule) ||
+				strings.HasPrefix(cleanPath, cleanRule+"/") ||
+				cleanPath == cleanRule {
+				return true
+			}
+			if strings.Contains(cleanPath, cleanRule) {
+				return true
+			}
+		}
+		// Glob pattern match
+		if matched, _ := filepath.Match(rule, funcName); matched {
+			return true
+		}
+		if matched, _ := filepath.Match(rule, cleanPath); matched {
+			return true
+		}
+	}
+	return false
+}
+
+func loadActiveIncludeAsm() (map[string]bool, error) {
+	active := make(map[string]bool)
+	includeAsmRegex := regexp.MustCompile(`INCLUDE_ASM\([^,]+,\s*([^)]+)\)`)
+
+	err := filepath.Walk("src", func(path string, info os.FileInfo, err error) error {
+		if err != nil || !strings.HasSuffix(path, ".c") {
+			return err
+		}
+		file, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		defer file.Close()
+
+		scanner := bufio.NewScanner(file)
+		for scanner.Scan() {
+			line := strings.TrimSpace(scanner.Text())
+			matches := includeAsmRegex.FindStringSubmatch(line)
+			if len(matches) > 1 {
+				funcName := strings.TrimSpace(matches[1])
+				active[funcName] = true
+			}
+		}
+		return nil
+	})
+	return active, err
 }

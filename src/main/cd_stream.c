@@ -1,5 +1,11 @@
 #include "common.h"
 
+
+
+extern s32 g_CdTransferReady;
+extern char s_cdFileName [];
+
+
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", LoadChapterEndGraphic);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", GetCdFileSectorInfo);
@@ -18,13 +24,24 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", LoadFileFromGroupByIndex);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", WaitForCdIdle);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", GetFilename);
+
+
+char* GetFilename(void)
+{
+    return s_cdFileName ;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", GetFileCountInGroup);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", IsDebugDisabled);
+s32 IsDebugDisabled(void)
+{
+    return -1;
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", func_80019CF4);
+s32 func_80019CF4(void)
+{
+    return 0;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", SeekToCdFileEntry);
 
@@ -122,9 +139,16 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", SetCdBusyStatus);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", ResetCdTransferReadyFlag);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", ClearCdTransferReadyFlag);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", IsCdTransferReady);
+void ClearCdTransferReadyFlag(void)
+{
+    g_CdTransferReady = 0;
+}
+
+s32 IsCdTransferReady(void)
+{
+    return g_CdTransferReady;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", func_8001BCE8);
 

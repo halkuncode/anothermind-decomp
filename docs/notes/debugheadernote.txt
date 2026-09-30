@@ -1,0 +1,16 @@
+SPCNO 0007/0075
+Screen Primitive Number -- used/Max
+
+MC.0000/0000
+Memory Card slot save count - loadMemoryCardSaveHeaders()
+
+SSS == always zero
+
+
+srl.flag
+srl.show
+srl.file
+
+dbgScreenPrintInt((int)scriptFlag);
+dbgScreenPrintInt((int)scriptShowFlag);
+dbgScreenPrintInt((int)scriptFileId);

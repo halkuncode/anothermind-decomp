@@ -59,7 +59,11 @@ requirements:
 	.venv/bin/pip3 install -r requirements.txt
 
 .PHONY: disk
-disk: disk/jp
+disk: disk/jp assets
+
+.PHONY: assets
+assets:
+	python3 tools/extract_assets.py
 
 disk/%.iso:
 	bchunk "disk/$*.bin" "disk/$*.cue" "$@"

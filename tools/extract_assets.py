@@ -1,0 +1,276 @@
+#!/usr/bin/env python3
+"""
+Another Mind (PSX) - Asset Extractor & Decompressor
+Extracts and decompresses game assets from disk/jp/PROGDATA/ into assets/jp/progdata/
+organized by CDPOS.DAT groups.
+"""
+
+import argparse
+import os
+import struct
+import sys
+import time
+from concurrent.futures import ProcessPoolExecutor
+
+# CDPOS boundary offsets from executable symbol D_8004B440
+GROUP_BOUNDS = [2, 0x44, 0x81, 0xA9, 0xDE, 0x1CD, 0x324, 0x7E7, 0xB12, 0xC31, 0xC32]
+
+GROUP_NAMES = [
+    "video",        # Group 00: FMV video streams (.STR)
+    "system",       # Group 01: Core UI, fonts, chapter cards, vibration
+    "dictionary",   # Group 02: Kanji conversion dictionaries (.DCT, etc.)
+    "dialogue",     # Group 03: Dialogue window chrome, text glyphs
+    "menus",        # Group 04: Subsystem menus, scenario data (.BIZ)
+    "scripts",      # Group 05: Scenario scripts / VM bytecode (.ZZZ -> .ZZS)
+    "backgrounds",  # Group 06: Background graphics (.TIZ -> .TIM)
+    "animations",   # Group 07: Character portrait animations (.ANZ -> .ANM)
+    "audio",        # Group 08: Sound effects, sample banks, music (.DAT, .SNG)
+    "dummy",        # Group 09: Disc dummy/padding
+]
+
+EXTENSION_MAP = {
+    ".TIZ": ".TIM",
+    ".ANZ": ".ANM",
+    ".ZZZ": ".ZZS",
+    ".BIZ": ".BIN",
+}
+
+
+def decompress_lzss(data: bytes) -> bytes:
+    """
+    Decompresses Ampack/LZSS data matching the in-game DecompressLZSS function.
+    Header format (6 bytes):
+      - Bytes 0..1: Magic 0xC3, 0xFF (0xFFC3 little-endian)
+      - Bytes 2..5: Total compressed file size (uint32 LE)
+      - Bytes 6.. : Raw LZSS compressed byte stream
+    """
+    if len(data) < 6 or data[0] != 0xC3 or data[1] != 0xFF:
+        return data
+
+    total_sz = struct.unpack_from("<I", data, 2)[0]
+    payload = data[6:total_sz]
+
+    buf = bytearray(4096)
+    r = 4078  # 0xFEE initial ring buffer write position
+    out = bytearray()
+
+    p_len = len(payload)
+    src_idx = 0
+    flags = 0
+
+    while src_idx < p_len:
+        flags >>= 1
+        if (flags & 0x100) == 0:
+            if src_idx >= p_len:
+                break
+            flags = payload[src_idx] | 0xFF00
+            src_idx += 1
+
+        if flags & 1:
+            if src_idx >= p_len:
+                break
+            c = payload[src_idx]
+            src_idx += 1
+            out.append(c)
+            buf[r] = c
+            r = (r + 1) & 0xFFF
+        else:
+            if src_idx + 1 >= p_len:
+                break
+            b0 = payload[src_idx]
+            b1 = payload[src_idx + 1]
+            src_idx += 2
+
+            offset = b0 | ((b1 & 0xF0) << 4)
+            length = (b1 & 0x0F) + 2
+
+            for k in range(length + 1):
+                c = buf[(offset + k) & 0xFFF]
+                out.append(c)
+                buf[r] = c
+                r = (r + 1) & 0xFFF
+
+    return bytes(out)
+
+
+def get_decompressed_filename(filename: str) -> str:
+    name, ext = os.path.splitext(filename)
+    new_ext = EXTENSION_MAP.get(ext.upper(), ext)
+    return name + new_ext
+
+
+def parse_iso_directory(iso_path: str) -> dict:
+    """Parses ISO9660 directory records in PROGDATA to map LBA -> filename."""
+    if not os.path.exists(iso_path):
+        return {}
+
+    with open(iso_path, "rb") as f:
+        # Read Primary Volume Descriptor at sector 16
+        f.seek(16 * 2048)
+        pvd = f.read(2048)
+        if pvd[1:6] != b"CD001":
+            return {}
+
+        root_record = pvd[156 : 156 + 34]
+        root_lba = struct.unpack_from("<I", root_record, 2)[0]
+        root_len = struct.unpack_from("<I", root_record, 10)[0]
+
+        f.seek(root_lba * 2048)
+        root_dir = f.read(root_len)
+        idx = 0
+        progdata_lba = 0
+        progdata_len = 0
+        while idx < len(root_dir):
+            rec_len = root_dir[idx]
+            if rec_len == 0:
+                idx = ((idx // 2048) + 1) * 2048
+                continue
+            lba = struct.unpack_from("<I", root_dir, idx + 2)[0]
+            sz = struct.unpack_from("<I", root_dir, idx + 10)[0]
+            nlen = root_dir[idx + 32]
+            name = root_dir[idx + 33 : idx + 33 + nlen].decode("ascii", errors="replace")
+            if "PROGDATA" in name:
+                progdata_lba = lba
+                progdata_len = sz
+                break
+            idx += rec_len
+
+        if not progdata_lba:
+            return {}
+
+        f.seek(progdata_lba * 2048)
+        pdir = f.read(progdata_len)
+        pidx = 0
+        iso_by_lba = {}
+        while pidx < len(pdir):
+            rlen = pdir[pidx]
+            if rlen == 0:
+                pidx = ((pidx // 2048) + 1) * 2048
+                continue
+            flba = struct.unpack_from("<I", pdir, pidx + 2)[0]
+            nlen = pdir[pidx + 32]
+            fname = pdir[pidx + 33 : pidx + 33 + nlen].decode("ascii", errors="replace").split(";")[0]
+            if fname and fname not in (".", "\x01"):
+                iso_by_lba[flba] = fname
+            pidx += rlen
+
+        return iso_by_lba
+
+
+def parse_cdlookup_fallback() -> dict:
+    """Fallback filename lookup from docs/cdlookup.md if ISO is missing."""
+    lookup_file = os.path.join(os.path.dirname(__file__), "..", "docs", "cdlookup.md")
+    if not os.path.exists(lookup_file):
+        return {}
+
+    mapping = {}
+    with open(lookup_file, "r") as f:
+        for line in f:
+            if line.startswith("|") and not line.startswith("| File ID") and not line.startswith("|---"):
+                parts = [p.strip().strip("`") for p in line.split("|")[1:-1]]
+                if len(parts) >= 4:
+                    try:
+                        fid = int(parts[0])
+                        disc_name = parts[1]
+                        sec = int(parts[3])
+                        mapping[sec - 1] = disc_name
+                    except ValueError:
+                        continue
+    return mapping
+
+
+def process_file_task(task_args):
+    src_path, dst_path, is_compressed = task_args
+    try:
+        with open(src_path, "rb") as f:
+            raw = f.read()
+
+        if is_compressed:
+            out_bytes = decompress_lzss(raw)
+        else:
+            out_bytes = raw
+
+        os.makedirs(os.path.dirname(dst_path), exist_ok=True)
+        with open(dst_path, "wb") as f:
+            f.write(out_bytes)
+        return True, None
+    except Exception as e:
+        return False, f"Error processing {src_path}: {e}"
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Another Mind asset extractor & decompressor")
+    parser.add_argument("--disk-dir", default="disk/jp", help="Path to extracted disc directory")
+    parser.add_argument("--iso", default="disk/Another Mind (Japan).iso", help="Path to ISO image")
+    parser.add_argument("--out-dir", default="assets/jp/progdata", help="Output directory for assets")
+    args = parser.parse_args()
+
+    progdata_dir = os.path.join(args.disk_dir, "PROGDATA")
+    cdpos_path = os.path.join(args.disk_dir, "CDPOS.DAT")
+
+    if not os.path.exists(progdata_dir) or not os.path.exists(cdpos_path):
+        print(f"Error: {progdata_dir} or {cdpos_path} not found. Run 'make disk' first.")
+        sys.exit(1)
+
+    print("Resolving disc file layout...")
+    iso_by_lba = parse_iso_directory(args.iso)
+    if not iso_by_lba:
+        print("Note: ISO not found or unreadable; using docs/cdlookup.md fallback table.")
+        iso_by_lba = parse_cdlookup_fallback()
+
+    with open(cdpos_path, "rb") as f:
+        cdpos_data = f.read()
+
+    tasks = []
+    group_counts = [0] * len(GROUP_NAMES)
+
+    for g, folder in enumerate(GROUP_NAMES):
+        start = GROUP_BOUNDS[g]
+        end = GROUP_BOUNDS[g + 1]
+        out_subfolder = os.path.join(args.out_dir, folder)
+
+        for entry_idx in range(start, end):
+            sec, sz = struct.unpack_from("<II", cdpos_data, entry_idx * 8)
+            iso_sec = sec - 1
+            fname = iso_by_lba.get(iso_sec)
+
+            if not fname:
+                print(f"Warning: Could not find filename for sector {sec} in group {folder}")
+                continue
+
+            src_file = os.path.join(progdata_dir, fname)
+            if not os.path.exists(src_file):
+                print(f"Warning: File {src_file} does not exist!")
+                continue
+
+            dst_name = get_decompressed_filename(fname)
+            dst_file = os.path.join(out_subfolder, dst_name)
+
+            _, ext = os.path.splitext(fname)
+            is_comp = ext.upper() in EXTENSION_MAP
+
+            tasks.append((src_file, dst_file, is_comp))
+            group_counts[g] += 1
+
+    print(f"Extracting {len(tasks)} files into '{args.out_dir}' across {os.cpu_count() or 4} cores...")
+    t0 = time.time()
+
+    with ProcessPoolExecutor() as executor:
+        results = list(executor.map(process_file_task, tasks))
+
+    t1 = time.time()
+
+    errors = [err for ok, err in results if not ok]
+    if errors:
+        for err in errors[:10]:
+            print(err)
+        print(f"Encountered {len(errors)} errors during extraction.")
+        sys.exit(1)
+
+    print(f"\nSuccessfully extracted and decompressed {len(tasks)} assets in {t1 - t0:.2f}s:")
+    for g, folder in enumerate(GROUP_NAMES):
+        print(f"  - {args.out_dir}/{folder}/: {group_counts[g]} files")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,86 @@
+Debug menu: 
+
+Set 0x01 to RAM address 0x8012C994 to enable the debug mode.
+Press Start to display a CPU meter and the debug menu.
+ 
+Press L1, R1 to change the background.
+Press L2, R2 to change debug screens.
+Press Start + Select to go to the title screen. and turns off debug
+
+
+MAIN MENU
+
+OK 	Exit menu
+BASICS* SYSTEM 	Displays some information of scenario or memory data.
+STEP 	Execute script step by step.
+LABEL 	Displays the script's current label.
+WATCH 	Displays "WATCH". (Turns On Watch)
+WATCH16: HEX* BINARY 	Displays 16 bit values as hex or binary
+WATCHFLAG 	Displays flag values.
+CODE: 0000 	show script commands executed: (Number of lines ) 
+TAIWA(対話; Talk) 	Displays a talk system parameter.
+MSPEED0 	Set message speed to fastest.
+FLAG* GLOBAL 	Display memory viewer. 
+
+
+SCREEN SCRIPT
+
+BG FILE
+
+CHR FILE 0 
+
+x 0-319
+y  0-207
+Left/right arrow for digit select for chaacrter file 
+up/down arrow to increment/decrement
+X+arrows = move
+X = select character file
+^- animation speed up
+o= animation speed down
+810 character files
+char file resolution 64x64 px
+Size = 16pixel boxs (4x4 size is 64x64actual pixels ) 
+/ NORMAL  <--- Normal animation
+/ NEXT   <--- some animations g into a new scene character (ex 002)
+
+CHR 0 MESSAGE
+arrow keys move, messages are related the upper left corner
+message does not include teh page prompt 
+Red boz is AROUND the message area 
+size is in 
+
+x 0-319
+y  0-207
+can not change message window size,
+
+CHR FILE 1
+
+CHR 2 MESSAGE
+If char 1 is disabled, unable to move window
+
+
+(BLANK)
+
+
+
+
+Taiwa
+
+LIMIT -> Number of choices in the selected section 
+MMAX -> Max character width of the message 
+JN -> Non cogigaed verb last seleted 
+JV -> Japanese veb congigation last selected 
+SLOT
+TN[2]
+KN[2]
+
+
+(Main menu)
+SYSTEM
+PTR (Script pointer absolute address)
+S ADDR(Script loaded at this address)
+S OFFS (Script pointer offset in script)
+
+*VPRE.PTR = Preloaded Command about to run
+
+

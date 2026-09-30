@@ -65,6 +65,10 @@ disk: disk/jp assets
 assets:
 	python3 tools/extract_assets.py
 
+.PHONY: cd
+cd: build
+	python3 tools/build_cd.py --output disk/another_build.iso
+
 disk/%.iso:
 	bchunk "disk/$*.bin" "disk/$*.cue" "$@"
 	mv "disk/$*.iso01.iso" "$@"

@@ -436,10 +436,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_A4_PitchBendSlide);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_DA_PortamentoOn);
 
-void AkaoOp_DB_PortamentoOff(AkaoChannel* track)
-{
-    track->portamentoSteps = 0;
-}
+void AkaoOp_DB_PortamentoOff(AkaoChannel* track) { track->portamentoSteps = 0; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_D8_FineTuningAbsolute);
 
@@ -481,10 +478,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_C2_ReverbOn);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_C3_ReverbOff);
 
-void AkaoOp_CC_LegatoOn(AkaoChannel* track)
-{
-    track->sfxMask = AKAO_SFX_LEGATO;
-}
+void AkaoOp_CC_LegatoOn(AkaoChannel* track) { track->sfxMask = AKAO_SFX_LEGATO; }
 
 void AkaoOp_CD_LegatoOff(void) {}
 

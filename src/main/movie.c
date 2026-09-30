@@ -1,5 +1,13 @@
 #include "common.h"
 
+typedef struct ControllerState {
+    /* 0x00 */ u8 pad28[0x28];
+    /* 0x28 */ u32 vibrationBuffer;
+    /* 0x2C */ u8 pad2C[8];
+    /* 0x34 */ u8 vibrationBufferLength;
+    /* 0x35 */ u8 pad35[0xF0 - 0x35];
+} ControllerState;
+
 INCLUDE_ASM("asm/jp/nonmatchings/main/movie", func_80046748);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/movie", GsResetInterruptHandlers);
@@ -48,7 +56,10 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/movie", WaitForControllerReady);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/movie", WaitForControllerAckBit);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/movie", WriteVibrationData);
+void WriteVibrationData(ControllerState* controller, s32 vibebuff, s8 vibebuffLen) {
+    controller->vibrationBuffer = vibebuff;
+    controller->vibrationBufferLength = vibebuffLen;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/movie", func_800479E4);
 

@@ -1,10 +1,9 @@
 #include "common.h"
 
-
-
+extern s32 g_LastDisplayBufferIndex;
+extern s32 g_MovieDecoderActive;
 extern s32 g_CdTransferReady;
-extern char s_cdFileName [];
-
+extern char s_cdFileName[];
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", LoadChapterEndGraphic);
 
@@ -24,24 +23,13 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", LoadFileFromGroupByIndex);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", WaitForCdIdle);
 
-
-
-char* GetFilename(void)
-{
-    return s_cdFileName ;
-}
+char* GetFilename(void) { return s_cdFileName; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", GetFileCountInGroup);
 
-s32 IsDebugDisabled(void)
-{
-    return -1;
-}
+s32 IsDebugDisabled(void) { return -1; }
 
-s32 func_80019CF4(void)
-{
-    return 0;
-}
+s32 func_80019CF4(void) { return 0; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", SeekToCdFileEntry);
 
@@ -111,7 +99,7 @@ void func_8001B85C(void) {}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", StopScriptedMovieDecoder);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", IsMovieDecoderActive);
+s32 IsMovieDecoderActive(void) { return g_MovieDecoderActive; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", GetCurrentMovieFrame);
 
@@ -123,9 +111,9 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", LoopMovieById);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", ShutdownMovieDecoder);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", ResetMovieDecoderState);
+void ResetMovieDecoderState(void) { g_MovieDecoderActive = 0; }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", func_8001B9C4);
+s32 GetLastDisplayBufferIndex(void) { return g_LastDisplayBufferIndex; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", func_8001B9D0);
 
@@ -137,18 +125,11 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", func_8001BB00);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", SetCdBusyStatus);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", ResetCdTransferReadyFlag);
+void ResetCdTransferReadyFlag(void) { g_CdTransferReady = 0; }
 
+void ClearCdTransferReadyFlag(void) { g_CdTransferReady = 0; }
 
-void ClearCdTransferReadyFlag(void)
-{
-    g_CdTransferReady = 0;
-}
-
-s32 IsCdTransferReady(void)
-{
-    return g_CdTransferReady;
-}
+s32 IsCdTransferReady(void) { return g_CdTransferReady; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", func_8001BCE8);
 

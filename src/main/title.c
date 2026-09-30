@@ -20,10 +20,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/title", AnimateTitleScreenIdleLoop);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/title", DrawTitleScreenDebugOverlay);
 
-s32 LoadDebugTitleScreen(void)
-{
-    return 0;
-}
+s32 LoadDebugTitleScreen(void) { return 0; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/title", DisplayEndTitle);
 

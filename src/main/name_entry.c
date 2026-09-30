@@ -1,5 +1,7 @@
 #include "common.h"
 
+extern s32 g_CurrVibrationMode;
+
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", RunNameEntryScreen);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", func_80013CE4);
@@ -74,7 +76,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", SetVibrationMode_80015E70);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", SetVibrationMode_80015EBC);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", IsVibrationEnabled);
+s32 IsVibrationEnabled(void) { return g_CurrVibrationMode; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", StopVibrationEffect);
 

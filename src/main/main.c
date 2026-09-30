@@ -19,7 +19,6 @@ extern void DisplayCdFileDebugStatus(void);
 extern void DisplayMovieDebugPanel(void);
 extern void DisplayPadDebugPanel(void);
 
-
 extern s32 g_DebugLockState; //!< Global debug lockout state flag.
 
 /**
@@ -67,14 +66,9 @@ void DisplaySystemDebugPanel(void) {
     DisplayPadDebugPanel();
 }
 
-/**
- * @brief Retrieves the current debug lockout state.
- *
- * @return Current value of @ref g_DebugLockState (non-zero if debug features are locked out, 0 otherwise).
- */
 s32 GetDebugLockState(void) { return g_DebugLockState; }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/main", LockoutDebug);
+void LockoutDebug(s32 state) { g_DebugLockState = state; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/main", GetDebugScriptBuildDateString);
 

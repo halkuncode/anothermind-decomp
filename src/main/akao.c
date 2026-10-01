@@ -692,11 +692,22 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_AA_SetPan);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_AB_SetPanSlide);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_A5_SetOctave);
+void AkaoOp_A5_SetOctave(AkaoChannel* track) {
+    u8* seq = track->akaoSequencePointer;
+    u8 val = *seq++;
+    track->akaoSequencePointer = seq;
+    track->octave = val;
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_A6_IncOctave);
+void AkaoOp_A6_IncOctave(AkaoChannel* track)
+{
+    track->octave = (track->octave + 1) & 0xF;
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_A7_DecOctave);
+void AkaoOp_A7_DecOctave(AkaoChannel* track)
+{
+    track->octave = (track->octave - 1) & 0xF;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_A1_LoadInstrument);
 
@@ -706,13 +717,37 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_FC_CustomInstrumentMap);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_B3_ResetAdsr);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_C0_TransposeAbsolute);
+void AkaoOp_C0_TransposeAbsolute(AkaoChannel* track)
+{
+    u8* seq = track->akaoSequencePointer;
+    s8 val = *seq++;
+    track->akaoSequencePointer = seq;
+    track->transpose = val;
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_C1_TransposeRelative);
+void AkaoOp_C1_TransposeRelative(AkaoChannel* track) {
+    u8* seq = track->akaoSequencePointer;
+    s8 val = *seq++;
+    track->akaoSequencePointer = seq;
+    track->transpose =  (track->transpose +  val);
+}
+
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_A4_PitchBendSlide);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_DA_PortamentoOn);
+void AkaoOp_DA_PortamentoOn(AkaoChannel* track) {
+    u8* seq = track->akaoSequencePointer;
+    u8 val = *seq;
+    track->akaoSequencePointer = seq + 1;
+
+    track->portamentoSteps = val;
+    if (val == 0) {
+        track->portamentoSteps = 0x100;
+    }
+    track->transposeStored = 0;
+    track->keyStored = 0;
+    track->sfxMask = 1;
+}
 
 void AkaoOp_DB_PortamentoOff(AkaoChannel* track) { track->portamentoSteps = 0; }
 

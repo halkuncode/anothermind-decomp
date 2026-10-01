@@ -1,17 +1,46 @@
 //! PSYQ=4.0
 #include "common.h"
 #include "akao.h"
+#include "libspu.h"
+
+
 
 //keep stucts inside the C file.
+typedef struct {
+    /* 0x00 */ u32 voice_id;
+    /* 0x04 */ u32 mask;
+    /* 0x08 */ u32 addr;
+    /* 0x0C */ u32 loop_addr;
+    /* 0x10 */ s32 a_mode;
+    /* 0x14 */ s32 s_mode;
+    /* 0x18 */ s32 r_mode;
+    /* 0x1C */ u16 pitch;
+    /* 0x1E */ u16 ar;
+    /* 0x20 */ u16 dr;
+    /* 0x22 */ u16 sl;
+    /* 0x24 */ s16 sr;
+    /* 0x26 */ u16 rr;
+    /* 0x28 */ s16 vol_l;
+    /* 0x2A */ s16 vol_r;
+} AkaoVoiceAttr; /* size = 0x2C */
+
+
+
 typedef struct AkaoChannel {
     /* 0x00 */ u8* akaoSequencePointer;
     /* 0x04 */ u8 pad04[0x34 - 0x04];
     /* 0x34 */ u32 updateFlags;
-    /* 0x38 */ u8 pad38[0x98 - 0x38];
+    /* 0x38 */ u8 pad38[0x8A - 0x38];
+    /* 0x8A */ u16 volBalanceSlideSteps; // Assumed 16-bit based on offset
+    /* 0x8C */ u8 pad8C[0x98 - 0x8C];
     /* 0x98 */ u16 portamentoSteps;
-    /* 0x9A */ u16 sfxMask;
-    /* 0x9C */ u8 pad9C[0x124 - 0x9C];
-} AkaoChannel;
+    /* 0x9A */ u16 sfxMask;              //[cite: 1]
+    /* 0x9C */ u8 pad9C[0xDE - 0x9C];
+    /* 0xDE */ s16 volBalance;           // Assumed 16-bit based on offset
+    /* 0xE0 */ u8 padE0[0xF4 - 0xE0];
+    /* 0xF4 */ AkaoVoiceAttr voiceAttr;  // voiceAttr.mask is at 0xF8
+    /* 0x120 */ u8 pad120[0x124 - 0x120];
+} AkaoChannel; /* size = 0x124 */
 
 
 
@@ -433,7 +462,16 @@ void AkaoOp_F4_OverlayVoiceOn(AkaoChannel* track)
 
 void AkaoOp_F5_OverlayVoiceOff(void) {}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_F6_OverlayVolBalance);
+void AkaoOp_F6_OverlayVolBalance(AkaoChannel* track) {
+    u8 val = *track->akaoSequencePointer;
+    track->akaoSequencePointer++;
+
+    track->volBalanceSlideSteps = 0;
+    track->volBalance = val << 8;
+    if (track->updateFlags & AKAO_UPDATE_OVERLAY) {
+        track->voiceAttr.mask |= AKAO_UPDATE_SPU_VOICE;
+    }
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_F7_OverlayVolBalanceSlide);
 
@@ -599,7 +637,11 @@ void AkaoOp_E0_VoiceBusRoutingOn(AkaoChannel* track)
     track->updateFlags |= AKAO_UPDATE_VOICE_BUS;
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_Null);
+
+void AkaoOp_Null(void)
+{
+    AkaoOp_A0_FinishChannel();
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037578);
 

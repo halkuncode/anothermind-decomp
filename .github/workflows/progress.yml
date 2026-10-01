@@ -1,0 +1,50 @@
+name: Build and Report
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install system dependencies
+        run: |
+          sudo add-apt-repository ppa:longsleep/golang-backports
+          sudo apt update
+          sudo apt install -y golang-go ninja-build binutils-mipsel-linux-gnu gcc-mipsel-linux-gnu
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python requirements
+        run: make requirements
+
+      - name: Set up compiler binary
+        run: |
+          mkdir -p bin
+          curl -L -o bin/cc1-psx-272.gz https://github.com/halkuncode/anothermind-decomp/releases/download/init/cc1-psx-272.gz
+          gzip -d bin/cc1-psx-272.gz
+          chmod +x bin/cc1-psx-272
+
+      - name: Generate progress report
+        run: |
+          mkdir -p build
+          ./mako.sh report jp build/report.json
+
+      - name: Upload progress report
+        uses: actions/upload-artifact@v4
+        with:
+          name: jp_report
+          path: build/report.json

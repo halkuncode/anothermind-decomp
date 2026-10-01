@@ -6,6 +6,23 @@
 
 
 //keep stucts inside the C file.
+// 16.16 fixed point volume
+typedef union {
+    s32 val;
+    struct {
+        s16 lo;
+        s16 hi;
+    } i;
+} AkaoCdVol; /* size = 0x4 */
+
+typedef struct {
+    /* 0x0 */ s32 opcode;
+    /* 0x4 */ s8 start;
+    /* 0x5 */ s8 pad5[3];
+    /* 0x8 */ s32 steps;
+    /* 0xC */ s8 target;
+} AkaoTempoPitchSlide;
+
 typedef struct {
     /* 0x00 */ u32 voice_id;
     /* 0x04 */ u32 mask;
@@ -25,6 +42,20 @@ typedef struct {
     /* 0x2C */ s16 vol_r;
     /* 0x2E */ u16 pad2E;
 } AkaoVoiceAttr; /* size = 0x30 */
+
+typedef struct {
+    /* 0x00 */ u32 addr;
+    /* 0x04 */ u32 loopAddr;
+    /* 0x08 */ s32 pitch[12];
+    /* 0x38 */ u8 ar;
+    /* 0x39 */ u8 dr;
+    /* 0x3A */ u8 sl;
+    /* 0x3B */ s8 sr;
+    /* 0x3C */ u8 rr;
+    /* 0x3D */ u8 aMode;
+    /* 0x3E */ u8 sMode;
+    /* 0x3F */ u8 rMode;
+} AkaoInstrument; /* size = 0x40 */
 
 typedef struct AkaoChannel {
     /* 0x00 */ u8* akaoSequencePointer;
@@ -121,6 +152,108 @@ typedef struct AkaoChannel {
     /* 0xF2 */ s16 panLfoVol;
     /* 0xF4 */ AkaoVoiceAttr voiceAttr;
 } AkaoChannel; /* size = 0x124 */
+
+// Each sound effect slot occupies a stereo voice pair (2 audio channels, 0x248 bytes).
+typedef struct {
+    AkaoChannel voices[2];
+} AkaoSoundSlot; /* size = 0x248 */
+
+typedef struct {
+    /* 0x00 */ u32 stereoMono;
+    /* 0x04 */ u32 activeMask;
+    /* 0x08 */ u32 onMask;
+    /* 0x0C */ u32 keyedMask;
+    /* 0x10 */ u32 offMask;
+    /* 0x14 */ u32 activeMaskStored;
+    /* 0x18 */ u32 tempo;
+    /* 0x1C */ s32 tempoSlideStep;
+    /* 0x20 */ u32 tempoUpdate;
+    /* 0x24 */ u32 overMask;
+    /* 0x28 */ u32 altMask;
+    /* 0x2C */ u32 noiseMask;
+    /* 0x30 */ u32 reverbMask;
+    /* 0x34 */ u32 pitchLfoMask;
+    /* 0x38 */ u32 updateFlags;
+    /* 0x3C */ s32 reverbMode;
+    /* 0x40 */ s32 reverbDepth;
+    /* 0x44 */ s32 reverbDepthSlideStep;
+    /* 0x48 */ u16 tempoSlideSteps;
+    /* 0x4A */ u16 musicId;
+    /* 0x4C */ u16 conditionStored;
+    /* 0x4E */ u16 condition;
+    /* 0x50 */ u16 reverbDepthSlideSteps;
+    /* 0x52 */ u16 noiseClock;
+    /* 0x54 */ u16 muteMusic;
+    /* 0x56 */ u16 timerUpper;
+    /* 0x58 */ u16 timerUpperCur;
+    /* 0x5A */ u16 timerLower;
+    /* 0x5C */ u16 timerLowerCur;
+    /* 0x5E */ u16 timerTopCur;
+} AkaoChannelConfig;
+
+typedef struct {
+    /* 0x00 */ u16 opcode;
+    /* 0x02 */ u16 pad;
+    /* 0x04 */ s32 param0;
+    /* 0x08 */ s32 param1;
+    /* 0x0C */ s32 param2;
+    /* 0x10 */ s32 param3;
+    /* 0x14 */ s32 param4;
+    /* 0x18 */ s32 param5;
+    /* 0x1C */ s32 param6;
+    /* 0x20 */ s32 param7;
+} AkaoQueuedCommand; /* size = 0x24 */
+
+typedef struct {
+    /* 0x0 */ u32 opcode;
+    /* 0x4 */ s32 steps;
+    /* 0x8 */ s32 targetVol;
+} AkaoVolSlideFromCurr;
+
+typedef struct {
+    /* 0x0 */ u32 opcode;
+    /* 0x4 */ s32 steps;
+    /* 0x8 */ s32 startVol;
+    /* 0xC */ s32 targetVol;
+} AkaoVolSlideBetweenTargets;
+
+typedef struct {
+    /* 0x0 */ u32 opcode;
+    /* 0x4 */ s32 steps;
+    /* 0x8 */ u16 targetVol;
+} AkaoCdVolSlideFromCurr;
+
+typedef struct {
+    /* 0x0 */ u32 opcode;
+    /* 0x4 */ s32 steps;
+    /* 0x8 */ u16 startVol;
+    /* 0xA */ u16 padA;
+    /* 0xC */ u16 targetVol;
+    /* 0xE */ u16 padE;
+} AkaoCdVolSlideBetweenTargets;
+
+typedef struct {
+    /* 0x0 */ s32 opcode;
+    /* 0x4 */ s32 steps;
+    /* 0x8 */ s8 target;
+} AkaoSlideFromCurr;
+
+typedef struct {
+    /* 0x0 */ u32 opcode;
+    /* 0x4 */ u16 pan;
+} AkaoSetReverbPan;
+
+typedef struct {
+    /* 0x0 */ u32 opcode;
+    /* 0x4 */ u8 mul;
+} AkaoSetReverbMul;
+
+typedef struct {
+    /* 0x0 */ s32 pitchSlide;
+    /* 0x4 */ s32 volSlide;
+    /* 0x8 */ s16 currentKey;
+    /* 0xA */ s16 padA;
+} AkaoVoiceWork; /* size = 0xC */
 
 
 

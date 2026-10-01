@@ -91,13 +91,13 @@ Discarded input sections
  .reginfo       0x00000000       0x18 build/jp/src/main/akao.c.o
  .MIPS.abiflags
                 0x00000000       0x18 build/jp/src/main/akao.c.o
- .pdr           0x00000000      0x360 build/jp/src/main/akao.c.o
- .debug_line    0x00000000      0x59f build/jp/src/main/akao.c.o
- .debug_info    0x00000000      0x1d8 build/jp/src/main/akao.c.o
+ .pdr           0x00000000      0x380 build/jp/src/main/akao.c.o
+ .debug_line    0x00000000      0x5a1 build/jp/src/main/akao.c.o
+ .debug_info    0x00000000      0x1e8 build/jp/src/main/akao.c.o
  .debug_abbrev  0x00000000       0x28 build/jp/src/main/akao.c.o
  .debug_aranges
                 0x00000000       0x20 build/jp/src/main/akao.c.o
- .debug_str     0x00000000      0x2cc build/jp/src/main/akao.c.o
+ .debug_str     0x00000000      0x2e4 build/jp/src/main/akao.c.o
  .gnu.attributes
                 0x00000000       0x10 build/jp/src/main/akao.c.o
  .reginfo       0x00000000       0x18 build/jp/src/main/psxsdk.c.o
@@ -115,13 +115,13 @@ Discarded input sections
  .reginfo       0x00000000       0x18 build/jp/src/main/movie.c.o
  .MIPS.abiflags
                 0x00000000       0x18 build/jp/src/main/movie.c.o
- .pdr           0x00000000       0x60 build/jp/src/main/movie.c.o
- .debug_line    0x00000000      0x158 build/jp/src/main/movie.c.o
- .debug_info    0x00000000       0x55 build/jp/src/main/movie.c.o
+ .pdr           0x00000000      0x120 build/jp/src/main/movie.c.o
+ .debug_line    0x00000000      0x173 build/jp/src/main/movie.c.o
+ .debug_info    0x00000000       0xb8 build/jp/src/main/movie.c.o
  .debug_abbrev  0x00000000       0x28 build/jp/src/main/movie.c.o
  .debug_aranges
                 0x00000000       0x20 build/jp/src/main/movie.c.o
- .debug_str     0x00000000       0x93 build/jp/src/main/movie.c.o
+ .debug_str     0x00000000      0x12c build/jp/src/main/movie.c.o
  .gnu.attributes
                 0x00000000       0x10 build/jp/src/main/movie.c.o
  .text          0x00000000        0x0 build/jp/asm/jp/data/39FD8.data.s.o
@@ -1502,7 +1502,7 @@ Linker script and memory map
                 0x80033678                func_80033678
                 0x800336b8                func_800336B8
                 0x800336f8                func_800336F8
-                0x80033738                func_80033738
+                0x80033738                AkaoSetChannelCondition
                 0x8003374c                func_8003374C
                 0x8003383c                func_8003383C
                 0x800338e0                func_800338E0
@@ -2050,7 +2050,7 @@ Linker script and memory map
                 0x80046d20                SetupMovieIRQHandlers
                 0x80046d4c                CheckAndHandleMovieInterrupt
                 0x80046db4                HandleMovieFrameInterrupt
-                0x80046f44                func_80046F44
+                0x80046f44                GetAndClearControllerReadyFlag
                 0x80046f58                ResetInterruptHandlersAndTimers
                 0x80047024                func_80047024
                 0x80047068                BeginMovieFrameTransfer
@@ -2073,12 +2073,12 @@ Linker script and memory map
                 0x800483e0                func_800483E0
                 0x80048478                func_80048478
                 0x800484cc                func_800484CC
-                0x8004852c                SetupMovieCommandGeneric
-                0x8004854c                func_8004854C
-                0x80048560                MovieCmd_SetupType3
-                0x80048580                MovieCmd_SetupType2
-                0x800485a0                MovieCmd_SetupType4
-                0x800485c0                MovieCmd_Abort
+                0x8004852c                SetControllerConfigMode
+                0x8004854c                SetControllerQueryStatus
+                0x80048560                SetControllerQueryMap
+                0x80048580                SetControllerQueryActuator
+                0x800485a0                SetControllerQueryParam
+                0x800485c0                SetControllerAbort
                 0x800485d8                func_800485D8
                 0x80048620                func_80048620
                 0x800486f8                func_800486F8
@@ -2407,7 +2407,7 @@ Linker script and memory map
                 0x800619cc                D_800619CC
                 0x800619d4                D_800619D4
                 0x800619d8                D_800619D8
-                0x800619dc                D_800619DC
+                0x800619dc                g_ControllerReadyFlag
                 0x800619ec                D_800619EC
                 0x800619f0                D_800619F0
                 0x800619f4                D_800619F4
@@ -2888,7 +2888,7 @@ Linker script and memory map
                 0x800dcdc0                D_800DCDC0
                 0x800dcdc4                D_800DCDC4
                 0x800dcdc8                D_800DCDC8
-                0x800dcdec                D_800DCDEC
+                0x800dcdec                g_AkaoChannelConfig
                 0x800dcdf0                D_800DCDF0
                 0x800dcdf4                D_800DCDF4
                 0x800dcdf8                D_800DCDF8

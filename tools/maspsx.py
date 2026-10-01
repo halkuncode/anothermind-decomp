@@ -35,7 +35,14 @@ _LA_RE         = re.compile(r"^\s*la\s+(\$[a-z0-9]+),\s*([A-Za-z0-9_]+)")
 
 def _is_code_line(line: str) -> bool:
     s = line.strip()
-    return bool(s) and not s.startswith("#") and not s.startswith("//") and not s.startswith(".loc")
+    if not s or s.startswith("#") or s.startswith("//") or s.startswith("/*"):
+        return False
+    if s.startswith("."):
+        return False
+    if s.endswith(":"):
+        return False
+    return True
+
 
 
 def epilogue_delay_slot_swap(lines: list) -> list:
@@ -89,6 +96,73 @@ def epilogue_delay_slot_swap(lines: list) -> list:
         n = len(result)
         i += 1  # keep scanning; don't re-examine swapped lines
     return result
+
+
+_STORE_SYM_RE = re.compile(r"^\s*(sw|sh|sb)\s+(\$[a-z0-9]+),\s*([A-Za-z0-9_]+)\s*$")
+
+
+def leaf_store_delay_slot_swap(lines: list) -> list:
+    """When a leaf function stores to a symbol via `sw/sh/sb $reg, <sym>` followed by
+    `j $31`, ASPSX splits the store and places the low half into the jump delay slot.
+    We transform:
+        sw   $reg, <sym>
+        j    $31
+    Into:
+        .set noat
+        lui  $1, %hi(<sym>)
+        .set noreorder
+        j    $31
+        sw   $reg, %lo(<sym>)($1)
+        .set reorder
+        .set at
+    """
+    result = list(lines)
+    n = len(result)
+    i = 0
+    while i < n:
+        if not _is_code_line(result[i]):
+            i += 1
+            continue
+        m = _STORE_SYM_RE.match(result[i].strip())
+        if not m:
+            i += 1
+            continue
+        op, reg, sym = m.group(1), m.group(2), m.group(3)
+        j = i + 1
+        while j < n and not _is_code_line(result[j]):
+            j += 1
+        if j < n and _J_RA_RE.match(result[j].strip()):
+            j_line = result[j]
+            indent = re.match(r"^(\s*)", j_line).group(1)
+            lui_line       = f"{indent}.set\tnoat\n{indent}lui\t$1,%hi({sym})\n"
+            noreorder_line = f"{indent}.set\tnoreorder\n"
+            store_line     = f"{indent}{op}\t{reg},%lo({sym})($1)\n"
+            reorder_line   = f"{indent}.set\treorder\n{indent}.set\tat\n"
+
+            k = j + 1
+            while k < n and not _is_code_line(result[k]):
+                if result[k].strip().startswith("nop"):
+                    break
+                k += 1
+            if k < n and result[k].strip().startswith("nop"):
+                result = (result[:i]
+                          + [lui_line]
+                          + result[i + 1:j]
+                          + [noreorder_line, j_line, store_line, reorder_line]
+                          + result[j + 1:k]
+                          + result[k + 1:])
+            else:
+                result = (result[:i]
+                          + [lui_line]
+                          + result[i + 1:j]
+                          + [noreorder_line, j_line, store_line, reorder_line]
+                          + result[j + 1:])
+            n = len(result)
+            i = j + 4
+            continue
+        i += 1
+    return result
+
 
 
 def leaf_la_delay_slot_swap(lines: list) -> list:
@@ -185,7 +259,7 @@ def load_gp_symbols() -> set[str]:
                     val = val.replace(";", "").strip()
                     try:
                         addr = int(val, 16)
-                        if 0x80059A1C <= addr <= 0x80062170:
+                        if 0x80061A1C <= addr <= 0x80062170:
                             gp_symbols.add(name)
                     except ValueError:
                         pass
@@ -213,12 +287,59 @@ def rewrite_gp_rel(text: str, gp_symbols: set[str]) -> str:
     return "".join(new_lines)
 
 
+_LW_SYM_RE  = re.compile(r"^\s*lw\s+(\$[a-z0-9]+),\s*([A-Za-z0-9_]+)\s*$")
+_DEST_V0_RE = re.compile(r"^\s*(?:lw|lh|lhu|lb|lbu|li|move|addiu|addu|subu|and|or|xor|nor)\s+\$2\b")
+
+
+def aspsx_load_symbol_scratch_swap(lines: list) -> list:
+    """ASPSX uses $2 ($v0) as the scratch register for symbol loads `lw $reg, <sym>`
+    when the following instruction immediately overwrites $2 (meaning $2 was dead).
+    GNU as expands `lw $reg, <sym>` using $reg as the temp register instead.
+    We transform:
+        lw   $reg, <sym>
+        <op> $2, ...
+    Into:
+        lui  $2, %hi(<sym>)
+        lw   $reg, %lo(<sym>)($2)
+        <op> $2, ...
+    """
+    result = list(lines)
+    n = len(result)
+    i = 0
+    while i < n:
+        if not _is_code_line(result[i]):
+            i += 1
+            continue
+        m = _LW_SYM_RE.match(result[i].strip())
+        if not m:
+            i += 1
+            continue
+        reg, sym = m.group(1), m.group(2)
+        if reg == "$2" or reg == "$v0":
+            i += 1
+            continue
+        j = i + 1
+        while j < n and not _is_code_line(result[j]):
+            j += 1
+        if j < n and _DEST_V0_RE.match(result[j].strip()):
+            indent = re.match(r"^(\s*)", result[i]).group(1)
+            lui_line = f"{indent}lui\t$2,%hi({sym})\n"
+            lw_line  = f"{indent}lw\t{reg},%lo({sym})($2)\n"
+            result = result[:i] + [lui_line, lw_line] + result[i + 1:]
+            n = len(result)
+            i += 2
+            continue
+        i += 1
+    return result
+
+
 def main():
     in_text = sys.stdin.read()
     lines = in_text.splitlines(keepends=True)
     lines = strip_dead_epilogue(lines)
     lines = epilogue_delay_slot_swap(lines)
     lines = leaf_la_delay_slot_swap(lines)
+    lines = aspsx_load_symbol_scratch_swap(lines)
     filtered_text = "".join(lines)
 
     proc = subprocess.run(
@@ -233,7 +354,8 @@ def main():
     if proc.stdout:
         gp_symbols = load_gp_symbols()
         out_text = rewrite_gp_rel(proc.stdout, gp_symbols)
-        sys.stdout.write(out_text)
+        out_lines = leaf_store_delay_slot_swap(out_text.splitlines(keepends=True))
+        sys.stdout.write("".join(out_lines))
 
     sys.exit(proc.returncode)
 

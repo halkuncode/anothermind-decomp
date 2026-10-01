@@ -3,10 +3,8 @@
 #include "akao.h"
 #include "libspu.h"
 
-
-
-//keep stucts inside the C file.
-// 16.16 fixed point volume
+// keep stucts inside the C file.
+//  16.16 fixed point volume
 typedef union {
     s32 val;
     struct {
@@ -165,36 +163,34 @@ typedef struct {
     /* 0x0C */ u32 keyedMask;
     /* 0x10 */ u32 offMask;
     /* 0x14 */ u32 activeMaskStored;
-    /* 0x18 */ u32 tempo;
-    /* 0x1C */ s32 tempoSlideStep;
-    /* 0x20 */ u32 tempoUpdate;
-    /* 0x24 */ u32 overMask;
-    /* 0x28 */ u32 altMask;
-    /* 0x2C */ u32 noiseMask;
-    /* 0x30 */ u32 reverbMask;
-    /* 0x34 */ u32 pitchLfoMask;
-    /* 0x38 */ u32 updateFlags;
-    /* 0x3C */ s32 reverbMode;
-    /* 0x40 */ s32 reverbDepth;
-    /* 0x44 */ s32 reverbDepthSlideStep;
-    /* 0x48 */ u16 tempoSlideSteps;
-    /* 0x4A */ u16 musicId;
-    /* 0x4C */ u16 conditionStored;
-    /* 0x4E */ u16 condition;
-    /* 0x50 */ u16 reverbDepthSlideSteps;
-    /* 0x52 */ u16 noiseClock;
-    /* 0x54 */ u16 muteMusic;
-    /* 0x56 */ u16 timerUpper;
-    /* 0x58 */ u16 timerUpperCur;
-    /* 0x5A */ u16 timerLower;
-    /* 0x5C */ u16 timerLowerCur;
+    /* 0x18 */ u32 unk18;
+    /* 0x1C */ u32 unk1C;
+    /* 0x20 */ u32 tempo;
+    /* 0x24 */ s32 tempoSlideStep;
+    /* 0x28 */ u32 tempoUpdate;
+    /* 0x2C */ u32 overMask;
+    /* 0x30 */ u32 altMask;
+    /* 0x34 */ u32 updateFlags;
+    /* 0x38 */ u32 noiseMask;
+    /* 0x3C */ u32 reverbMask;
+    /* 0x40 */ u32 pitchLfoMask;
+    /* 0x44 */ s32 reverbDepth;
+    /* 0x48 */ s32 reverbDepthSlideStep;
+    /* 0x4C */ s32 vol;
+    /* 0x50 */ s32 volSlideStep;
+    /* 0x54 */ s16 volSlideSteps;
+    /* 0x56 */ u16 tempoSlideSteps;
+    /* 0x58 */ u16 musicId;
+    /* 0x5A */ u16 condition;
+    /* 0x5C */ u16 reverbDepthSlideSteps;
     /* 0x5E */ u16 timerTopCur;
 } AkaoChannelConfig;
 
 typedef struct {
     /* 0x00 */ u16 opcode;
     /* 0x02 */ u16 pad;
-    /* 0x04 */ s32 param0;
+    /* 0x04 */ u16 param0;
+    /* 0x06 */ u16 param0_hi;
     /* 0x08 */ s32 param1;
     /* 0x0C */ s32 param2;
     /* 0x10 */ s32 param3;
@@ -255,9 +251,8 @@ typedef struct {
     /* 0xA */ s16 padA;
 } AkaoVoiceWork; /* size = 0xC */
 
-
-
 extern s32 g_AudioInitialized;
+extern AkaoChannelConfig* g_AkaoChannelConfig;
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", InitSoundDriver);
 
@@ -385,10 +380,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002EF3C);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002EFB4);
 
-s32 VerifyAkaoMagic(s32* akaoBuffer)
-{
-    return *akaoBuffer - AKAO_MAGIC;
-}
+s32 VerifyAkaoMagic(s32* akaoBuffer) { return *akaoBuffer - AKAO_MAGIC; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002EFF0);
 
@@ -576,7 +568,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_800336B8);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_800336F8);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80033738);
+void AkaoSetChannelCondition(AkaoQueuedCommand* cmd) { g_AkaoChannelConfig->condition = cmd->param0; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8003374C);
 
@@ -658,19 +650,12 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_A9_SetVolSlide);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_FE19_PanSlideFromCurr);
 
-void AkaoOp_FE1A_VoiceEffectOn(AkaoChannel* track)
-{
-    track->updateFlags |= AKAO_UPDATE_VOICE_EFFECT;
-}
+void AkaoOp_FE1A_VoiceEffectOn(AkaoChannel* track) { track->updateFlags |= AKAO_UPDATE_VOICE_EFFECT; }
 
-void AkaoOp_FE1B_VoiceEffectOff(AkaoChannel* track)
-{
-    track->updateFlags &= ~AKAO_UPDATE_VOICE_EFFECT;
-}
+void AkaoOp_FE1B_VoiceEffectOff(AkaoChannel* track) { track->updateFlags &= ~AKAO_UPDATE_VOICE_EFFECT; }
 
-void AkaoOp_F4_OverlayVoiceOn(AkaoChannel* track)
-{
-    track->akaoSequencePointer += 2;  //skip!
+void AkaoOp_F4_OverlayVoiceOn(AkaoChannel* track) {
+    track->akaoSequencePointer += 2; // skip!
 }
 
 void AkaoOp_F5_OverlayVoiceOff(void) {}
@@ -699,15 +684,9 @@ void AkaoOp_A5_SetOctave(AkaoChannel* track) {
     track->octave = val;
 }
 
-void AkaoOp_A6_IncOctave(AkaoChannel* track)
-{
-    track->octave = (track->octave + 1) & 0xF;
-}
+void AkaoOp_A6_IncOctave(AkaoChannel* track) { track->octave = (track->octave + 1) & 0xF; }
 
-void AkaoOp_A7_DecOctave(AkaoChannel* track)
-{
-    track->octave = (track->octave - 1) & 0xF;
-}
+void AkaoOp_A7_DecOctave(AkaoChannel* track) { track->octave = (track->octave - 1) & 0xF; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_A1_LoadInstrument);
 
@@ -717,8 +696,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_FC_CustomInstrumentMap);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_B3_ResetAdsr);
 
-void AkaoOp_C0_TransposeAbsolute(AkaoChannel* track)
-{
+void AkaoOp_C0_TransposeAbsolute(AkaoChannel* track) {
     u8* seq = track->akaoSequencePointer;
     s8 val = *seq++;
     track->akaoSequencePointer = seq;
@@ -729,9 +707,8 @@ void AkaoOp_C1_TransposeRelative(AkaoChannel* track) {
     u8* seq = track->akaoSequencePointer;
     s8 val = *seq++;
     track->akaoSequencePointer = seq;
-    track->transpose =  (track->transpose +  val);
+    track->transpose = (track->transpose + val);
 }
-
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_A4_PitchBendSlide);
 
@@ -761,8 +738,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_B5_VibratoDepth);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_DD_VibratoDepthSlide);
 
-void AkaoOp_B6_VibratoOff(AkaoChannel* track)
-{
+void AkaoOp_B6_VibratoOff(AkaoChannel* track) {
     track->vibratoPitch = 0;
     track->updateFlags &= ~AKAO_UPDATE_VIBRATO;
     track->voiceAttr.mask |= SPU_VOICE_PITCH;
@@ -866,24 +842,13 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_D3_FrequencyModulationSwitch
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_CB_SfxReset);
 
-void AkaoOp_D4_SideChainPlaybackOn(AkaoChannel* track) {
-    track->updateFlags |= AKAO_UPDATE_SIDE_CHAIN_PITCH;
-}
+void AkaoOp_D4_SideChainPlaybackOn(AkaoChannel* track) { track->updateFlags |= AKAO_UPDATE_SIDE_CHAIN_PITCH; }
 
-void AkaoOp_D5_SideChainPlaybackOff(AkaoChannel* track)
-{
-    track->updateFlags &= ~AKAO_UPDATE_SIDE_CHAIN_PITCH;
-}
+void AkaoOp_D5_SideChainPlaybackOff(AkaoChannel* track) { track->updateFlags &= ~AKAO_UPDATE_SIDE_CHAIN_PITCH; }
 
-void AkaoOp_D6_SideChainPitchVolOn(AkaoChannel* track)
-{
-    track->updateFlags |= AKAO_UPDATE_SIDE_CHAIN_VOL;
-}
+void AkaoOp_D6_SideChainPitchVolOn(AkaoChannel* track) { track->updateFlags |= AKAO_UPDATE_SIDE_CHAIN_VOL; }
 
-void AkaoOp_D7_SideChainPitchVolOff(AkaoChannel* track)
-{
-    track->updateFlags &= ~AKAO_UPDATE_SIDE_CHAIN_VOL;
-}
+void AkaoOp_D7_SideChainPitchVolOff(AkaoChannel* track) { track->updateFlags &= ~AKAO_UPDATE_SIDE_CHAIN_VOL; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_F3_MuteMusic);
 
@@ -891,16 +856,9 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_FF_ReverbDelay);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_FE18_ReverbDepthSlideFromCurr);
 
-void AkaoOp_E0_VoiceBusRoutingOn(AkaoChannel* track)
-{
-    track->updateFlags |= AKAO_UPDATE_VOICE_BUS;
-}
+void AkaoOp_E0_VoiceBusRoutingOn(AkaoChannel* track) { track->updateFlags |= AKAO_UPDATE_VOICE_BUS; }
 
-
-void AkaoOp_Null(void)
-{
-    AkaoOp_A0_FinishChannel();
-}
+void AkaoOp_Null(void) { AkaoOp_A0_FinishChannel(); }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037578);
 

@@ -368,7 +368,7 @@ with open("build.ninja", "w") as f:
     nw = ninja_syntax.Writer(f)
 
     splat_cmd = (
-        "python3 -c \"import pathlib, sys; p = pathlib.Path(sys.argv[1]); p.parent.mkdir(parents=True, exist_ok=True); p.touch()\" $out"
+        'python3 -c "import pathlib, sys; p = pathlib.Path(sys.argv[1]); p.parent.mkdir(parents=True, exist_ok=True); p.touch()" $out'
         if progress_report
         else ".venv/bin/splat split $in > /dev/null && touch $out"
     )

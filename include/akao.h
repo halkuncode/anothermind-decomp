@@ -54,7 +54,6 @@
 #define AKAO_UPDATE_ALTERNATIVE 0x200
 #define AKAO_UPDATE_VOICE_BUS 0x100000
 
-
 #define AKAO_UPDATE_LFO_MASK                                                                                           \
     (AKAO_UPDATE_VIBRATO | AKAO_UPDATE_TREMOLO | AKAO_UPDATE_PAN_LFO | AKAO_UPDATE_SIDE_CHAIN_PITCH |                  \
      AKAO_UPDATE_SIDE_CHAIN_VOL)
@@ -65,7 +64,6 @@
 // Sequence opcodes (0xA0..0xFF)
 #define AKAO_OP_FINISH_CHANNEL 0xA0
 #define AKAO_OP_LOOP_RETURN 0xCA
-
 
 typedef enum {
     AKAO_PLAY_MUSIC = 0x10,

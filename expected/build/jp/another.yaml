@@ -1,0 +1,115 @@
+options:
+  platform: psx
+  basename: another
+  base_path: ../..
+  build_path: build/jp
+  target_path: disk/jp/SLPS_016.55
+  asm_path: asm/jp
+  asset_path: assets/jp
+  src_path: src
+  ld_script_path: build/jp/another.ld
+  compiler: GCC
+  symbol_addrs_path:
+  - config/symbols.another.jp.txt
+  create_undefined_funcs_auto: true
+  undefined_funcs_auto_path: build/jp/undefined_funcs.another.txt
+  create_undefined_syms_auto: true
+  undefined_syms_auto_path: build/jp/undefined_syms.another.txt
+  find_file_boundaries: false
+  use_legacy_include_asm: false
+  migrate_rodata_to_functions: true
+  disassemble_all: true
+  global_vram_start: 2147549184
+  gp_value: 2147883548
+  section_order:
+  - .rodata
+  - .text
+  - .data
+  - .sdata
+  - .sbss
+  - .bss
+  ld_generate_symbol_per_data_segment: true
+  ld_bss_is_noload: false
+sha1: 5f4f77b1eb743e92564008b24a98efa8e8d317d6
+segments:
+- - 2048
+  - header
+- name: main
+  type: code
+  start: 2048
+  vram: 2147549184
+  align: 4
+  subalign: 4
+  subsegments:
+  - - 2048
+    - rodata
+  - - 12204
+    - c
+    - main/main
+  - - 15288
+    - c
+    - main/name_entry
+  - - 27812
+    - c
+    - main/chapter_title
+  - - 33384
+    - c
+    - main/title
+  - - 40032
+    - c
+    - main/cd_stream
+  - - 50788
+    - c
+    - main/script
+  - - 124488
+    - c
+    - main/akao
+  - - 169068
+    - c
+    - main/psxsdk
+  - - 225096
+    - c
+    - main/movie
+  - - 237528
+    - data
+  - - 336412
+    - sdata
+  - - 337848
+    - sbss
+  - - 337856
+    - bss
+- name: engine
+  type: code
+  start: 873392
+  vram: 2148420528
+  align: 4
+  subalign: 4
+  subsegments:
+  - - 873392
+    - rodata
+  - - 875752
+    - c
+    - engine/vram_cache
+  - - 889120
+    - c
+    - engine/portrait_anim
+  - - 902688
+    - c
+    - engine/taiwa
+  - - 937128
+    - c
+    - engine/demo_menu
+  - - 961784
+    - c
+    - engine/memcard
+  - - 980544
+    - c
+    - engine/portrait_select
+  - - 996808
+    - c
+    - engine/game_loop
+  - - 1037200
+    - data
+  - - 1038768
+    - bss
+- - 1196032

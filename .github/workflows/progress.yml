@@ -16,6 +16,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+          fetch-depth: 0
 
       - name: Install system dependencies
         run: |
@@ -31,12 +32,20 @@ jobs:
       - name: Install Python requirements
         run: make requirements
 
-      - name: Set up compiler binary
+      - name: Set up compiler and tools
         run: |
           mkdir -p bin
           curl -L -o bin/cc1-psx-272.gz https://github.com/halkuncode/anothermind-decomp/releases/download/init/cc1-psx-272.gz
           gzip -d bin/cc1-psx-272.gz
           chmod +x bin/cc1-psx-272
+          curl -L -o bin/objdiff-cli-linux-x86_64 https://github.com/encounter/objdiff/releases/download/v3.3.1/objdiff-cli-linux-x86_64
+          chmod +x bin/objdiff-cli-linux-x86_64
+          echo -n "v3.3.1" > bin/objdiff-cli-linux-x86_64.tag
+
+      - name: Create dummy executable for splat
+        run: |
+          mkdir -p disk/jp
+          truncate -s 1196032 disk/jp/SLPS_016.55
 
       - name: Generate progress report
         run: |

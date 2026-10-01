@@ -392,17 +392,17 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_EF_JumpConditional);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_A3_MasterVol);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80035D28);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_FA_VolSlideFromCurr);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_A8_SetVol);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_A9_SetVolSlide);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80035E68);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_FE19_PanSlideFromCurr);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80035EF8);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_FE1A_VoiceEffectOn);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80035F0C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_FE1B_VoiceEffectOff);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_F4_OverlayVoiceOn);
 
@@ -426,7 +426,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_A1_LoadInstrument);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_F2_LoadInstrument);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80036214);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_FC_CustomInstrumentMap);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_B3_ResetAdsr);
 
@@ -554,11 +554,11 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_D7_SideChainPitchVolOff);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_F3_MuteMusic);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8003744C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_FF_ReverbDelay);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037490);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_FE18_ReverbDepthSlideFromCurr);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037544);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_E0_VoiceBusRoutingOn);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_Null);
 

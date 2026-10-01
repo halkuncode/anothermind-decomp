@@ -1251,7 +1251,7 @@ INCLUDE_ASM("asm/us/main/nonmatchings/akao", AkaoMusicCopyChannelsAndConfig);
 /////////////////////////
 // AKAO COMMANDS
 /////////////////////////
-
+/*
 // Copies the sequence to the staging buffer, restores audio channels and config from backup
 // if musicId matches backup slot 0 or 1, otherwise initializes fresh music audio channels.
 void AkaoCmd_10_PlayMusic(AkaoQueuedCommand* cmd) {
@@ -1271,6 +1271,7 @@ void AkaoCmd_10_PlayMusic(AkaoQueuedCommand* cmd) {
     }
     g_AkaoMusicId = cmd->param2;
 }
+
 
 // Copies the music sequence to the staging buffer, backs up the currently playing song,
 // (to backup slot 1 if BGM_TA [World map Main Theme] or slot 0 for any other song)
@@ -1294,7 +1295,7 @@ void AkaoCmd_14_PlayMusicSaveCurrent(AkaoQueuedCommand* cmd) {
     AkaoMusicChannelsInit();
     g_AkaoMusicId = cmd->param2;
 }
-
+*/
 // Copies the sequence to staging buffer, clears flag 0x100, and switches music with
 // backup state swapping: if the requested music ID matches backup slot 0 or 1, active
 // music (channel 1) is moved to channel 2 (transition) and saved back into the backup slot,
@@ -2176,6 +2177,7 @@ static void AkaoGetCommandQueue(AkaoQueuedCommand** out_cmd) {
     g_AkaoCommandQueueId++;
 }
 
+/*
 s32 AkaoExec(void) {
     AkaoQueuedCommand* command;
     u8* data;
@@ -2303,7 +2305,7 @@ s32 AkaoExec(void) {
     g_AkaoMutex = 0;
     return result;
 }
-
+*/
 INCLUDE_ASM("asm/us/main/nonmatchings/akao", AkaoDispatchCommand);
 
 static void AkaoExecuteCommandsQueue(void) {

@@ -761,11 +761,22 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_B5_VibratoDepth);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_DD_VibratoDepthSlide);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_B6_VibratoOff);
+void AkaoOp_B6_VibratoOff(AkaoChannel* track)
+{
+    track->vibratoPitch = 0;
+    track->updateFlags &= ~AKAO_UPDATE_VIBRATO;
+    track->voiceAttr.mask |= SPU_VOICE_PITCH;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_B8_Tremolo);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_B9_TremoloDepth);
+void AkaoOp_B9_TremoloDepth(AkaoChannel* track) {
+    u8* seq = track->akaoSequencePointer;
+    u8 val = *seq++;
+    track->akaoSequencePointer = seq;
+
+    track->tremoloDepth = (val & 0x7F) << 8;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_DE_TremoloDepthSlideFromCurr);
 

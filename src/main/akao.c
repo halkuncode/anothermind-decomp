@@ -2,6 +2,19 @@
 #include "common.h"
 #include "akao.h"
 
+//keep stucts inside the C file.
+typedef struct AkaoChannel {
+    /* 0x00 */ u8* akaoSequencePointer;
+    /* 0x04 */ u8 pad04[0x34 - 0x04];
+    /* 0x34 */ u32 updateFlags;
+    /* 0x38 */ u8 pad38[0x98 - 0x38];
+    /* 0x98 */ u16 portamentoSteps;
+    /* 0x9A */ u16 sfxMask;
+    /* 0x9C */ u8 pad9C[0x124 - 0x9C];
+} AkaoChannel;
+
+
+
 extern s32 g_AudioInitialized;
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", InitSoundDriver);
@@ -130,7 +143,10 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002EF3C);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002EFB4);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", IsValidAkaoMagic);
+s32 VerifyAkaoMagic(s32* akaoBuffer)
+{
+    return *akaoBuffer - AKAO_MAGIC;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002EFF0);
 
@@ -400,11 +416,20 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_A9_SetVolSlide);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_FE19_PanSlideFromCurr);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_FE1A_VoiceEffectOn);
+void AkaoOp_FE1A_VoiceEffectOn(AkaoChannel* track)
+{
+    track->updateFlags |= AKAO_UPDATE_VOICE_EFFECT;
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_FE1B_VoiceEffectOff);
+void AkaoOp_FE1B_VoiceEffectOff(AkaoChannel* track)
+{
+    track->updateFlags &= ~AKAO_UPDATE_VOICE_EFFECT;
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_F4_OverlayVoiceOn);
+void AkaoOp_F4_OverlayVoiceOn(AkaoChannel* track)
+{
+    track->akaoSequencePointer += 2;  //skip!
+}
 
 void AkaoOp_F5_OverlayVoiceOff(void) {}
 
@@ -544,13 +569,24 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_D3_FrequencyModulationSwitch
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_CB_SfxReset);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_D4_SideChainPlaybackOn);
+void AkaoOp_D4_SideChainPlaybackOn(AkaoChannel* track) {
+    track->updateFlags |= AKAO_UPDATE_SIDE_CHAIN_PITCH;
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_D5_SideChainPlaybackOff);
+void AkaoOp_D5_SideChainPlaybackOff(AkaoChannel* track)
+{
+    track->updateFlags &= ~AKAO_UPDATE_SIDE_CHAIN_PITCH;
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_D6_SideChainPitchVolOn);
+void AkaoOp_D6_SideChainPitchVolOn(AkaoChannel* track)
+{
+    track->updateFlags |= AKAO_UPDATE_SIDE_CHAIN_VOL;
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_D7_SideChainPitchVolOff);
+void AkaoOp_D7_SideChainPitchVolOff(AkaoChannel* track)
+{
+    track->updateFlags &= ~AKAO_UPDATE_SIDE_CHAIN_VOL;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_F3_MuteMusic);
 
@@ -558,7 +594,10 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_FF_ReverbDelay);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_FE18_ReverbDepthSlideFromCurr);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_E0_VoiceBusRoutingOn);
+void AkaoOp_E0_VoiceBusRoutingOn(AkaoChannel* track)
+{
+    track->updateFlags |= AKAO_UPDATE_VOICE_BUS;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_Null);
 

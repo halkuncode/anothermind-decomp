@@ -157,7 +157,15 @@ void SetControllerQueryParam(ControllerState* controller, u8 param) {
     controller->configBufferLength = 1;
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/movie", SetControllerAbort);
+void SetControllerAbort(ControllerState* controller)
+{
+    controller->configMode = CONTROLLER_ABORT;
+    controller->configBuffer = NULL;
+    controller->configBufferLength = 0;
+}
+
+//TU Split (?)
+__asm__(".align 3\n");
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/movie", func_800485D8);
 

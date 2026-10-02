@@ -92,7 +92,7 @@ Discarded input sections
  .MIPS.abiflags
                 0x00000000       0x18 build/jp/src/main/akao.c.o
  .pdr           0x00000000      0x380 build/jp/src/main/akao.c.o
- .debug_line    0x00000000      0x5a1 build/jp/src/main/akao.c.o
+ .debug_line    0x00000000      0x594 build/jp/src/main/akao.c.o
  .debug_info    0x00000000      0x1e8 build/jp/src/main/akao.c.o
  .debug_abbrev  0x00000000       0x28 build/jp/src/main/akao.c.o
  .debug_aranges
@@ -115,13 +115,13 @@ Discarded input sections
  .reginfo       0x00000000       0x18 build/jp/src/main/movie.c.o
  .MIPS.abiflags
                 0x00000000       0x18 build/jp/src/main/movie.c.o
- .pdr           0x00000000      0x120 build/jp/src/main/movie.c.o
- .debug_line    0x00000000      0x173 build/jp/src/main/movie.c.o
- .debug_info    0x00000000       0xb8 build/jp/src/main/movie.c.o
+ .pdr           0x00000000      0x140 build/jp/src/main/movie.c.o
+ .debug_line    0x00000000      0x176 build/jp/src/main/movie.c.o
+ .debug_info    0x00000000       0xc8 build/jp/src/main/movie.c.o
  .debug_abbrev  0x00000000       0x28 build/jp/src/main/movie.c.o
  .debug_aranges
                 0x00000000       0x20 build/jp/src/main/movie.c.o
- .debug_str     0x00000000      0x12c build/jp/src/main/movie.c.o
+ .debug_str     0x00000000      0x13f build/jp/src/main/movie.c.o
  .gnu.attributes
                 0x00000000       0x10 build/jp/src/main/movie.c.o
  .text          0x00000000        0x0 build/jp/asm/jp/data/39FD8.data.s.o

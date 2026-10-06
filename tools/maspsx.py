@@ -440,6 +440,74 @@ def leaf_la_multi_store_delay_slot_swap(lines: list) -> list:
     return [line for line in result if line != ""]
 
 
+def leaf_struct_multi_store_delay_slot_swap(lines: list) -> list:
+    """When a leaf function stores to a symbol at multiple offsets, e.g.:
+        sh  $reg, <sym>+<off1>
+        sh  $reg, <sym>+<off2>
+        j   $31
+    (optionally preceded by a direct symbol store):
+        sh  $reg, <sym0>
+    ASPSX loads the base address of <sym> into $2 ($v0), stores <off1>($2),
+    and places the second store <off2>($2) into the delay slot of `j $31`.
+    If preceded by `<op> $reg, <sym0>`, ASPSX also expands that with $2.
+    """
+    result = list(lines)
+    n = len(result)
+    i = 0
+    while i < n:
+        if not _is_code_line(result[i]):
+            i += 1
+            continue
+        m1 = _STORE_SYM_OFF_RE.match(result[i].strip())
+        if not m1:
+            i += 1
+            continue
+        op1, reg1, sym1, off1 = m1.group(1), m1.group(2), m1.group(3), m1.group(4)
+        j = i + 1
+        while j < n and not _is_code_line(result[j]):
+            s = result[j].strip()
+            if _BRANCH_LABEL_RE.match(s) or s.startswith(".end") or s.startswith(".ent"):
+                break
+            j += 1
+        if j >= n:
+            i += 1
+            continue
+        m2 = _STORE_SYM_OFF_RE.match(result[j].strip())
+        if not m2 or m2.group(1) != op1 or m2.group(2) != reg1 or m2.group(3) != sym1:
+            i += 1
+            continue
+        off2 = m2.group(4)
+        k = j + 1
+        while k < n and not _is_code_line(result[k]):
+            s = result[k].strip()
+            if _BRANCH_LABEL_RE.match(s) or s.startswith(".end") or s.startswith(".ent"):
+                break
+            k += 1
+        if k >= n or not _J_RA_RE.match(result[k].strip()):
+            i += 1
+            continue
+
+        indent = re.match(r"^(\s*)", result[i]).group(1)
+        h = i - 1
+        while h >= 0 and not _is_code_line(result[h]):
+            s = result[h].strip()
+            if _BRANCH_LABEL_RE.match(s) or s.startswith(".end") or s.startswith(".ent"):
+                h = -1
+                break
+            h -= 1
+        if h >= 0:
+            m_prev = _STORE_SYM_RE.match(result[h].strip())
+            if m_prev and m_prev.group(1) == op1 and m_prev.group(2) == reg1:
+                sym0 = m_prev.group(3)
+                result[h] = f"{indent}lui\t$2,%hi({sym0})\n{indent}{op1}\t{reg1},%lo({sym0})($2)\n"
+
+        result[i] = f"{indent}lui\t$2,%hi({sym1})\n{indent}addiu\t$2,$2,%lo({sym1})\n{indent}{op1}\t{reg1},{off1}($2)\n"
+        result[j] = ""
+        result[k] = f"{indent}.set\tnoreorder\n{indent}j\t$31\n{indent}{op1}\t{reg1},{off2}($2)\n{indent}.set\treorder\n"
+        i = k + 1
+    return [line for line in result if line != ""]
+
+
 def main():
     in_text = sys.stdin.read()
     lines = in_text.splitlines(keepends=True)
@@ -447,6 +515,7 @@ def main():
     lines = epilogue_delay_slot_swap(lines)
     lines = leaf_la_delay_slot_swap(lines)
     lines = leaf_la_multi_store_delay_slot_swap(lines)
+    lines = leaf_struct_multi_store_delay_slot_swap(lines)
     lines = aspsx_load_symbol_scratch_swap(lines)
     filtered_text = "".join(lines)
 

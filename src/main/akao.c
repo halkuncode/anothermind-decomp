@@ -435,9 +435,13 @@ void AkaoSpuSetVoicePitch(s32 voice, s16 pitch) {
     SPU_VOICE_REG(voice, SPU_VOICE_PITCH_OFFSET) = pitch;
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSpuSetVoiceStartAddress);
+void AkaoSpuSetVoiceStartAddress(s32 voice, u32 addr) {
+    SPU_VOICE_REG(voice, SPU_VOICE_START_ADDR_OFFSET) = addr >> 3;
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSpuSetVoiceLoopAddress);
+void AkaoSpuSetVoiceLoopAddress(s32 voice, u32 loopAddr) {
+    SPU_VOICE_REG(voice, SPU_VOICE_LOOP_ADDR_OFFSET) = loopAddr >> 3;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSpuSetVoiceAttackRate);
 

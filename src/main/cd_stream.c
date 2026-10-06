@@ -1,9 +1,16 @@
+//! PSYQ=4.0
 #include "common.h"
 
 extern s32 g_LastDisplayBufferIndex;
 extern s32 g_MovieDecoderActive;
 extern s32 g_CdTransferReady;
 extern char s_cdFileName[];
+extern s32 g_CdState;
+extern s32 g_CdReadStartSector;
+extern s32 g_CdReadByteCount;
+extern s32 g_CdReadTargetAddr;
+
+
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", LoadChapterEndGraphic);
 
@@ -13,7 +20,15 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", ProcessCdReadStateMachine);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", DisplayCdFileDebugStatus);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", LoadRawSectorData);
+
+void LoadRawSectorData(s32 startSector, s32 byteCount, s32 destination)
+{
+    g_CdReadStartSector = startSector;
+    g_CdReadByteCount = byteCount;
+    g_CdReadTargetAddr = destination;
+    g_CdState = 1;
+}
+
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", LoadCdPosTablefromCd);
 

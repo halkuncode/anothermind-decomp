@@ -1,6 +1,8 @@
 //! PSYQ=4.0
 #include "common.h"
 
+
+//keep structs in c file
 typedef struct PortraitSlot {
     /* 0x00 */ u8 pad00[2];
     /* 0x02 */ s16 state;          // or u16 (written with 3 here)
@@ -11,6 +13,18 @@ typedef struct NewsMode {
     /* 0x00 */ s16 newsModeActive;
     /* 0x02 */ s16 newsDisplayMode;
 } NewsMode;
+
+
+typedef struct TaiwaState {
+    /* 0x000 */ u8 highlightSlotEnabled;
+    /* 0x001 */ u8 pad01[0x17C - 0x001];
+    /* 0x17C */ s16 newsFadeSlot1;
+    /* 0x17E */ u8 pad17E[0x190 - 0x17E];
+    /* 0x190 */ s16 newsFadeSlot2;
+} TaiwaState;
+
+extern s16 g_TaiwaBarX;
+extern TaiwaState g_TaiwaState;
 extern NewsMode g_NewsMode;
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_80102DC8);
@@ -141,7 +155,13 @@ INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010C8A4);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010C8C8);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", ResetTaiwaFadeTimers);
+
+
+void ResetTaiwaFadeTimers(void) {
+    g_TaiwaBarX = 0;
+    g_TaiwaState.newsFadeSlot1 = 0;
+    g_TaiwaState.newsFadeSlot2 = 0;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", WaitWithDialogueUI);
 

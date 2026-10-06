@@ -938,3 +938,13 @@ PlaySystemMessage = 0x8010CAAC;
 DoGame = 0x8010CB70;
 g_PortraitSlotIndex = 0x8012C958;
 g_NewsMode = 0x80130CB0;
+
+
+g_CdState =  0x80062070;
+g_CdReadStartSector  = 0x80062074;
+g_CdReadByteCount = 0x80062078;
+g_CdReadTargetAddr =  0x8006207C;
+
+g_TaiwaBarX = 0x8012CA20;
+g_TaiwaState = 0x80132AB0;
+

@@ -2,7 +2,7 @@
 all: disk build
 
 .PHONY: build
-build: bin/cc1-psx-272
+build: bin/cc1-psx-272 bin/cc1-psx-280 bin/cc1-psx-281
 	@./mako.sh build
 
 .PHONY: clean
@@ -79,12 +79,11 @@ disk/jp: disk/Another\ Mind\ (Japan).iso
 build/jp/%.o: %
 	ninja $@
 
-bin/cc1-psx-272: bin/cc1-psx-272.gz
-	sha256sum --check bin/cc1-psx-272.gz.sha256
+bin/cc1-%: bin/cc1-%.gz
+	sha256sum --check bin/cc1-$*.gz.sha256
 	gzip -kcd $< > $@
 	touch $@
 	chmod +x $@
 
-# just the one file for now may need to make this /$*.gz later
-bin/cc1-psx-272.gz: bin/cc1-psx-272.gz.sha256
-	wget -O $@ https://github.com/halkuncode/anothermind-decomp/releases/download/init/cc1-psx-272.gz
+bin/cc1-%.gz: bin/cc1-%.gz.sha256
+	wget -O $@ https://github.com/halkuncode/anothermind-decomp/releases/download/init/cc1-$*.gz

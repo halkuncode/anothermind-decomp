@@ -1,6 +1,14 @@
 //! PSYQ=4.0
 #include "common.h"
 
+// Note 'volitile' is allowed here as a deviation from 
+// STYLE.md due to the high degree of timing needed
+// for the root counter, 
+#define RCNT_REG(addr) (*(volatile u16*)(addr))
+#define RCNT2_COUNT    0x1F801120
+#define RCNT2_MODE     0x1F801124
+#define RCNT2_TARGET   0x1F801128
+
 typedef enum ControllerCommand {
     CONTROLLER_POLL = 0x42,
     CONTROLLER_CONFIG_MODE = 0x43,
@@ -229,6 +237,13 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/controller", func_80049600);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller", func_800496E0);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller", func_80049718);
+extern s32 g_ControllerTimeoutStartTime;
+extern s32 g_ControllerTimeoutDuration;
+
+void StartControllerTimeout(s32 duration)
+{
+    g_ControllerTimeoutDuration = duration;
+    g_ControllerTimeoutStartTime = RCNT_REG(RCNT2_COUNT);
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller", func_80049738);

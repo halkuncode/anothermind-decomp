@@ -103,7 +103,15 @@ void StopVibrationEffect(void)
 
 
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", GetMovieBuffer);
+extern u8 g_ControllerPort1Buffer[];
+extern u8 g_ControllerPort2Buffer[];
+
+u8* GetControllerBuffer(s32 port) {
+    if (port != 0) {
+        return g_ControllerPort2Buffer;
+    }
+    return g_ControllerPort1Buffer;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", GetNextInterpolatedByte);
 

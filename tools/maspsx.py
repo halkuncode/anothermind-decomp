@@ -38,6 +38,7 @@ _LA_SYM_OFF_RE    = re.compile(r"^\s*la\s+(\$[a-z0-9]+),\s*([A-Za-z0-9_]+)\+(\d+
 _STORE_SYM_RE = re.compile(r"^\s*(sw|sh|sb)\s+(\$[a-z0-9]+),\s*([A-Za-z_][A-Za-z0-9_]*)\s*$")
 _STORE_INDIRECT_RE = re.compile(r"^\s*(sw|sh|sb)\s+(\$[a-z0-9]+),\s*(-?\d*)\((\$[a-z0-9]+)\)\s*$")
 _BRANCH_LABEL_RE = re.compile(r"^(\$|\.)?L\d+:$")
+_BNE_ZERO_RE = re.compile(r"^\s*bne\s+(\$[a-z0-9]+),\s*\$0,\s*(\S+)")
 
 
 def _is_code_line(line: str) -> bool:
@@ -283,6 +284,102 @@ def leaf_la_delay_slot_swap(lines: list) -> list:
             i = j + 3
             continue
         i += 1
+    return result
+
+
+def leaf_la_branch_delay_slot_swap(lines: list) -> list:
+    """When a leaf function returns one of two symbol addresses based on a condition:
+        la   $2, <sym2>
+        bne  $cond, $0, <label>
+        la   $2, <sym1>
+      <label>:
+        j    $31
+    ASPSX expands this with separate returns and delay slots:
+        beqz $cond, <label>
+        nop
+        lui  $2, %hi(<sym2>)
+        j    $31
+        addiu $2, $2, %lo(<sym2>)
+      <label>:
+        lui  $2, %hi(<sym1>)
+        j    $31
+        addiu $2, $2, %lo(<sym1>)
+    """
+    result = list(lines)
+    n = len(result)
+    i = 0
+    while i < n:
+        if not _is_code_line(result[i]):
+            i += 1
+            continue
+        m_la1 = _LA_RE.match(result[i].strip())
+        if not m_la1:
+            i += 1
+            continue
+        reg1, sym2 = m_la1.group(1), m_la1.group(2)
+
+        j = i + 1
+        while j < n and not _is_code_line(result[j]):
+            j += 1
+        if j >= n:
+            i += 1
+            continue
+        m_bne = _BNE_ZERO_RE.match(result[j].strip())
+        if not m_bne:
+            i += 1
+            continue
+        cond_reg, label = m_bne.group(1), m_bne.group(2)
+
+        k = j + 1
+        while k < n and not _is_code_line(result[k]):
+            k += 1
+        if k >= n:
+            i += 1
+            continue
+        m_la2 = _LA_RE.match(result[k].strip())
+        if not m_la2 or m_la2.group(1) != reg1:
+            i += 1
+            continue
+        sym1 = m_la2.group(2)
+
+        l = k + 1
+        found_label = False
+        while l < n:
+            s = result[l].strip()
+            if s == f"{label}:":
+                found_label = True
+                break
+            if _is_code_line(result[l]):
+                break
+            l += 1
+        if not found_label:
+            i += 1
+            continue
+
+        m = l + 1
+        while m < n and not _is_code_line(result[m]):
+            m += 1
+        if m >= n or not _J_RA_RE.match(result[m].strip()):
+            i += 1
+            continue
+
+        indent = re.match(r"^(\s*)", result[i]).group(1)
+        transformed = [
+            f"{indent}.set\tnoreorder\n",
+            f"{indent}beqz\t{cond_reg},{label}\n",
+            f"{indent}nop\n",
+            f"{indent}lui\t{reg1},%hi({sym2})\n",
+            f"{indent}j\t$31\n",
+            f"{indent}addiu\t{reg1},{reg1},%lo({sym2})\n",
+            f"{label}:\n",
+            f"{indent}lui\t{reg1},%hi({sym1})\n",
+            f"{indent}j\t$31\n",
+            f"{indent}addiu\t{reg1},{reg1},%lo({sym1})\n",
+            f"{indent}.set\treorder\n",
+        ]
+        result = result[:i] + transformed + result[m + 1:]
+        n = len(result)
+        i = m + 1
     return result
 
 
@@ -743,6 +840,62 @@ def leaf_interleaved_store_swap(lines: list, gp_symbols: set[str]) -> list:
     return result
 
 
+def leaf_repeated_store_scratch_swap(lines: list, gp_symbols: set[str]) -> list:
+    """When a leaf function stores to the same non-GP symbol multiple times,
+    ASPSX loads the symbol address into $2 ($v0) and reuses it for the subsequent stores:
+        sh $reg1, <sym>
+        ...
+        sh $reg2, <sym>
+    """
+    result = list(lines)
+    n = len(result)
+    i = 0
+    while i < n:
+        if not _is_code_line(result[i]):
+            i += 1
+            continue
+        m1 = _STORE_SYM_RE.match(result[i].strip())
+        if not m1:
+            i += 1
+            continue
+        op1, reg1, sym1 = m1.group(1), m1.group(2), m1.group(3)
+        if is_gp_symbol(sym1, gp_symbols):
+            i += 1
+            continue
+
+        j = i + 1
+        found_second = False
+        second_idx = -1
+        while j < n:
+            s = result[j].strip()
+            if s.startswith(".end") or s.startswith(".ent"):
+                break
+            if _is_code_line(result[j]):
+                m2 = _STORE_SYM_RE.match(s)
+                if m2 and m2.group(1) == op1 and m2.group(3) == sym1:
+                    found_second = True
+                    second_idx = j
+                    break
+            j += 1
+        if not found_second:
+            i += 1
+            continue
+
+        indent = re.match(r"^(\s*)", result[i]).group(1)
+        result[i] = f"{indent}# maspsx-repeated-store-start\n{indent}lui\t$2,%hi({sym1})\n{indent}{op1}\t{reg1},%lo({sym1})($2)\n"
+        m2 = _STORE_SYM_RE.match(result[second_idx].strip())
+        reg2 = m2.group(2)
+        result[second_idx] = f"{indent}{op1}\t{reg2},%lo({sym1})($2)\n"
+
+        k = second_idx + 1
+        while k < n and not result[k].strip().startswith("j\t$31"):
+            k += 1
+        if k < n:
+            result[k] = f"{result[k]}{indent}# maspsx-repeated-store-end\n"
+        i = second_idx + 1
+    return result
+
+
 def expand_li_addiu(lines: list) -> list:
     """ASPSX expands small positive immediate constants (0 < val < 0x8000) using
     `addiu $reg, $zero, val` instead of `ori $reg, $zero, val`.
@@ -776,12 +929,14 @@ def main():
     lines = strip_dead_epilogue(lines)
     if not is_unswapped_epilogue_file:
         lines = epilogue_delay_slot_swap(lines)
+    lines = leaf_la_branch_delay_slot_swap(lines)
     lines = leaf_la_delay_slot_swap(lines)
     lines = leaf_la_multi_store_delay_slot_swap(lines)
     lines = leaf_struct_multi_store_delay_slot_swap(lines)
     lines = leaf_la_offset_struct_access_swap(lines)
     lines = leaf_store_multi_symbol_delay_slot_swap(lines, gp_symbols)
     lines = leaf_interleaved_store_swap(lines, gp_symbols)
+    lines = leaf_repeated_store_scratch_swap(lines, gp_symbols)
     lines = aspsx_load_symbol_scratch_swap(lines)
     lines = expand_li_addiu(lines)
     filtered_text = "".join(lines)
@@ -799,7 +954,15 @@ def main():
         gp_symbols = load_gp_symbols()
         out_text = rewrite_gp_rel(proc.stdout, gp_symbols)
         out_lines = leaf_store_delay_slot_swap(out_text.splitlines(keepends=True))
-        sys.stdout.write("".join(out_lines))
+        final_lines = []
+        for line in out_lines:
+            if "# maspsx-repeated-store-start" in line:
+                final_lines.append(".set\tnoreorder\n")
+            elif "# maspsx-repeated-store-end" in line:
+                final_lines.append(".set\treorder\n")
+            else:
+                final_lines.append(line)
+        sys.stdout.write("".join(final_lines))
 
     sys.exit(proc.returncode)
 

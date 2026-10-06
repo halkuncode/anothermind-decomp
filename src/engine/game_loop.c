@@ -102,7 +102,16 @@ INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", LoadKanjiById);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", ResetPortraitCacheStatus);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", OpenMenuById);
+extern s16 g_CurrentMenuRequest;
+
+void OpenMenuById(s32 menuId)
+{
+    g_CurrentMenuRequest = menuId;
+    if (menuId < 3) {
+        return;
+    }
+    g_CurrentMenuRequest = 0;
+}
 
 
 void PlayMovie(void)

@@ -200,5 +200,7 @@ typedef enum {
 #define SPU_VOICE_CHN_NOISE_HI  0x1F801D96
 #define SPU_VOICE_CHN_REVERB_LO 0x1F801D98
 #define SPU_VOICE_CHN_REVERB_HI 0x1F801D9A
+#define SPU_CD_VOL_L            0x1F801DB0
+#define SPU_CD_VOL_R            0x1F801DB2
 
 #endif

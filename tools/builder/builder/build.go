@@ -36,9 +36,6 @@ func Build(version string) error {
 	if err := deps.Ninja(); err != nil {
 		return err
 	}
-	if err := generateExpected(); err != nil {
-		return err
-	}
 	return nil
 }
 

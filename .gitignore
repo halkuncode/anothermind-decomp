@@ -9,8 +9,15 @@ __pycache__/
 /bin/
 /assets/
 /report/
-expected/
 sym_export.*.txt
+expected/**/*.elf
+expected/**/*.exe
+expected/**/*.map
+expected/**/*.ld
+expected/**/*.yaml
+expected/**/*.sha1
+expected/**/*.fingerprint
+expected/**/undefined_*.txt
 undefined_funcs_auto.*.txt
 undefined_syms_auto.*.txt
 .ninja_log

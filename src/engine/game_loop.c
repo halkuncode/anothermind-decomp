@@ -26,6 +26,7 @@ typedef struct TaiwaState {
 extern s16 g_TaiwaBarX;
 extern TaiwaState g_TaiwaState;
 extern NewsMode g_NewsMode;
+extern s16 g_CurrentKanjiSet;
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_80102DC8);
 
@@ -98,7 +99,14 @@ void ClearNewsState(void)
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", SetNewsValue);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", LoadKanjiById);
+
+
+
+void LoadKanjiById(s32 kanjiSet)
+{
+    g_CurrentKanjiSet = kanjiSet;
+    LoadKanjiTimData(kanjiSet);
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", ResetPortraitCacheStatus);
 

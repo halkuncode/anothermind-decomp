@@ -62,9 +62,19 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", StartVibrationEffect);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", DisplayPadDebugPanel);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", DoVibeEffect3);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", BeginTaiwaVibration);
+
+void BeginFlashVibration(void)
+{
+    StartVibrationEffect(VIBE_EFFECT_FLASH);
+    g_VibrationEffectFrameCount = VIBE_EFFECT_DEFAULT_DURATION;
+}
+
+void BeginTaiwaVibration(void)
+{
+    StartVibrationEffect(VIBE_EFFECT_TAIWA);
+    g_VibrationEffectFrameCount = VIBE_EFFECT_DEFAULT_DURATION;
+}
 
 
 

@@ -35,7 +35,7 @@ HandleNameConfirmOrCancel = 0x80015798;
 GetEnteredNameLength_800158E8 = 0x800158E8;
 StartVibrationEffect = 0x80015934;
 DisplayPadDebugPanel = 0x80015A60;
-DoVibeEffect3 = 0x80015D20;
+BeginFlashVibration = 0x80015D20;
 BeginTaiwaVibration = 0x80015D44;
 CancelVibrationEffect = 0x80015D68;
 ResetControllerIRQSystem = 0x80015D88;
@@ -987,3 +987,5 @@ g_NewsMode = 0x80130CB0;
 g_TaiwaState = 0x80132AB0;
 
 g_CurrentMenuRequest = 0x801308EE;
+
+g_CurrentKanjiSet = 0x80130D1A;

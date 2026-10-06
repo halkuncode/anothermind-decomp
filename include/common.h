@@ -44,4 +44,6 @@ typedef unsigned int* unk_ptr;
 #endif
 #endif
 
+#include "game.h"
+
 #endif

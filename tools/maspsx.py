@@ -29,7 +29,9 @@ MASPSX_SCRIPT = Path(__file__).resolve().parent / "maspsx" / "maspsx.py"
 # Match addu/addiu $sp, $sp, <imm>  (cc1 uses addu; addiu also handled for safety)
 _SP_RESTORE_RE = re.compile(r"^\s*(?:addu|addiu)\s+\$sp,\s*\$sp,\s*\S+")
 _LW_RA_RE      = re.compile(r"^\s*lw\s+\$31,\s*\d+\(\$sp\)")
+_SW_RA_RE      = re.compile(r"^\s*sw\s+(?:\$31|\$ra),\s*\d+\(\$sp\)")
 _J_RA_RE       = re.compile(r"^\s*j\s+\$31\s*$")
+_JAL_RE        = re.compile(r"^\s*jal\s+(\S+)")
 _LA_RE         = re.compile(r"^\s*la\s+(\$[a-z0-9]+),\s*([A-Za-z0-9_]+)")
 _LI_RE         = re.compile(r"^\s*li\s+(\$[a-z0-9]+),\s*(\S+)")
 _STORE_BASE_RE = re.compile(r"^\s*(sw|sh|sb)\s+(\$[a-z0-9]+),\s*0\((\$[a-z0-9]+)\)")
@@ -114,7 +116,31 @@ def epilogue_delay_slot_swap(lines: list) -> list:
         j_line     = result[k]
         indent = re.match(r"^(\s*)", j_line).group(1)
 
+        prev_def_idx = None
         if prev_store_idx is not None:
+            q = prev_store_idx - 1
+            while q >= 0:
+                line_q = result[q].strip()
+                if not line_q or line_q.startswith("#") or line_q.startswith("//") or line_q.startswith("/*"):
+                    q -= 1
+                    continue
+                if line_q.startswith(".") or line_q.endswith(":"):
+                    q -= 1
+                    continue
+                m_def = re.match(r"^\s*(?:li|addiu|addu|move|lbu|lb|lhu|lh|lw)\s+(" + re.escape(store_reg) + r")\b", line_q)
+                if m_def and "$31" not in line_q and "$ra" not in line_q and "$sp" not in line_q:
+                    prev_def_idx = q
+                break
+
+        if prev_def_idx is not None:
+            def_line = result[prev_def_idx]
+            m_li = re.match(r"^(\s*)li\s+(\$[a-z0-9]+),\s*(0x[0-9a-fA-F]+|\d+)", def_line)
+            if m_li:
+                def_line = f"{m_li.group(1)}addiu\t{m_li.group(2)},$zero,{m_li.group(3)}\n"
+            delay_slot_fill = def_line + result[prev_store_idx]
+            result[prev_def_idx] = ""
+            result[prev_store_idx] = ""
+        elif prev_store_idx is not None:
             delay_slot_fill = result[prev_store_idx]
             result[prev_store_idx] = ""
         else:
@@ -235,6 +261,90 @@ def leaf_store_delay_slot_swap(lines: list) -> list:
                         continue
 
         i += 1
+    return result
+
+
+def call_store_delay_slot_swap(lines: list) -> list:
+    """When a non-leaf function stores to a symbol via `sw/sh/sb $reg, <sym>` followed by
+    `jal <target>`, ASPSX splits the store, hoists lui $2 before `sw $31`, and puts
+    the store into the jal delay slot.
+    """
+    result = list(lines)
+    n = len(result)
+    i = 0
+    while i < n:
+        if not _is_code_line(result[i]) or not _SW_RA_RE.match(result[i].strip()):
+            i += 1
+            continue
+
+        idx_sw_ra = i
+
+        j = i + 1
+        while j < n and not _is_code_line(result[j]):
+            if result[j].strip().startswith((".end", ".ent")):
+                break
+            j += 1
+        if j >= n:
+            i += 1
+            continue
+
+        m_store = _STORE_SYM_RE.match(result[j].strip())
+        if not m_store:
+            i += 1
+            continue
+
+        op, reg, sym = m_store.group(1), m_store.group(2), m_store.group(3)
+        if reg in ("$2", "$v0", "$31", "$ra", "$sp"):
+            i += 1
+            continue
+
+        idx_store = j
+
+        k = j + 1
+        while k < n and not _is_code_line(result[k]):
+            if result[k].strip().startswith((".end", ".ent")):
+                break
+            k += 1
+        if k >= n:
+            i += 1
+            continue
+
+        m_jal = _JAL_RE.match(result[k].strip())
+        if not m_jal:
+            i += 1
+            continue
+
+        idx_jal = k
+
+        p = k + 1
+        while p < n and not _is_code_line(result[p]):
+            if result[p].strip().startswith("nop"):
+                break
+            p += 1
+        if p >= n or not result[p].strip().startswith("nop"):
+            i += 1
+            continue
+
+        idx_nop = p
+
+        indent = re.match(r"^(\s*)", result[idx_jal]).group(1)
+        lui_line = f"{indent}lui\t$2,%hi({sym})\n"
+        store_line = f"{indent}{op}\t{reg},%lo({sym})($2)\n"
+
+        jal_line = result[idx_jal]
+
+        result = (
+            result[:idx_sw_ra]
+            + [lui_line]
+            + [result[idx_sw_ra]]
+            + result[idx_sw_ra + 1:idx_store]
+            + result[idx_store + 1:idx_jal]
+            + [jal_line, store_line]
+            + result[idx_jal + 1:idx_nop]
+            + result[idx_nop + 1:]
+        )
+        n = len(result)
+        i = idx_nop + 4
     return result
 
 
@@ -954,6 +1064,7 @@ def main():
         gp_symbols = load_gp_symbols()
         out_text = rewrite_gp_rel(proc.stdout, gp_symbols)
         out_lines = leaf_store_delay_slot_swap(out_text.splitlines(keepends=True))
+        out_lines = call_store_delay_slot_swap(out_lines)
         final_lines = []
         for line in out_lines:
             if "# maspsx-repeated-store-start" in line:

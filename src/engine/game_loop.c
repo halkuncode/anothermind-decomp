@@ -1,4 +1,4 @@
-//! PSYQ=4.0
+//! CC1=2.8.0 ASPSX=2.56 G=0
 #include "common.h"
 
 

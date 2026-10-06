@@ -113,6 +113,12 @@ def parse_compiler_params(line: str) -> CompilerParams:
             elif value == "4.0":
                 c.cc1 = "cc1-psx-272"
                 c.as_flags = "--expand-div --aspsx-version=2.56"
+            elif value == "4.1":
+                c.cc1 = "cc1-psx-280"
+                c.as_flags = "--expand-div --aspsx-version=2.56"
+            elif value in ("4.3", "4.4"):
+                c.cc1 = "cc1-psx-281"
+                c.as_flags = "--expand-div --aspsx-version=2.56"
             else:
                 raise Exception(f"{key} value {value} is not recognized")
 
@@ -121,8 +127,15 @@ def parse_compiler_params(line: str) -> CompilerParams:
                 c.cc1 = "cc1-psx-26"
             elif value == "2.7.2":
                 c.cc1 = "cc1-psx-272"
+            elif value in ("2.8.0", "280"):
+                c.cc1 = "cc1-psx-280"
+            elif value in ("2.8.1", "281"):
+                c.cc1 = "cc1-psx-281"
             else:
                 raise Exception(f"{key} value {value} is not recognized")
+
+        elif key == "ASPSX":
+            c.as_flags = f"--expand-div --aspsx-version={value}"
 
         elif key == "G":
             try:

@@ -1,3 +1,4 @@
+//! CC1=2.8.0 G=8
 #include "common.h"
 
 extern u8 g_ControllerTypeId;
@@ -90,7 +91,12 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", ResetControllerIRQSystem);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", GetRawControllerInput);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", func_80015E4C);
+s32 PlaySingleSoundeffect(s16);                     
+
+s32 func_80015E4C(s16 arg0) {
+    PlaySingleSoundeffect(arg0);
+}
+
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", SetVibrationMode_80015E70);
 
@@ -117,10 +123,10 @@ extern u8 g_ControllerPort1Buffer[];
 extern u8 g_ControllerPort2Buffer[];
 
 u8* GetControllerBuffer(s32 port) {
-    if (port != 0) {
-        return g_ControllerPort2Buffer;
+    if (port == 0) {
+        return g_ControllerPort1Buffer;
     }
-    return g_ControllerPort1Buffer;
+    return g_ControllerPort2Buffer;
 }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", GetNextInterpolatedByte);

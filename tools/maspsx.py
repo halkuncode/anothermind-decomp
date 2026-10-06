@@ -743,6 +743,26 @@ def leaf_interleaved_store_swap(lines: list, gp_symbols: set[str]) -> list:
     return result
 
 
+def expand_li_addiu(lines: list) -> list:
+    """ASPSX expands small positive immediate constants (0 < val < 0x8000) using
+    `addiu $reg, $zero, val` instead of `ori $reg, $zero, val`.
+    """
+    result = []
+    for line in lines:
+        m = re.match(r"^(\s*)li\s+(\$[a-z0-9]+),\s*(0x[0-9a-fA-F]+|-?\d+)(\s*#.*)?$", line)
+        if m:
+            indent, reg, val_str, comment = m.group(1), m.group(2), m.group(3), m.group(4) or ""
+            try:
+                val = int(val_str, 0)
+                if 0 < val < 0x8000:
+                    result.append(f"{indent}addiu\t{reg},$zero,{val}{comment}\n")
+                    continue
+            except ValueError:
+                pass
+        result.append(line)
+    return result
+
+
 def main():
     in_text = sys.stdin.read()
     lines = in_text.splitlines(keepends=True)
@@ -756,6 +776,7 @@ def main():
     lines = leaf_store_multi_symbol_delay_slot_swap(lines, gp_symbols)
     lines = leaf_interleaved_store_swap(lines, gp_symbols)
     lines = aspsx_load_symbol_scratch_swap(lines)
+    lines = expand_li_addiu(lines)
     filtered_text = "".join(lines)
 
     proc = subprocess.run(

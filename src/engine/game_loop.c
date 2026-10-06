@@ -90,7 +90,6 @@ NewsMode* SetNews(void) {
     return news;
 }
 
-                            // extern
 
 void ClearNewsState(void)
 {

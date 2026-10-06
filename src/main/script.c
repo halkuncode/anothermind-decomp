@@ -1,5 +1,15 @@
 #include "common.h"
 
+typedef enum {
+	EQ_OPCODE_ADD = 0x07,
+	EQ_OPCODE_SUB = 0x08,
+	EQ_OPCODE_MUL = 0x09,
+	EQ_OPCODE_DIV = 0x0A,
+	EQ_OPCODE_MOD = 0x0B,
+} EqOpcodes;
+
+extern void ExecuteEquationOpcode(s32 opcode);
+
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", InitOpcodeHandlerTable);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", InitializeScriptInterpreter);
@@ -328,7 +338,12 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_logicalNot);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_negate);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_add);
+
+
+void Cmd_add(void)
+{
+    ExecuteEquationOpcode(EQ_OPCODE_ADD);
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_subtract);
 

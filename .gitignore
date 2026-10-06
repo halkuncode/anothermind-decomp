@@ -9,8 +9,7 @@ __pycache__/
 /bin/
 /assets/
 /report/
-!expected/
-!expected/**
+expected/
 sym_export.*.txt
 undefined_funcs_auto.*.txt
 undefined_syms_auto.*.txt

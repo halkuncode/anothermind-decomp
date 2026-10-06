@@ -35,7 +35,11 @@ typedef struct MovieAttribute {
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/movie", func_80046748);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/movie", GsResetInterruptHandlers);
+
+void GsResetInterruptHandlers(void)
+{
+    ResetInterruptHandlersAndTimers();
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/movie", func_80046788);
 

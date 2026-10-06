@@ -767,8 +767,15 @@ def main():
     in_text = sys.stdin.read()
     lines = in_text.splitlines(keepends=True)
     gp_symbols = load_gp_symbols()
+
+    is_unswapped_epilogue_file = any(
+        line.strip().startswith(".file") and ("movie.c" in line or "psxsdk.c" in line)
+        for line in lines[:15]
+    )
+
     lines = strip_dead_epilogue(lines)
-    lines = epilogue_delay_slot_swap(lines)
+    if not is_unswapped_epilogue_file:
+        lines = epilogue_delay_slot_swap(lines)
     lines = leaf_la_delay_slot_swap(lines)
     lines = leaf_la_multi_store_delay_slot_swap(lines)
     lines = leaf_struct_multi_store_delay_slot_swap(lines)

@@ -164,7 +164,12 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", CopyScriptToRuntimeBuffer);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", InitTitleScreenAudio);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", ForceStopMusic);
+
+
+void ForceStopMusic(void)
+{
+    AkaoSendCmd_F0_StopMusic();
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", LoadStoryScript);
 

@@ -175,4 +175,9 @@ INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", PlaySystemMessage);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010CB14);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", DoGame);
+
+
+void DoGame(void)
+{
+    RunGameLoop();
+}

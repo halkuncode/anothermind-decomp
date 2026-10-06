@@ -60,6 +60,18 @@
 
 #define AKAO_UPDATE_NOISE_CLOCK 0x10
 #define AKAO_UPDATE_REVERB 0x80
+#define AKAO_UPDATE_VOICE_MODES 0x100
+
+typedef struct {
+    /* 0x00 */ s32 stereoMode;
+    /* 0x04 */ s32 updateFlags;
+} AkaoControl;
+
+extern AkaoControl g_AkaoControl;
+
+void AkaoUpdateNoiseVoices(void);
+void AkaoUpdateReverbVoices(void);
+void AkaoUpdatePitchLfoVoices(void);
 
 // Sequence opcodes (0xA0..0xFF)
 #define AKAO_OP_FINISH_CHANNEL 0xA0

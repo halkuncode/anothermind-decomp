@@ -34,6 +34,7 @@ _LA_RE         = re.compile(r"^\s*la\s+(\$[a-z0-9]+),\s*([A-Za-z0-9_]+)")
 _LI_RE         = re.compile(r"^\s*li\s+(\$[a-z0-9]+),\s*(\S+)")
 _STORE_BASE_RE = re.compile(r"^\s*(sw|sh|sb)\s+(\$[a-z0-9]+),\s*0\((\$[a-z0-9]+)\)")
 _STORE_SYM_OFF_RE = re.compile(r"^\s*(sw|sh|sb)\s+(\$[a-z0-9]+),\s*([A-Za-z0-9_]+)\+(\d+)")
+_LA_SYM_OFF_RE    = re.compile(r"^\s*la\s+(\$[a-z0-9]+),\s*([A-Za-z0-9_]+)\+(\d+)")
 
 
 def _is_code_line(line: str) -> bool:
@@ -508,6 +509,56 @@ def leaf_struct_multi_store_delay_slot_swap(lines: list) -> list:
     return [line for line in result if line != ""]
 
 
+def leaf_la_offset_struct_access_swap(lines: list) -> list:
+    """When cc1 accesses a struct field via `la $reg, <sym>+<offset>` followed by
+    accesses to 0($reg), ASPSX materializes `<sym>` into $reg without adding <offset>,
+    and instead adds <offset> to subsequent 0($reg) displacements:
+        la   $reg, <sym>+<offset>
+        lw   $dest, 0($reg)
+        ...
+        sw   $src, 0($reg)
+    Becomes:
+        lui   $reg, %hi(<sym>)
+        addiu $reg, $reg, %lo(<sym>)
+        lw    $dest, <offset>($reg)
+        ...
+        sw    $src, <offset>($reg)
+    """
+    result = list(lines)
+    n = len(result)
+    i = 0
+    while i < n:
+        if not _is_code_line(result[i]):
+            i += 1
+            continue
+        m = _LA_SYM_OFF_RE.match(result[i].strip())
+        if not m:
+            i += 1
+            continue
+        reg, sym, off = m.group(1), m.group(2), m.group(3)
+        indent = re.match(r"^(\s*)", result[i]).group(1)
+
+        j = i + 1
+        replaced_any = False
+        target_pat = re.compile(r"(0\(" + re.escape(reg) + r"\))")
+        while j < n:
+            line_s = result[j].strip()
+            if _BRANCH_LABEL_RE.match(line_s) or line_s.startswith(".end") or line_s.startswith(".ent"):
+                break
+            if _is_code_line(result[j]):
+                if target_pat.search(result[j]):
+                    result[j] = target_pat.sub(f"{off}({reg})", result[j])
+                    replaced_any = True
+                elif re.match(r"^\s*(?:[a-z]+)\s+" + re.escape(reg) + r"\b", line_s):
+                    break
+            j += 1
+
+        if replaced_any:
+            result[i] = f"{indent}lui\t{reg},%hi({sym})\n{indent}addiu\t{reg},{reg},%lo({sym})\n"
+        i += 1
+    return result
+
+
 def main():
     in_text = sys.stdin.read()
     lines = in_text.splitlines(keepends=True)
@@ -516,6 +567,7 @@ def main():
     lines = leaf_la_delay_slot_swap(lines)
     lines = leaf_la_multi_store_delay_slot_swap(lines)
     lines = leaf_struct_multi_store_delay_slot_swap(lines)
+    lines = leaf_la_offset_struct_access_swap(lines)
     lines = aspsx_load_symbol_scratch_swap(lines)
     filtered_text = "".join(lines)
 

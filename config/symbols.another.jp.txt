@@ -413,6 +413,9 @@ AkaoAllocateVoice = 0x80030898;
 AkaoUpdateKeysOn = 0x80030CD4;
 AkaoCollectChannelsVoicesMask = 0x80030FD8;
 AkaoUpdateKeysOff = 0x80031038;
+AkaoUpdateNoiseVoices = 0x80031228;
+AkaoUpdateReverbVoices = 0x80031244;
+AkaoUpdatePitchLfoVoices = 0x80031260;
 AdjustAudioEventAddresses = 0x80031360;
 AkaoSetChannelCondition = 0x80033738;
 AkaoExecuteCommandsQueue = 0x80033B40;
@@ -947,4 +950,4 @@ g_CdReadTargetAddr =  0x8006207C;
 
 g_TaiwaBarX = 0x8012CA20;
 g_TaiwaState = 0x80132AB0;
-
+g_AkaoControl = 0x800DE9C0;

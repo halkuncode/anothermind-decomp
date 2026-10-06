@@ -479,11 +479,20 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoUpdateKeysOff);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80031134);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80031228);
+void AkaoUpdateNoiseVoices(void)
+{
+    g_AkaoControl.updateFlags |= AKAO_UPDATE_VOICE_MODES;
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80031244);
+void AkaoUpdateReverbVoices(void)
+{
+    g_AkaoControl.updateFlags |= AKAO_UPDATE_VOICE_MODES;
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80031260);
+void AkaoUpdatePitchLfoVoices(void)
+{
+    g_AkaoControl.updateFlags |= AKAO_UPDATE_VOICE_MODES;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8003127C);
 

@@ -253,6 +253,10 @@ typedef struct {
 
 extern s32 g_AudioInitialized;
 extern AkaoChannelConfig* g_AkaoChannelConfig;
+extern s16 g_AkaoPitchMulMusicSlideSteps;
+extern s32 g_AkaoPitchMulMusic;
+
+
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", InitSoundDriver);
 
@@ -284,7 +288,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", IsResourceLoaded);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSetStereoMonoMode);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_90_SetMuteMusicMask);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSendCmd_90_SetMuteMusicMask);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_92_SetCondition);
 
@@ -334,11 +338,11 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", SetMusicLayerTrack);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", SetMusicLayerTrackPan);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_D4_SetPitch);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSendCmd_D4_SetPitch);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", ReleaseMusicLayerTrack);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_D6_PitchSlideBetweenTargets);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSendCmd_D6_PitchSlideBetweenTargets);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", ResetAndStopMusicLayer);
 
@@ -346,7 +350,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", OverrideMusicLayerTrack);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", OverrideMusicLayerTrackWithPan);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_F0_StopMusic);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSendCmd_F0_StopMusic);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", CutSoundEffect);
 
@@ -574,29 +578,44 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_800331E0);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80033258);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80033324);
+extern s16 g_AkaoTempoMulMusicSlideSteps;
+extern s32 g_AkaoTempoMulMusic;
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80033340);
+void AkaoCmd_D0_SetTempo(AkaoTempoPitchSlide* cmd)
+{
+    s32 start = cmd->start;
+    g_AkaoTempoMulMusicSlideSteps = 0;
+    g_AkaoTempoMulMusic = start << 16;
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_800333A8);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_D1_TempoSlideFromCurr);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8003341C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_D2_TempoSlideBetweenTargets);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80033438);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_800334A0);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80033514);
+void AkaoCmd_D4_SetPitch(AkaoTempoPitchSlide* cmd)
+{
+    s32 pitch = cmd->start;
+    g_AkaoPitchMulMusicSlideSteps = 0;
+    g_AkaoPitchMulMusic = pitch << 16;
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8003354C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_D5_PitchSlideFromCurr);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80033588);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_D6_PitchSlideBetweenTargets);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80033678);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_F0_StopMusic);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_800336B8);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_11_StopMusicLane);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_800336F8);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_F1_StopAllSounds);
+
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_80_SetStereoMode);
+
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_81_SetMonoMode);
+
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_90_SetMuteMusicMask);
 
 void AkaoSetChannelCondition(AkaoQueuedCommand* cmd) { g_AkaoChannelConfig->condition = cmd->param0; }
 

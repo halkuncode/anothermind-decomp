@@ -35,6 +35,9 @@ _LI_RE         = re.compile(r"^\s*li\s+(\$[a-z0-9]+),\s*(\S+)")
 _STORE_BASE_RE = re.compile(r"^\s*(sw|sh|sb)\s+(\$[a-z0-9]+),\s*0\((\$[a-z0-9]+)\)")
 _STORE_SYM_OFF_RE = re.compile(r"^\s*(sw|sh|sb)\s+(\$[a-z0-9]+),\s*([A-Za-z0-9_]+)\+(\d+)")
 _LA_SYM_OFF_RE    = re.compile(r"^\s*la\s+(\$[a-z0-9]+),\s*([A-Za-z0-9_]+)\+(\d+)")
+_STORE_SYM_RE = re.compile(r"^\s*(sw|sh|sb)\s+(\$[a-z0-9]+),\s*([A-Za-z_][A-Za-z0-9_]*)\s*$")
+_STORE_INDIRECT_RE = re.compile(r"^\s*(sw|sh|sb)\s+(\$[a-z0-9]+),\s*(-?\d*)\((\$[a-z0-9]+)\)\s*$")
+_BRANCH_LABEL_RE = re.compile(r"^(\$|\.)?L\d+:$")
 
 
 def _is_code_line(line: str) -> bool:
@@ -79,12 +82,43 @@ def epilogue_delay_slot_swap(lines: list) -> list:
             i += 1
             continue
 
+        # Check if the instruction immediately preceding lw $31 is an independent store.
+        # ASPSX reorders such a store to fill the load delay slot of lw $31, avoiding a nop.
+        prev_store_idx = None
+        p = i - 1
+        while p >= 0:
+            line_p = result[p].strip()
+            if not line_p or line_p.startswith("#") or line_p.startswith("//") or line_p.startswith("/*"):
+                p -= 1
+                continue
+            if line_p.startswith("."):
+                if line_p.startswith(".end") or line_p.startswith(".ent"):
+                    break
+                p -= 1
+                continue
+            if line_p.endswith(":"):
+                if not (line_p.startswith("LM") or line_p.startswith("$Lb") or line_p.startswith("$Le")):
+                    break
+                p -= 1
+                continue
+            m_store = _STORE_SYM_RE.match(line_p) or _STORE_INDIRECT_RE.match(line_p)
+            if m_store:
+                store_reg = m_store.group(2)
+                if store_reg not in ("$31", "$ra") and "$31" not in line_p and "$ra" not in line_p and "$sp" not in line_p:
+                    prev_store_idx = p
+            break
+
         # All three found: lw $31 at i, addu $sp at j, j $31 at k
         sp_restore = result[j]
         j_line     = result[k]
         indent = re.match(r"^(\s*)", j_line).group(1)
 
-        nop_line       = indent + "nop\n"
+        if prev_store_idx is not None:
+            delay_slot_fill = result[prev_store_idx]
+            result[prev_store_idx] = ""
+        else:
+            delay_slot_fill = indent + "nop\n"
+
         noreorder_line = indent + ".set\tnoreorder\n"
         reorder_line   = indent + ".set\treorder\n"
 
@@ -93,18 +127,14 @@ def epilogue_delay_slot_swap(lines: list) -> list:
         after   = result[k + 1:]    # everything after j $31
 
         result = (before
-                  + [nop_line]
+                  + [delay_slot_fill]
                   + between
                   + [noreorder_line, j_line, sp_restore, reorder_line]
                   + after)
+        result = [line for line in result if line != ""]
         n = len(result)
         i += 1  # keep scanning; don't re-examine swapped lines
     return result
-
-
-_STORE_SYM_RE = re.compile(r"^\s*(sw|sh|sb)\s+(\$[a-z0-9]+),\s*([A-Za-z_][A-Za-z0-9_]*)\s*$")
-_STORE_INDIRECT_RE = re.compile(r"^\s*(sw|sh|sb)\s+(\$[a-z0-9]+),\s*(-?\d*)\((\$[a-z0-9]+)\)\s*$")
-_BRANCH_LABEL_RE = re.compile(r"^(\$|\.)?L\d+:$")
 
 
 def leaf_store_delay_slot_swap(lines: list) -> list:
@@ -559,15 +589,172 @@ def leaf_la_offset_struct_access_swap(lines: list) -> list:
     return result
 
 
+def leaf_store_multi_symbol_delay_slot_swap(lines: list, gp_symbols: set[str]) -> list:
+    """When a leaf function stores to sym1, performs an op, and stores to sym2 before j $31,
+    ASPSX expands sym1 with $3, loads %hi(sym2) into $3 before the operation, and puts the store to
+    %lo(sym2)($3) in the delay slot of j $31:
+        sh   $0, <sym1>
+        sll  $reg, $reg, <shift>
+        sw   $reg, <sym2>
+        j    $31
+    Becomes:
+        lui  $3, %hi(<sym1>)
+        sh   $0, %lo(<sym1>)($3)
+        lui  $3, %hi(<sym2>)
+        sll  $reg, $reg, <shift>
+        .set noreorder
+        j    $31
+        sw   $reg, %lo(<sym2>)($3)
+        .set reorder
+    """
+    result = list(lines)
+    n = len(result)
+    i = 0
+    while i < n:
+        if not _is_code_line(result[i]):
+            i += 1
+            continue
+        m1 = _STORE_SYM_RE.match(result[i].strip())
+        if not m1:
+            i += 1
+            continue
+        op1, reg1, sym1 = m1.group(1), m1.group(2), m1.group(3)
+        if is_gp_symbol(sym1, gp_symbols):
+            i += 1
+            continue
+
+        j = i + 1
+        while j < n and not _is_code_line(result[j]):
+            if result[j].strip().startswith(".end") or result[j].strip().startswith(".ent"):
+                break
+            j += 1
+        if j >= n or not _is_code_line(result[j]):
+            i += 1
+            continue
+
+        k = j + 1
+        while k < n and not _is_code_line(result[k]):
+            if result[k].strip().startswith(".end") or result[k].strip().startswith(".ent"):
+                break
+            k += 1
+        if k >= n:
+            i += 1
+            continue
+        m2 = _STORE_SYM_RE.match(result[k].strip())
+        if not m2:
+            i += 1
+            continue
+        op2, reg2, sym2 = m2.group(1), m2.group(2), m2.group(3)
+        if is_gp_symbol(sym2, gp_symbols):
+            i += 1
+            continue
+
+        l = k + 1
+        while l < n and not _is_code_line(result[l]):
+            if result[l].strip().startswith(".end") or result[l].strip().startswith(".ent"):
+                break
+            l += 1
+        if l >= n or not _J_RA_RE.match(result[l].strip()):
+            i += 1
+            continue
+
+        indent = re.match(r"^(\s*)", result[i]).group(1)
+        result[i] = f"{indent}lui\t$3,%hi({sym1})\n{indent}{op1}\t{reg1},%lo({sym1})($3)\n"
+        result[j] = f"{indent}lui\t$3,%hi({sym2})\n{result[j]}"
+        result[k] = ""
+        result[l] = f"{indent}.set\tnoreorder\n{indent}j\t$31\n{indent}{op2}\t{reg2},%lo({sym2})($3)\n{indent}.set\treorder\n"
+        i = l + 1
+    return [line for line in result if line != ""]
+
+
+def leaf_interleaved_store_swap(lines: list, gp_symbols: set[str]) -> list:
+    """When a leaf function stores to a non-GP symbol, followed by a GP symbol,
+    followed by another non-GP symbol:
+        sw   $reg1, <sym1>   (non-gp)
+        sb   $reg2, <sym2>   (gp)
+        sw   $reg3, <sym3>   (non-gp)
+    ASPSX expands sym1 with $2, loads %hi(sym3) into $2 before the GP store,
+    and stores to %lo(sym3)($2):
+        lui  $2, %hi(<sym1>)
+        sw   $reg1, %lo(<sym1>)($2)
+        lui  $2, %hi(<sym3>)
+        sb   $reg2, <sym2>
+        sw   $reg3, %lo(<sym3>)($2)
+    """
+    result = list(lines)
+    n = len(result)
+    i = 0
+    while i < n:
+        if not _is_code_line(result[i]):
+            i += 1
+            continue
+        m1 = _STORE_SYM_RE.match(result[i].strip())
+        if not m1:
+            i += 1
+            continue
+        op1, reg1, sym1 = m1.group(1), m1.group(2), m1.group(3)
+        if is_gp_symbol(sym1, gp_symbols):
+            i += 1
+            continue
+
+        j = i + 1
+        while j < n and not _is_code_line(result[j]):
+            if result[j].strip().startswith(".end") or result[j].strip().startswith(".ent"):
+                break
+            j += 1
+        if j >= n or not _is_code_line(result[j]):
+            i += 1
+            continue
+        m2 = _STORE_SYM_RE.match(result[j].strip())
+        if not m2:
+            i += 1
+            continue
+        op2, reg2, sym2 = m2.group(1), m2.group(2), m2.group(3)
+        if not is_gp_symbol(sym2, gp_symbols):
+            i += 1
+            continue
+
+        k = j + 1
+        while k < n and not _is_code_line(result[k]):
+            if result[k].strip().startswith(".end") or result[k].strip().startswith(".ent"):
+                break
+            k += 1
+        if k >= n or not _is_code_line(result[k]):
+            i += 1
+            continue
+        m3 = _STORE_SYM_RE.match(result[k].strip())
+        if not m3:
+            i += 1
+            continue
+        op3, reg3, sym3 = m3.group(1), m3.group(2), m3.group(3)
+        if is_gp_symbol(sym3, gp_symbols):
+            i += 1
+            continue
+
+        if reg1 in ("$2", "$v0") or reg2 in ("$2", "$v0") or reg3 in ("$2", "$v0"):
+            i += 1
+            continue
+
+        indent = re.match(r"^(\s*)", result[i]).group(1)
+        result[i] = f"{indent}lui\t$2,%hi({sym1})\n{indent}{op1}\t{reg1},%lo({sym1})($2)\n"
+        result[j] = f"{indent}lui\t$2,%hi({sym3})\n{result[j]}"
+        result[k] = f"{indent}{op3}\t{reg3},%lo({sym3})($2)\n"
+        i = k + 1
+    return result
+
+
 def main():
     in_text = sys.stdin.read()
     lines = in_text.splitlines(keepends=True)
+    gp_symbols = load_gp_symbols()
     lines = strip_dead_epilogue(lines)
     lines = epilogue_delay_slot_swap(lines)
     lines = leaf_la_delay_slot_swap(lines)
     lines = leaf_la_multi_store_delay_slot_swap(lines)
     lines = leaf_struct_multi_store_delay_slot_swap(lines)
     lines = leaf_la_offset_struct_access_swap(lines)
+    lines = leaf_store_multi_symbol_delay_slot_swap(lines, gp_symbols)
+    lines = leaf_interleaved_store_swap(lines, gp_symbols)
     lines = aspsx_load_symbol_scratch_swap(lines)
     filtered_text = "".join(lines)
 

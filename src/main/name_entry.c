@@ -2,6 +2,7 @@
 
 extern u8 g_ControllerTypeId;
 extern s32 g_CurrVibrationMode;
+extern s32 g_VibrationEffectFrameCount;
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", RunNameEntryScreen);
 
@@ -65,7 +66,15 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", DoVibeEffect3);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", BeginTaiwaVibration);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", CancelVibrationEffect);
+
+
+void StopVibrationEffect(void);
+
+void CancelVibrationEffect(void)
+{
+    StopVibrationEffect();
+    g_VibrationEffectFrameCount = 0;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", ResetMovieIRQSystem);
 
@@ -79,7 +88,20 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", SetVibrationMode_80015EBC);
 
 s32 IsVibrationEnabled(void) { return g_CurrVibrationMode; }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", StopVibrationEffect);
+extern s8 g_PrimaryVibrationBuffer;
+extern s8 g_VibrationCycleCounter;
+extern s32 g_VibrationStateFlag;
+extern s32 g_VibrationSegmentIndex;
+
+void StopVibrationEffect(void)
+{
+    g_VibrationStateFlag = 0;
+    g_PrimaryVibrationBuffer = 0;
+    g_VibrationSegmentIndex = 0;
+    g_VibrationCycleCounter = 0;
+}
+
+
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", GetMovieBuffer);
 

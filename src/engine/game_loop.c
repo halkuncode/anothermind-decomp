@@ -90,7 +90,12 @@ NewsMode* SetNews(void) {
     return news;
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", ClearNewsState);
+                            // extern
+
+void ClearNewsState(void)
+{
+    ResetNewsSystem();
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", SetNewsValue);
 

@@ -14,7 +14,8 @@ typedef enum ControllerCommand {
 } ControllerCommand;
 
 typedef struct ControllerState {
-    /* 0x00 */ u8 pad0[0x24];
+    /* 0x00 */ u8 pad0[0x20];
+    /* 0x20 */ u8* rumbleMap;
     /* 0x24 */ u8 configParam;
     /* 0x25 */ u8 pad25[3];
     /* 0x28 */ u8* vibrationBuffer;
@@ -113,7 +114,12 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/movie", ProcessMovieFrameStep);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/movie", SetVibrationPlaybackState);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/movie", func_800482FC);
+void SetControllerRumbleMap(ControllerState* controller)
+{
+    controller->configMode = CONTROLLER_RUMBLE_MAP;
+    controller->configBufferLength = 6;
+    controller->configBuffer = controller->rumbleMap;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/movie", func_80048318);
 

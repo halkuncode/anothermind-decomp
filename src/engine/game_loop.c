@@ -1,8 +1,7 @@
 //! CC1=2.8.0 ASPSX=2.56 G=0
 #include "common.h"
 
-
-//keep structs in c file
+// keep structs in c file
 typedef struct PortraitSlot {
     /* 0x00 */ u8 pad00[2];
     /* 0x02 */ s16 state;          // or u16 (written with 3 here)
@@ -13,7 +12,6 @@ typedef struct NewsMode {
     /* 0x00 */ s16 newsModeActive;
     /* 0x02 */ s16 newsDisplayMode;
 } NewsMode;
-
 
 typedef struct TaiwaState {
     /* 0x000 */ u8 highlightSlotEnabled;
@@ -91,19 +89,11 @@ NewsMode* SetNews(void) {
     return news;
 }
 
-
-void ClearNewsState(void)
-{
-    ResetNewsSystem();
-}
+void ClearNewsState(void) { ResetNewsSystem(); }
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", SetNewsValue);
 
-
-
-
-void LoadKanjiById(s32 kanjiSet)
-{
+void LoadKanjiById(s32 kanjiSet) {
     g_CurrentKanjiSet = kanjiSet;
     LoadKanjiTimData(kanjiSet);
 }
@@ -112,8 +102,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", ResetPortraitCacheStatus);
 
 extern s16 g_CurrentMenuRequest;
 
-void OpenMenuById(s32 menuId)
-{
+void OpenMenuById(s32 menuId) {
     g_CurrentMenuRequest = menuId;
     if (menuId < 3) {
         return;
@@ -121,11 +110,7 @@ void OpenMenuById(s32 menuId)
     g_CurrentMenuRequest = 0;
 }
 
-
-void PlayMovie(void)
-{
-    StartPlayMovie();
-}
+void PlayMovie(void) { StartPlayMovie(); }
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", SetupExtendedMovieFlashEffect);
 
@@ -180,8 +165,6 @@ INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010C8A4);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010C8C8);
 
-
-
 void ResetTaiwaFadeTimers(void) {
     g_TaiwaBarX = 0;
     g_TaiwaState.newsFadeSlot1 = 0;
@@ -196,9 +179,4 @@ INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", PlaySystemMessage);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010CB14);
 
-
-
-void DoGame(void)
-{
-    RunGameLoop();
-}
+void DoGame(void) { RunGameLoop(); }

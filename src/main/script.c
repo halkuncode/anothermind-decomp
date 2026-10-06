@@ -1,31 +1,30 @@
 #include "common.h"
 
 typedef enum {
-	EQ_OP_LOGIC_AND = 0x00,
-	EQ_OP_LOGIC_OR = 0x01,
-	EQ_OP_BIT_AND = 0x02,
-	EQ_OP_BIT_OR = 0x03,
-	EQ_OP_BIT_XOR = 0x04,
-	EQ_OP_LOGIC_NOT = 0x05,
-	EQ_OP_NEG = 0x06,
-	EQ_OP_ADD = 0x07,
-	EQ_OP_SUB = 0x08,
-	EQ_OP_MUL = 0x09,
-	EQ_OP_NOT_EUQ = 0x10,
-	EQ_OP_DIV = 0x0A,
-	EQ_OP_MOD = 0x0B,
-	EQ_OP_SHIF_L = 0x0D,
-	EQ_OP_SHIF_R = 0x0E,
-	EQ_OP_EQU = 0x0F,
-	EQ_OP_LT = 0x11,
-	EQ_OP_LTEQ = 0x12,
-	EQ_OP_GT = 0x13,
-	EQ_OP_GTEQ = 0x14,
-
+    EQ_OP_LOGIC_AND = 0x00,
+    EQ_OP_LOGIC_OR = 0x01,
+    EQ_OP_BIT_AND = 0x02,
+    EQ_OP_BIT_OR = 0x03,
+    EQ_OP_BIT_XOR = 0x04,
+    EQ_OP_LOGIC_NOT = 0x05,
+    EQ_OP_NEG = 0x06,
+    EQ_OP_ADD = 0x07,
+    EQ_OP_SUB = 0x08,
+    EQ_OP_MUL = 0x09,
+    EQ_OP_NOT_EUQ = 0x10,
+    EQ_OP_DIV = 0x0A,
+    EQ_OP_MOD = 0x0B,
+    EQ_OP_SHIF_L = 0x0D,
+    EQ_OP_SHIF_R = 0x0E,
+    EQ_OP_EQU = 0x0F,
+    EQ_OP_LT = 0x11,
+    EQ_OP_LTEQ = 0x12,
+    EQ_OP_GT = 0x13,
+    EQ_OP_GTEQ = 0x14,
 
 } EqOpcodes;
 
-void ExecuteUnaryOpcode(s32 opcode);  
+void ExecuteUnaryOpcode(s32 opcode);
 void ExecuteEquationOpcode(s32 opcode);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", InitOpcodeHandlerTable);
@@ -164,12 +163,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", CopyScriptToRuntimeBuffer);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", InitTitleScreenAudio);
 
-
-
-void ForceStopMusic(void)
-{
-    AkaoSendCmd_F0_StopMusic();
-}
+void ForceStopMusic(void) { AkaoSendCmd_F0_StopMusic(); }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", LoadStoryScript);
 
@@ -347,109 +341,47 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_newsput);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_newsquit);
 
-void Cmd_logicalAnd(void)
-{
-    ExecuteEquationOpcode(EQ_OP_LOGIC_AND);
-}
+void Cmd_logicalAnd(void) { ExecuteEquationOpcode(EQ_OP_LOGIC_AND); }
 
-void Cmd_logicalOr(void)
-{
-    ExecuteEquationOpcode(EQ_OP_LOGIC_OR);
-}
+void Cmd_logicalOr(void) { ExecuteEquationOpcode(EQ_OP_LOGIC_OR); }
 
-void Cmd_bitwiseAnd(void)
-{
-    ExecuteEquationOpcode(EQ_OP_BIT_AND);
-}
+void Cmd_bitwiseAnd(void) { ExecuteEquationOpcode(EQ_OP_BIT_AND); }
 
-void Cmd_bitwiseOr(void)
-{
-    ExecuteEquationOpcode(EQ_OP_BIT_OR);
-}
+void Cmd_bitwiseOr(void) { ExecuteEquationOpcode(EQ_OP_BIT_OR); }
 
-void Cmd_bitwiseXor(void)
-{
-    ExecuteEquationOpcode(EQ_OP_BIT_XOR);
-}
+void Cmd_bitwiseXor(void) { ExecuteEquationOpcode(EQ_OP_BIT_XOR); }
 
-void Cmd_logicalNot(void)
-{
-    ExecuteUnaryOpcode(EQ_OP_LOGIC_NOT);
-}
+void Cmd_logicalNot(void) { ExecuteUnaryOpcode(EQ_OP_LOGIC_NOT); }
 
-void Cmd_negate(void)
-{
-    ExecuteUnaryOpcode(EQ_OP_NEG);
-}
+void Cmd_negate(void) { ExecuteUnaryOpcode(EQ_OP_NEG); }
 
+void Cmd_add(void) { ExecuteEquationOpcode(EQ_OP_ADD); }
 
+void Cmd_subtract(void) { ExecuteEquationOpcode(EQ_OP_SUB); }
 
-void Cmd_add(void)
-{
-    ExecuteEquationOpcode(EQ_OP_ADD);
-}
+void Cmd_multiply(void) { ExecuteEquationOpcode(EQ_OP_MUL); }
 
-void Cmd_subtract(void)
-{
-    ExecuteEquationOpcode(EQ_OP_SUB);
-}
+void Cmd_divide(void) { ExecuteEquationOpcode(EQ_OP_DIV); }
 
-void Cmd_multiply(void)
-{
-    ExecuteEquationOpcode(EQ_OP_MUL);
-}
-
-void Cmd_divide(void)
-{
-    ExecuteEquationOpcode(EQ_OP_DIV);
-}
-
-void Cmd_modulo(void)
-{
-    ExecuteEquationOpcode(EQ_OP_MOD);
-}
+void Cmd_modulo(void) { ExecuteEquationOpcode(EQ_OP_MOD); }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_setVariable);
 
-void Cmd_shiftLeft(void)
-{
-    ExecuteEquationOpcode(EQ_OP_SHIF_L);
-}
+void Cmd_shiftLeft(void) { ExecuteEquationOpcode(EQ_OP_SHIF_L); }
 
-void Cmd_shiftRight(void)
-{
-    ExecuteEquationOpcode(EQ_OP_SHIF_R);
-}
+void Cmd_shiftRight(void) { ExecuteEquationOpcode(EQ_OP_SHIF_R); }
 
-void Cmd_equal(void)
-{
-    ExecuteEquationOpcode(EQ_OP_EQU);
-}
+void Cmd_equal(void) { ExecuteEquationOpcode(EQ_OP_EQU); }
 
-void Cmd_notEqual(void)
-{
-    ExecuteEquationOpcode(EQ_OP_NOT_EUQ);
-}
+void Cmd_notEqual(void) { ExecuteEquationOpcode(EQ_OP_NOT_EUQ); }
 
-void Cmd_lessThan(void)
-{
-    ExecuteEquationOpcode(EQ_OP_LT);
-}
+void Cmd_lessThan(void) { ExecuteEquationOpcode(EQ_OP_LT); }
 
-void Cmd_lessThanOrEqual(void)
-{
-    ExecuteEquationOpcode(EQ_OP_LTEQ);
-}
+void Cmd_lessThanOrEqual(void) { ExecuteEquationOpcode(EQ_OP_LTEQ); }
 
-void Cmd_greaterThan(void)
-{
-    ExecuteEquationOpcode(EQ_OP_GT);
-}
+void Cmd_greaterThan(void) { ExecuteEquationOpcode(EQ_OP_GT); }
 
-void Cmd_graterThanOrEqualTo(void)
-{
-    ExecuteEquationOpcode(EQ_OP_GTEQ);
-}
+void Cmd_graterThanOrEqualTo(void) { ExecuteEquationOpcode(EQ_OP_GTEQ); }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", ReadScript16bitBE);
 

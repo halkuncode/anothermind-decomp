@@ -40,6 +40,7 @@ BeginTaiwaVibration = 0x80015D44;
 CancelVibrationEffect = 0x80015D68;
 ResetControllerIRQSystem = 0x80015D88;
 GetRawControllerInput = 0x80015DBC;
+PlaySfx = 0x80015E4C;
 SetVibrationMode_80015E70 = 0x80015E70;
 SetVibrationMode_80015EBC = 0x80015EBC;
 IsVibrationEnabled = 0x80015EE4;
@@ -983,9 +984,7 @@ PlaySystemMessage = 0x8010CAAC;
 DoGame = 0x8010CB70;
 g_PortraitSlotIndex = 0x8012C958;
 g_TaiwaBarX = 0x8012CA20;
-g_NewsMode = 0x80130CB0;
-g_TaiwaState = 0x80132AB0;
-
 g_CurrentMenuRequest = 0x801308EE;
-
+g_NewsMode = 0x80130CB0;
 g_CurrentKanjiSet = 0x80130D1A;
+g_TaiwaState = 0x80132AB0;

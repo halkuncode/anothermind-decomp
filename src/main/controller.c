@@ -1,13 +1,13 @@
 //! PSYQ=4.0
 #include "common.h"
 
-// Note 'volitile' is allowed here as a deviation from 
+// Note 'volitile' is allowed here as a deviation from
 // STYLE.md due to the high degree of timing needed
-// for the root counter, 
+// for the root counter,
 #define RCNT_REG(addr) (*(volatile u16*)(addr))
-#define RCNT2_COUNT    0x1F801120
-#define RCNT2_MODE     0x1F801124
-#define RCNT2_TARGET   0x1F801128
+#define RCNT2_COUNT 0x1F801120
+#define RCNT2_MODE 0x1F801124
+#define RCNT2_TARGET 0x1F801128
 
 typedef enum ControllerCommand {
     CONTROLLER_POLL = 0x42,
@@ -41,22 +41,11 @@ typedef struct ControllerAttribute {
     /* 0x38 */ u8 savedCmdType;
 } ControllerAttribute;
 
-void GsGetAndClearControllerReadyFlag(void)
-{
-    GetAndClearControllerReadyFlag();
-}
+void GsGetAndClearControllerReadyFlag(void) { GetAndClearControllerReadyFlag(); }
 
+void GsResetInterruptHandlers(void) { ResetInterruptHandlersAndTimers(); }
 
-void GsResetInterruptHandlers(void)
-{
-    ResetInterruptHandlersAndTimers();
-}
-
-
-void GsRemoveInterruptHandlers(void)
-{
-    RemoveInterruptHandlersAndTimers();
-}
+void GsRemoveInterruptHandlers(void) { RemoveInterruptHandlersAndTimers(); }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller", func_800467A8);
 
@@ -133,8 +122,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/controller", ProcessControllerPacketStep);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller", SetVibrationPlaybackState);
 
-void SetControllerRumbleMap(ControllerState* controller)
-{
+void SetControllerRumbleMap(ControllerState* controller) {
     controller->configMode = CONTROLLER_RUMBLE_MAP;
     controller->configBufferLength = 6;
     controller->configBuffer = controller->rumbleMap;
@@ -182,14 +170,13 @@ void SetControllerQueryParam(ControllerState* controller, u8 param) {
     controller->configBufferLength = 1;
 }
 
-void SetControllerAbort(ControllerState* controller)
-{
+void SetControllerAbort(ControllerState* controller) {
     controller->configMode = CONTROLLER_ABORT;
     controller->configBuffer = NULL;
     controller->configBufferLength = 0;
 }
 
-//TU Split (?)
+// TU Split (?)
 __asm__(".align 3\n");
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller", func_800485D8);
@@ -240,8 +227,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/controller", func_800496E0);
 extern s32 g_ControllerTimeoutStartTime;
 extern s32 g_ControllerTimeoutDuration;
 
-void StartControllerTimeout(s32 duration)
-{
+void StartControllerTimeout(s32 duration) {
     g_ControllerTimeoutDuration = duration;
     g_ControllerTimeoutStartTime = RCNT_REG(RCNT2_COUNT);
 }

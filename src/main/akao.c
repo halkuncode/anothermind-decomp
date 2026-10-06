@@ -4,25 +4,18 @@
 #include "akao.h"
 #include "libspu.h"
 
-
-
-
 extern s32 g_AudioInitialized;
 extern AkaoChannelConfig* g_AkaoChannelConfig;
 extern s16 g_AkaoPitchMulMusicSlideSteps;
 extern s32 g_AkaoPitchMulMusic;
 extern s32 g_AkaoCdVol;
 
-
-s32 InitSoundDriver(void)
-{
+s32 InitSoundDriver(void) {
     SetupSpuAndAudioEvents();
     return 0;
 }
 
-
-s32 ShutdownSoundSystem(void)
-{
+s32 ShutdownSoundSystem(void) {
     StopAndCloseSoundEvents();
     return 0;
 }
@@ -200,13 +193,9 @@ void AkaoSpuPitchLfoOn(u32 mask) {
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSpuSetVoiceVolume);
 
-void AkaoSpuSetVoicePitch(s32 voice, s16 pitch) {
-    SPU_VOICE_REG(voice, SPU_VOICE_PITCH_OFFSET) = pitch;
-}
+void AkaoSpuSetVoicePitch(s32 voice, s16 pitch) { SPU_VOICE_REG(voice, SPU_VOICE_PITCH_OFFSET) = pitch; }
 
-void AkaoSpuSetVoiceStartAddress(s32 voice, u32 addr) {
-    SPU_VOICE_REG(voice, SPU_VOICE_START_ADDR_OFFSET) = addr >> 3;
-}
+void AkaoSpuSetVoiceStartAddress(s32 voice, u32 addr) { SPU_VOICE_REG(voice, SPU_VOICE_START_ADDR_OFFSET) = addr >> 3; }
 
 void AkaoSpuSetVoiceLoopAddress(s32 voice, u32 loopAddr) {
     SPU_VOICE_REG(voice, SPU_VOICE_LOOP_ADDR_OFFSET) = loopAddr >> 3;
@@ -248,20 +237,11 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoUpdateKeysOff);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80031134);
 
-void AkaoUpdateNoiseVoices(void)
-{
-    g_AkaoControl.updateFlags |= AKAO_UPDATE_VOICE_MODES;
-}
+void AkaoUpdateNoiseVoices(void) { g_AkaoControl.updateFlags |= AKAO_UPDATE_VOICE_MODES; }
 
-void AkaoUpdateReverbVoices(void)
-{
-    g_AkaoControl.updateFlags |= AKAO_UPDATE_VOICE_MODES;
-}
+void AkaoUpdateReverbVoices(void) { g_AkaoControl.updateFlags |= AKAO_UPDATE_VOICE_MODES; }
 
-void AkaoUpdatePitchLfoVoices(void)
-{
-    g_AkaoControl.updateFlags |= AKAO_UPDATE_VOICE_MODES;
-}
+void AkaoUpdatePitchLfoVoices(void) { g_AkaoControl.updateFlags |= AKAO_UPDATE_VOICE_MODES; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8003127C);
 
@@ -346,8 +326,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80033258);
 extern s16 g_AkaoTempoMulMusicSlideSteps;
 extern s32 g_AkaoTempoMulMusic;
 
-void AkaoCmd_D0_SetTempo(AkaoTempoPitchSlide* cmd)
-{
+void AkaoCmd_D0_SetTempo(AkaoTempoPitchSlide* cmd) {
     s32 start = cmd->start;
     g_AkaoTempoMulMusicSlideSteps = 0;
     g_AkaoTempoMulMusic = start << 16;
@@ -357,10 +336,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_D1_TempoSlideFromCurr);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_D2_TempoSlideBetweenTargets);
 
-
-
-void AkaoCmd_D4_SetPitch(AkaoTempoPitchSlide* cmd)
-{
+void AkaoCmd_D4_SetPitch(AkaoTempoPitchSlide* cmd) {
     s32 pitch = cmd->start;
     g_AkaoPitchMulMusicSlideSteps = 0;
     g_AkaoPitchMulMusic = pitch << 16;
@@ -410,8 +386,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoExec);
 
 extern s32 g_AkaoCdVol;
 
-void AkaoUpdateCdVolume(void)
-{
+void AkaoUpdateCdVolume(void) {
     SPU_REG(SPU_CD_VOL_L) = (s16)(g_AkaoCdVol >> 16);
     SPU_REG(SPU_CD_VOL_R) = (s16)(g_AkaoCdVol >> 16);
 }
@@ -580,7 +555,6 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_BA_TremoloOff);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_BC_SetPanLfo);
 
-
 void AkaoOp_BD_PanLfoDepth(AkaoChannel* track) {
     u8* seq = track->akaoSequencePointer;
     u8 val = *seq++;
@@ -588,8 +562,6 @@ void AkaoOp_BD_PanLfoDepth(AkaoChannel* track) {
 
     track->panLfoDepth = val << 7;
 }
-
-
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_DF_PanLfoDepthSlideFromCurr);
 
@@ -722,12 +694,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037E98);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037EC8);
 
-
-
-void AkaoCmd_E2_StopStream(void)
-{
-    AkaoStopStream();
-}
+void AkaoCmd_E2_StopStream(void) { AkaoStopStream(); }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037F30);
 

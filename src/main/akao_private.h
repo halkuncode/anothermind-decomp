@@ -1,4 +1,4 @@
-// For akao.c, stucts go here 
+// For akao.c, stucts go here
 //  16.16 fixed point volume
 typedef union {
     s32 val;

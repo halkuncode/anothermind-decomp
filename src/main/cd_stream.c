@@ -10,8 +10,6 @@ extern s32 g_CdReadStartSector;
 extern s32 g_CdReadByteCount;
 extern s32 g_CdReadTargetAddr;
 
-
-
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", LoadChapterEndGraphic);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", GetCdFileSectorInfo);
@@ -20,15 +18,12 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", ProcessCdReadStateMachine);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", DisplayCdFileDebugStatus);
 
-
-void LoadRawSectorData(s32 startSector, s32 byteCount, s32 destination)
-{
+void LoadRawSectorData(s32 startSector, s32 byteCount, s32 destination) {
     g_CdReadStartSector = startSector;
     g_CdReadByteCount = byteCount;
     g_CdReadTargetAddr = destination;
     g_CdState = 1;
 }
-
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", LoadCdPosTablefromCd);
 
@@ -112,10 +107,7 @@ void func_8001B854(void) {}
 
 void func_8001B85C(void) {}
 
-void StopScriptedMovieDecoder(void)
-{
-    ShutdownMovieDecoder();
-}
+void StopScriptedMovieDecoder(void) { ShutdownMovieDecoder(); }
 
 s32 IsMovieDecoderActive(void) { return g_MovieDecoderActive; }
 

@@ -63,26 +63,19 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", StartVibrationEffect);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", DisplayPadDebugPanel);
 
-
-
-void BeginFlashVibration(void)
-{
+void BeginFlashVibration(void) {
     StartVibrationEffect(VIBE_EFFECT_FLASH);
     g_VibrationEffectFrameCount = VIBE_EFFECT_DEFAULT_DURATION;
 }
 
-void BeginTaiwaVibration(void)
-{
+void BeginTaiwaVibration(void) {
     StartVibrationEffect(VIBE_EFFECT_TAIWA);
     g_VibrationEffectFrameCount = VIBE_EFFECT_DEFAULT_DURATION;
 }
 
-
-
 void StopVibrationEffect(void);
 
-void CancelVibrationEffect(void)
-{
+void CancelVibrationEffect(void) {
     StopVibrationEffect();
     g_VibrationEffectFrameCount = 0;
 }
@@ -91,12 +84,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", ResetControllerIRQSystem);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", GetRawControllerInput);
 
-s32 PlaySingleSoundeffect(s16);                     
-
-s32 func_80015E4C(s16 arg0) {
-    PlaySingleSoundeffect(arg0);
-}
-
+s32 PlaySfx(s16 arg0) { PlaySingleSoundeffect(arg0); }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", SetVibrationMode_80015E70);
 
@@ -109,15 +97,12 @@ extern s8 g_VibrationCycleCounter;
 extern s32 g_VibrationStateFlag;
 extern s32 g_VibrationSegmentIndex;
 
-void StopVibrationEffect(void)
-{
+void StopVibrationEffect(void) {
     g_VibrationStateFlag = 0;
     g_PrimaryVibrationBuffer = 0;
     g_VibrationSegmentIndex = 0;
     g_VibrationCycleCounter = 0;
 }
-
-
 
 extern u8 g_ControllerPort1Buffer[];
 extern u8 g_ControllerPort2Buffer[];

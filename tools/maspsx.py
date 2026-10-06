@@ -101,7 +101,7 @@ def epilogue_delay_slot_swap(lines: list) -> list:
     return result
 
 
-_STORE_SYM_RE = re.compile(r"^\s*(sw|sh|sb)\s+(\$[a-z0-9]+),\s*([A-Za-z0-9_]+)\s*$")
+_STORE_SYM_RE = re.compile(r"^\s*(sw|sh|sb)\s+(\$[a-z0-9]+),\s*([A-Za-z_][A-Za-z0-9_]*)\s*$")
 _STORE_INDIRECT_RE = re.compile(r"^\s*(sw|sh|sb)\s+(\$[a-z0-9]+),\s*(-?\d*)\((\$[a-z0-9]+)\)\s*$")
 _BRANCH_LABEL_RE = re.compile(r"^(\$|\.)?L\d+:$")
 

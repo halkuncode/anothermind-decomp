@@ -404,15 +404,30 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", InitSeLoopWorkArea);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", StopAndCloseSoundEvents);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSpuKeyOn);
+void AkaoSpuKeyOn(u32 mask) {
+    SPU_REG(SPU_VOICE_KEY_ON_LO) = mask;
+    SPU_REG(SPU_VOICE_KEY_ON_HI) = mask >> 16;
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSpuKeyOff);
+void AkaoSpuKeyOff(u32 mask) {
+    SPU_REG(SPU_VOICE_KEY_OFF_LO) = mask;
+    SPU_REG(SPU_VOICE_KEY_OFF_HI) = mask >> 16;
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSpuNoiseOn);
+void AkaoSpuReverbOn(u32 mask) {
+    SPU_REG(SPU_VOICE_CHN_REVERB_LO) = mask;
+    SPU_REG(SPU_VOICE_CHN_REVERB_HI) = mask >> 16;
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSpuPitchLfoOn);
+void AkaoSpuNoiseOn(u32 mask) {
+    SPU_REG(SPU_VOICE_CHN_NOISE_LO) = mask;
+    SPU_REG(SPU_VOICE_CHN_NOISE_HI) = mask >> 16;
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSpuReverbOn);
+void AkaoSpuPitchLfoOn(u32 mask) {
+    SPU_REG(SPU_VOICE_CHN_FM_LO) = mask;
+    SPU_REG(SPU_VOICE_CHN_FM_HI) = mask >> 16;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSpuSetVoiceVolume);
 

@@ -769,7 +769,7 @@ def main():
     gp_symbols = load_gp_symbols()
 
     is_unswapped_epilogue_file = any(
-        line.strip().startswith(".file") and ("movie.c" in line or "psxsdk.c" in line)
+        line.strip().startswith(".file") and ("controller.c" in line or "movie.c" in line or "psxsdk.c" in line)
         for line in lines[:15]
     )
 

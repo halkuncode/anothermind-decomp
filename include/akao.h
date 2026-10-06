@@ -72,6 +72,7 @@ extern AkaoControl g_AkaoControl;
 void AkaoUpdateNoiseVoices(void);
 void AkaoUpdateReverbVoices(void);
 void AkaoUpdatePitchLfoVoices(void);
+void AkaoStopStream(void);
 
 // Sequence opcodes (0xA0..0xFF)
 #define AKAO_OP_FINISH_CHANNEL 0xA0
@@ -163,6 +164,7 @@ typedef enum {
     AKAO_TEMPO_AND_PITCH_SLIDE_BETWEEN_TARGETS = 0xDA,
     AKAO_SET_REVERB_PAN = 0xE0,
     AKAO_OP_VOICE_BUS_ROUTING_ON = 0xE0,
+    AKAO_STOP_STREAM = 0xE2,
     AKAO_SET_REVERB_MUL = 0xE4,
     AKAO_STOP_MUSIC = 0xF0,
     AKAO_STOP_ALL_SOUNDS = 0xF1,
@@ -172,7 +174,6 @@ typedef enum {
     AKAO_RESTORE_STATE = 0xF5,
     AKAO_STREAM_REVERB_MASK_CLEAR = 0xF8,
     AKAO_STREAM_REVERB_MASK_RESTORE = 0xF9,
-    AKAO_STOP_STREAM = 0xFA,
 } AkaoCommands;
 
 #define SPU_VOICE_REG(voice, offset) (*(volatile u16*)(0x1F801C00 + (offset) + ((voice) * 0x10)))

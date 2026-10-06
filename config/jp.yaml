@@ -31,7 +31,7 @@ overlays:
           - [0xC664, c, main/script]
           - [0x1E648, c, main/akao]
           - [0x2946C, c, main/psxsdk]
-          - [0x36F48, c, main/movie]
+          - [0x36F48, c, main/controller]
           - [0x39FD8, data]
           - [0x5221C, sdata]
           - [0x527B8, sbss]

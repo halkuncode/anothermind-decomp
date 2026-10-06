@@ -258,9 +258,18 @@ extern s32 g_AkaoPitchMulMusic;
 
 
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", InitSoundDriver);
+s32 InitSoundDriver(void)
+{
+    SetupSpuAndAudioEvents();
+    return 0;
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", ShutdownSoundSystem);
+
+s32 ShutdownSoundSystem(void)
+{
+    StopAndCloseSoundEvents();
+    return 0;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", EnsureSeLoopBlockInitialized);
 
@@ -914,7 +923,7 @@ void AkaoOp_Null(void) { AkaoOp_A0_FinishChannel(); }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037578);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8003760C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStopStream);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037690);
 
@@ -942,7 +951,12 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037E98);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037EC8);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037F10);
+
+
+void AkaoCmd_E2_StopStream(void)
+{
+    AkaoStopStream();
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037F30);
 

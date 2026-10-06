@@ -76,7 +76,7 @@ void CancelVibrationEffect(void)
     g_VibrationEffectFrameCount = 0;
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", ResetMovieIRQSystem);
+INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", ResetControllerIRQSystem);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", GetRawControllerInput);
 

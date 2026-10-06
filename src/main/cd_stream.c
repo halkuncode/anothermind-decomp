@@ -112,7 +112,10 @@ void func_8001B854(void) {}
 
 void func_8001B85C(void) {}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", StopScriptedMovieDecoder);
+void StopScriptedMovieDecoder(void)
+{
+    ShutdownMovieDecoder();
+}
 
 s32 IsMovieDecoderActive(void) { return g_MovieDecoderActive; }
 

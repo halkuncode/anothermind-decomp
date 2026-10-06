@@ -104,7 +104,11 @@ INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", ResetPortraitCacheStatus);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", OpenMenuById);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", PlayMovie);
+
+void PlayMovie(void)
+{
+    StartPlayMovie();
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", SetupExtendedMovieFlashEffect);
 

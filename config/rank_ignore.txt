@@ -8,3 +8,4 @@ psxsdk
 func_80038C64
 BIOS_bzero
 func_80049248
+AkaoSpuSetVoicePitch

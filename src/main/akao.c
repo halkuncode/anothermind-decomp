@@ -824,7 +824,11 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_DC_FixNoteLength);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_EC_DrumModeOn);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_ED_DrumModeOff);
+void AkaoOp_ED_DrumModeOff(AkaoChannel* track)
+{
+    track->voiceAttr.drumKey = 0;
+    track->updateFlags &= ~AKAO_UPDATE_DRUM_MODE;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_FD_TimeSignature);
 

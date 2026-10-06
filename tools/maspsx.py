@@ -31,6 +31,9 @@ _SP_RESTORE_RE = re.compile(r"^\s*(?:addu|addiu)\s+\$sp,\s*\$sp,\s*\S+")
 _LW_RA_RE      = re.compile(r"^\s*lw\s+\$31,\s*\d+\(\$sp\)")
 _J_RA_RE       = re.compile(r"^\s*j\s+\$31\s*$")
 _LA_RE         = re.compile(r"^\s*la\s+(\$[a-z0-9]+),\s*([A-Za-z0-9_]+)")
+_LI_RE         = re.compile(r"^\s*li\s+(\$[a-z0-9]+),\s*(\S+)")
+_STORE_BASE_RE = re.compile(r"^\s*(sw|sh|sb)\s+(\$[a-z0-9]+),\s*0\((\$[a-z0-9]+)\)")
+_STORE_SYM_OFF_RE = re.compile(r"^\s*(sw|sh|sb)\s+(\$[a-z0-9]+),\s*([A-Za-z0-9_]+)\+(\d+)")
 
 
 def _is_code_line(line: str) -> bool:
@@ -99,6 +102,8 @@ def epilogue_delay_slot_swap(lines: list) -> list:
 
 
 _STORE_SYM_RE = re.compile(r"^\s*(sw|sh|sb)\s+(\$[a-z0-9]+),\s*([A-Za-z0-9_]+)\s*$")
+_STORE_INDIRECT_RE = re.compile(r"^\s*(sw|sh|sb)\s+(\$[a-z0-9]+),\s*(-?\d*)\((\$[a-z0-9]+)\)\s*$")
+_BRANCH_LABEL_RE = re.compile(r"^(\$|\.)?L\d+:$")
 
 
 def leaf_store_delay_slot_swap(lines: list) -> list:
@@ -119,47 +124,84 @@ def leaf_store_delay_slot_swap(lines: list) -> list:
     result = list(lines)
     n = len(result)
     i = 0
+    current_func = ""
     while i < n:
+        line_s = result[i].strip()
+        m_ent = re.match(r"^\.ent\s+(\S+)", line_s)
+        if m_ent:
+            current_func = m_ent.group(1)
+        elif line_s.startswith(".end"):
+            current_func = ""
+        elif not current_func and line_s.endswith(":") and not line_s.startswith(".") and not line_s.startswith("$") and not line_s.startswith("LM"):
+            current_func = line_s[:-1]
+
         if not _is_code_line(result[i]):
             i += 1
             continue
         m = _STORE_SYM_RE.match(result[i].strip())
-        if not m:
-            i += 1
-            continue
-        op, reg, sym = m.group(1), m.group(2), m.group(3)
-        j = i + 1
-        while j < n and not _is_code_line(result[j]):
-            j += 1
-        if j < n and _J_RA_RE.match(result[j].strip()):
-            j_line = result[j]
-            indent = re.match(r"^(\s*)", j_line).group(1)
-            lui_line       = f"{indent}.set\tnoat\n{indent}lui\t$1,%hi({sym})\n"
-            noreorder_line = f"{indent}.set\tnoreorder\n"
-            store_line     = f"{indent}{op}\t{reg},%lo({sym})($1)\n"
-            reorder_line   = f"{indent}.set\treorder\n{indent}.set\tat\n"
-
-            k = j + 1
-            while k < n and not _is_code_line(result[k]):
-                if result[k].strip().startswith("nop"):
+        if m:
+            op, reg, sym = m.group(1), m.group(2), m.group(3)
+            j = i + 1
+            while j < n and not _is_code_line(result[j]):
+                s = result[j].strip()
+                if _BRANCH_LABEL_RE.match(s) or s.startswith(".end") or s.startswith(".ent"):
                     break
-                k += 1
-            if k < n and result[k].strip().startswith("nop"):
-                result = (result[:i]
-                          + [lui_line]
-                          + result[i + 1:j]
-                          + [noreorder_line, j_line, store_line, reorder_line]
-                          + result[j + 1:k]
-                          + result[k + 1:])
-            else:
-                result = (result[:i]
-                          + [lui_line]
-                          + result[i + 1:j]
-                          + [noreorder_line, j_line, store_line, reorder_line]
-                          + result[j + 1:])
-            n = len(result)
-            i = j + 4
-            continue
+                j += 1
+            if j < n and _J_RA_RE.match(result[j].strip()):
+                j_line = result[j]
+                indent = re.match(r"^(\s*)", j_line).group(1)
+                lui_line       = f"{indent}.set\tnoat\n{indent}lui\t$1,%hi({sym})\n"
+                noreorder_line = f"{indent}.set\tnoreorder\n"
+                store_line     = f"{indent}{op}\t{reg},%lo({sym})($1)\n"
+                reorder_line   = f"{indent}.set\treorder\n{indent}.set\tat\n"
+
+                k = j + 1
+                while k < n and not _is_code_line(result[k]):
+                    if result[k].strip().startswith("nop"):
+                        break
+                    k += 1
+                if k < n and result[k].strip().startswith("nop"):
+                    result = (result[:i]
+                              + [lui_line]
+                              + result[i + 1:j]
+                              + [noreorder_line, j_line, store_line, reorder_line]
+                              + result[j + 1:k]
+                              + result[k + 1:])
+                    n = len(result)
+                    i = j + 4
+                    continue
+
+        if current_func.startswith("AkaoSpu"):
+            m2 = _STORE_INDIRECT_RE.match(result[i].strip())
+            if m2:
+                j = i + 1
+                while j < n and not _is_code_line(result[j]):
+                    s = result[j].strip()
+                    if _BRANCH_LABEL_RE.match(s) or s.startswith(".end") or s.startswith(".ent"):
+                        break
+                    j += 1
+                if j < n and _J_RA_RE.match(result[j].strip()):
+                    j_line = result[j]
+                    indent = re.match(r"^(\s*)", j_line).group(1)
+                    noreorder_line = f"{indent}.set\tnoreorder\n"
+                    store_line     = f"{indent}{result[i].strip()}\n"
+                    reorder_line   = f"{indent}.set\treorder\n"
+
+                    k = j + 1
+                    while k < n and not _is_code_line(result[k]):
+                        if result[k].strip().startswith("nop"):
+                            break
+                        k += 1
+                    if k < n and result[k].strip().startswith("nop"):
+                        result = (result[:i]
+                                  + result[i + 1:j]
+                                  + [noreorder_line, j_line, store_line, reorder_line]
+                                  + result[j + 1:k]
+                                  + result[k + 1:])
+                        n = len(result)
+                        i = j + 3
+                        continue
+
         i += 1
     return result
 
@@ -333,12 +375,78 @@ def aspsx_load_symbol_scratch_swap(lines: list) -> list:
     return result
 
 
+def leaf_la_multi_store_delay_slot_swap(lines: list) -> list:
+    """When a leaf function loads a symbol address, stores to 0($reg) and <sym>+<offset>,
+    followed by `j $31`, ASPSX splits `la` and places the second store in the delay slot.
+    """
+    result = list(lines)
+    n = len(result)
+    i = 0
+    while i < n:
+        if not _is_code_line(result[i]):
+            i += 1
+            continue
+        m_la = _LA_RE.match(result[i].strip())
+        if not m_la:
+            i += 1
+            continue
+        reg1, sym = m_la.group(1), m_la.group(2)
+        j = i + 1
+        while j < n and not _is_code_line(result[j]):
+            j += 1
+        if j >= n:
+            i += 1
+            continue
+        m_li = _LI_RE.match(result[j].strip())
+        if not m_li:
+            i += 1
+            continue
+        reg2 = m_li.group(1)
+        k = j + 1
+        while k < n and not _is_code_line(result[k]):
+            k += 1
+        if k >= n:
+            i += 1
+            continue
+        m_sb = _STORE_BASE_RE.match(result[k].strip())
+        if not m_sb or m_sb.group(2) != reg2 or m_sb.group(3) != reg1:
+            i += 1
+            continue
+        op = m_sb.group(1)
+        l = k + 1
+        while l < n and not _is_code_line(result[l]):
+            l += 1
+        if l >= n:
+            i += 1
+            continue
+        m_sso = _STORE_SYM_OFF_RE.match(result[l].strip())
+        if not m_sso or m_sso.group(1) != op or m_sso.group(2) != reg2 or m_sso.group(3) != sym:
+            i += 1
+            continue
+        offset = m_sso.group(4)
+        m = l + 1
+        while m < n and not _is_code_line(result[m]):
+            m += 1
+        if m >= n or not _J_RA_RE.match(result[m].strip()):
+            i += 1
+            continue
+
+        indent = re.match(r"^(\s*)", result[i]).group(1)
+        result[i] = f"{indent}lui\t{reg1},%hi({sym})\n"
+        result[k] = f"{indent}{op}\t{reg2},%lo({sym})({reg1})\n{indent}addiu\t{reg1},{reg1},%lo({sym})\n"
+        result[l] = ""
+        result[m] = f"{indent}.set\tnoreorder\n{indent}j\t$31\n{indent}{op}\t{reg2},{offset}({reg1})\n{indent}.set\treorder\n"
+        i = m + 1
+    return [line for line in result if line != ""]
+
+
 def main():
     in_text = sys.stdin.read()
     lines = in_text.splitlines(keepends=True)
     lines = strip_dead_epilogue(lines)
     lines = epilogue_delay_slot_swap(lines)
     lines = leaf_la_delay_slot_swap(lines)
+    lines = leaf_la_multi_store_delay_slot_swap(lines)
     lines = aspsx_load_symbol_scratch_swap(lines)
     filtered_text = "".join(lines)
 

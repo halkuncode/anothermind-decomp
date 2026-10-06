@@ -936,3 +936,5 @@ WaitWithDialogueUI = 0x8010C9E4;
 PlayDialogueMessage = 0x8010CA44;
 PlaySystemMessage = 0x8010CAAC;
 DoGame = 0x8010CB70;
+g_PortraitSlotIndex = 0x8012C958;
+g_NewsMode = 0x80130CB0;

@@ -166,12 +166,12 @@ typedef enum {
 #define SPU_VOICE_REG(voice, offset) (*(volatile u16*)(0x1F801C00 + (offset) + ((voice) * 0x10)))
 
 // Voice channel register offsets (from 0x1F801C00 base)
-#define SPU_VOICE_VOL_L_OFFSET      0x00
-#define SPU_VOICE_VOL_R_OFFSET      0x02
-#define SPU_VOICE_PITCH_OFFSET      0x04
+#define SPU_VOICE_VOL_L_OFFSET 0x00
+#define SPU_VOICE_VOL_R_OFFSET 0x02
+#define SPU_VOICE_PITCH_OFFSET 0x04
 #define SPU_VOICE_START_ADDR_OFFSET 0x06
 #define SPU_VOICE_ADSR_AMODE_OFFSET 0x08
 #define SPU_VOICE_ADSR_SMODE_OFFSET 0x0A
-#define SPU_VOICE_LOOP_ADDR_OFFSET  0x0E
+#define SPU_VOICE_LOOP_ADDR_OFFSET 0x0E
 
 #endif

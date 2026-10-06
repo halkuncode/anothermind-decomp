@@ -416,7 +416,9 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSpuReverbOn);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSpuSetVoiceVolume);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSpuSetVoicePitch);
+void AkaoSpuSetVoicePitch(s32 voice, s16 pitch) {
+    SPU_VOICE_REG(voice, SPU_VOICE_PITCH_OFFSET) = pitch;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSpuSetVoiceStartAddress);
 
@@ -824,8 +826,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_DC_FixNoteLength);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_EC_DrumModeOn);
 
-void AkaoOp_ED_DrumModeOff(AkaoChannel* track)
-{
+void AkaoOp_ED_DrumModeOff(AkaoChannel* track) {
     track->voiceAttr.drumKey = 0;
     track->updateFlags &= ~AKAO_UPDATE_DRUM_MODE;
 }

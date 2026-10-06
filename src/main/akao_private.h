@@ -1,7 +1,6 @@
 #include "common.h"
 
-
-//  16.16 fixed point volume
+// 16.16 fixed point volume
 typedef union {
     s32 val;
     struct {

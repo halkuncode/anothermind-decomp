@@ -7,6 +7,12 @@ typedef struct PortraitSlot {
     /* 0x04 */ u8 pad04[0x44 - 4]; // total size 0x44 (68 bytes)
 } PortraitSlot;
 
+typedef struct NewsMode {
+    /* 0x00 */ s16 newsModeActive;
+    /* 0x02 */ s16 newsDisplayMode;
+} NewsMode;
+extern NewsMode g_NewsMode;
+
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_80102DC8);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_80103604);
@@ -61,7 +67,14 @@ INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010BDA8);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", DoEffectB);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", SetNews);
+NewsMode* SetNews(void) {
+    NewsMode* news = &g_NewsMode;
+
+    news->newsModeActive = 1;
+    news->newsDisplayMode = 1;
+
+    return news;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", ClearNewsState);
 
@@ -79,7 +92,9 @@ INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", SetupExtendedMovieFlashEffec
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", TriggerMovieFlashEffect);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", GetPackedDisplayHeightOffset);
+extern s32 g_PortraitSlotIndex;
+
+s32 GetPackedDisplayHeightOffset(void) { return (g_PortraitSlotIndex << 8) | 0x01400000; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", ClearScreenAndResetDisplay);
 

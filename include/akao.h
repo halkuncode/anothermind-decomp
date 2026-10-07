@@ -53,6 +53,9 @@
 #define AKAO_UPDATE_OVERLAY 0x100
 #define AKAO_UPDATE_ALTERNATIVE 0x200
 #define AKAO_UPDATE_VOICE_BUS 0x100000
+#define AKAO_UPDATE_ADSR_AR 0x1000000
+#define AKAO_UPDATE_ADSR_SR 0x8000000
+#define AKAO_UPDATE_ADSR_RR 0x10000000
 
 #define AKAO_UPDATE_LFO_MASK                                                                                           \
     (AKAO_UPDATE_VIBRATO | AKAO_UPDATE_TREMOLO | AKAO_UPDATE_PAN_LFO | AKAO_UPDATE_SIDE_CHAIN_PITCH |                  \

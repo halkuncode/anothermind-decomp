@@ -9,6 +9,9 @@ extern AkaoChannelConfig* g_AkaoChannelConfig;
 extern s16 g_AkaoPitchMulMusicSlideSteps;
 extern s32 g_AkaoPitchMulMusic;
 extern s32 g_AkaoCdVol;
+extern s32 g_SeLoopBufferMain;
+extern s32 g_SeLoopChannelState;
+extern s32 g_SeLoopMixBuffer;
 
 s32 InitSoundDriver(void) {
     SetupSpuAndAudioEvents();
@@ -168,7 +171,18 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", ResetAudioState);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", SetupSpuAndAudioEvents);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", InitSeLoopWorkArea);
+
+
+
+
+
+void InitSeLoopWorkArea(s32 baseAddress) {
+    g_SeLoopBufferMain = baseAddress;
+    baseAddress += 0x400;
+    g_SeLoopChannelState = baseAddress;
+    baseAddress += 0x200;
+    g_SeLoopMixBuffer = baseAddress;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", StopAndCloseSoundEvents);
 
@@ -562,7 +576,13 @@ void AkaoOp_B9_TremoloDepth(AkaoChannel* track) {
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_DE_TremoloDepthSlideFromCurr);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_BA_TremoloOff);
+void AkaoOp_BA_TremoloOff(AkaoChannel* track) {
+    track->tremoloVol = 0;
+    track->updateFlags &= ~AKAO_UPDATE_TREMOLO;
+    track->voiceAttr.mask |= AKAO_UPDATE_SPU_VOICE;
+}
+
+
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_BC_SetPanLfo);
 
@@ -576,7 +596,11 @@ void AkaoOp_BD_PanLfoDepth(AkaoChannel* track) {
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_DF_PanLfoDepthSlideFromCurr);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_BE_PanLfoOff);
+void AkaoOp_BE_PanLfoOff(AkaoChannel* track) {
+    track->panLfoVol = 0;
+    track->updateFlags &= ~AKAO_UPDATE_PAN_LFO;
+    track->voiceAttr.mask |= AKAO_UPDATE_SPU_VOICE;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_C4_NoiseOn);
 
@@ -600,21 +624,84 @@ void AkaoOp_D1_FullLengthOff(void) {}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_AC_NoiseClockFreq);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_AD_SetAr);
+void AkaoOp_AD_SetAr(AkaoChannel* track) {
+    u8* seq = track->akaoSequencePointer;
+    u16 val = *seq++;
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_AE_SetDr);
+    track->akaoSequencePointer = seq;
+    track->voiceAttr.mask |= SPU_VOICE_ADSR_AR | SPU_VOICE_ADSR_AMODE;
+    track->updateFlags |= AKAO_UPDATE_ADSR_AR;
+    track->voiceAttr.ar = val;
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_AF_SetSl);
+void AkaoOp_AE_SetDr(AkaoChannel* track) {
+    u8* seq = track->akaoSequencePointer;
+    u32 mask = track->voiceAttr.mask;
+    u16 val = *seq++;
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_B1_SetSr);
+    track->akaoSequencePointer = seq;
+    track->voiceAttr.mask = mask | SPU_VOICE_ADSR_DR;
+    track->voiceAttr.dr = val;
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_B2_SetRr);
+void AkaoOp_AF_SetSl(AkaoChannel* track) {
+    u8* seq = track->akaoSequencePointer;
+    u16 val = *seq++;
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_B7_AttackMode);
+    track->akaoSequencePointer = seq;
+    track->voiceAttr.mask |= SPU_VOICE_ADSR_SL;
+    track->voiceAttr.sl = val;
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_BB_SustainMode);
+void AkaoOp_B1_SetSr(AkaoChannel* track) {
+    u8* seq = track->akaoSequencePointer;
+    u16 val = *seq++;
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_BF_ReleaseMode);
+    track->akaoSequencePointer = seq;
+    track->voiceAttr.mask |= SPU_VOICE_ADSR_SR | SPU_VOICE_ADSR_SMODE;
+    track->updateFlags |= AKAO_UPDATE_ADSR_SR;
+    track->voiceAttr.sr = val;
+}
+
+void AkaoOp_B2_SetRr(AkaoChannel* track) {
+    u8* seq = track->akaoSequencePointer;
+    u16 val = *seq++;
+
+    track->akaoSequencePointer = seq;
+    track->voiceAttr.mask |= SPU_VOICE_ADSR_RR | SPU_VOICE_ADSR_RMODE;
+    track->updateFlags |= AKAO_UPDATE_ADSR_RR;
+    track->voiceAttr.rr = val;
+}
+
+void AkaoOp_B7_AttackMode(AkaoChannel* track) {
+    u8* seq = track->akaoSequencePointer;
+    u32 mask = track->voiceAttr.mask;
+    u16 val = *seq++;
+
+    track->akaoSequencePointer = seq;
+    track->voiceAttr.mask = mask | SPU_VOICE_ADSR_AMODE;
+    track->voiceAttr.a_mode = val;
+}
+
+void AkaoOp_BB_SustainMode(AkaoChannel* track) {
+    u8* seq = track->akaoSequencePointer;
+    u32 mask = track->voiceAttr.mask;
+    u16 val = *seq++;
+
+    track->akaoSequencePointer = seq;
+    track->voiceAttr.mask = mask | SPU_VOICE_ADSR_SMODE;
+    track->voiceAttr.s_mode = val;
+}
+
+void AkaoOp_BF_ReleaseMode(AkaoChannel* track) {
+    u8* seq = track->akaoSequencePointer;
+    u32 mask = track->voiceAttr.mask;
+    u16 val = *seq++;
+
+    track->akaoSequencePointer = seq;
+    track->voiceAttr.mask = mask | SPU_VOICE_ADSR_RMODE;
+    track->voiceAttr.r_mode = val;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_F8_AltVoiceOn);
 

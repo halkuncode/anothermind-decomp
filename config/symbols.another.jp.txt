@@ -990,3 +990,6 @@ g_CurrentKanjiSet = 0x80130D1A;
 g_TaiwaState = 0x80132AB0;
 g_Controllers = 0x800E49C8;
 
+g_SeLoopBufferMain = 0x800DCDB0;
+g_SeLoopChannelState = 0x800DCDB8;
+g_SeLoopMixBuffer = 0x800DCDBC;

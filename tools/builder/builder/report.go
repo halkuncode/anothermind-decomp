@@ -74,26 +74,44 @@ func Report(version string) error {
 			}
 		}
 
-		// Count matchings for this file
+		// Collect all known function stubs from both matchings and nonmatchings
 		dir := filepath.Dir(rel)
 		stem := strings.TrimSuffix(filepath.Base(path), ".c")
+		allFuncs := make(map[string]struct{})
+
 		matchFolder := filepath.Join(matchingsDir, dir, stem)
-		matchedCount := 0
 		if entries, err := os.ReadDir(matchFolder); err == nil {
 			for _, e := range entries {
 				if !e.IsDir() && strings.HasSuffix(e.Name(), ".s") {
-					matchedCount++
+					allFuncs[e.Name()] = struct{}{}
 				}
 			}
 		}
 
-		fileTotal := includeAsmCount + matchedCount
+		nonmatchFolder := filepath.Join(nonmatchingsDir, dir, stem)
+		if entries, err := os.ReadDir(nonmatchFolder); err == nil {
+			for _, e := range entries {
+				if !e.IsDir() && strings.HasSuffix(e.Name(), ".s") {
+					allFuncs[e.Name()] = struct{}{}
+				}
+			}
+		}
+
+		fileTotal := len(allFuncs)
+		decompiledCount := fileTotal - includeAsmCount
+		if decompiledCount < 0 {
+			decompiledCount = 0
+		}
+		if fileTotal < includeAsmCount {
+			fileTotal = includeAsmCount
+		}
+
 		modules[mod].total += fileTotal
-		modules[mod].decompiled += matchedCount
+		modules[mod].decompiled += decompiledCount
 		modules[mod].files = append(modules[mod].files, fileStats{
 			relPath:    rel,
 			total:      fileTotal,
-			decompiled: matchedCount,
+			decompiled: decompiledCount,
 		})
 		return nil
 	})

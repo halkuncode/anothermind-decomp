@@ -529,6 +529,60 @@ def aspsx_load_symbol_scratch_swap(lines: list) -> list:
     return result
 
 
+def aspsx_consecutive_lw_pair_swap(lines: list, gp_symbols: set[str]) -> list:
+    """When cc1 emits consecutive global symbol loads:
+        lw  $r1, sym1
+        lw  $r2, sym2
+    where r1 != r2 and neither is in GP, ASPSX expands both and reorders
+    them so both lui instructions come first:
+        lui $r1, %hi(sym1)
+        lui $r2, %hi(sym2)
+        lw  $r1, %lo(sym1)($r1)
+        lw  $r2, %lo(sym2)($r2)
+    """
+    result = list(lines)
+    n = len(result)
+    i = 0
+    while i < n - 1:
+        if not _is_code_line(result[i]):
+            i += 1
+            continue
+        m1 = _LW_SYM_RE.match(result[i].strip())
+        if not m1:
+            i += 1
+            continue
+        reg1, sym1 = m1.group(1), m1.group(2)
+        if is_gp_symbol(sym1, gp_symbols):
+            i += 1
+            continue
+
+        j = i + 1
+        while j < n and not _is_code_line(result[j]):
+            j += 1
+        if j >= n:
+            break
+        m2 = _LW_SYM_RE.match(result[j].strip())
+        if not m2:
+            i += 1
+            continue
+        reg2, sym2 = m2.group(1), m2.group(2)
+        if reg1 == reg2 or is_gp_symbol(sym2, gp_symbols):
+            i += 1
+            continue
+
+        indent = re.match(r"^(\s*)", result[i]).group(1)
+        line1 = f"{indent}lui\t{reg1},%hi({sym1})\n"
+        line2 = f"{indent}lui\t{reg2},%hi({sym2})\n"
+        line3 = f"{indent}lw\t{reg1},%lo({sym1})({reg1})\n"
+        line4 = f"{indent}lw\t{reg2},%lo({sym2})({reg2})\n"
+        between = result[i + 1:j]
+
+        result = result[:i] + [line1, line2] + between + [line3, line4] + result[j + 1:]
+        n = len(result)
+        i = j + 3
+    return result
+
+
 def leaf_la_multi_store_delay_slot_swap(lines: list) -> list:
     """When a leaf function loads a symbol address, stores to 0($reg) and <sym>+<offset>,
     followed by `j $31`, ASPSX splits `la` and places the second store in the delay slot.
@@ -859,7 +913,16 @@ def leaf_interleaved_store_swap(lines: list, gp_symbols: set[str]) -> list:
             continue
 
         indent = re.match(r"^(\s*)", result[i]).group(1)
-        result[i] = f"{indent}lui\t$2,%hi({sym1})\n{indent}{op1}\t{reg1},%lo({sym1})($2)\n"
+        h = i - 1
+        while h >= 0 and not _is_code_line(result[h]):
+            h -= 1
+        m_br = _BNE_ZERO_RE.match(result[h].strip()) if h >= 0 else None
+        if m_br:
+            cond_reg, label = m_br.group(1), m_br.group(2)
+            result[h] = f"{indent}.set\tnoreorder\n{indent}bnez\t{cond_reg},{label}\n{indent}lui\t$2,%hi({sym1})\n{indent}.set\treorder\n"
+            result[i] = f"{indent}{op1}\t{reg1},%lo({sym1})($2)\n"
+        else:
+            result[i] = f"{indent}lui\t$2,%hi({sym1})\n{indent}{op1}\t{reg1},%lo({sym1})($2)\n"
         result[j] = f"{indent}lui\t$2,%hi({sym3})\n{result[j]}"
         result[k] = f"{indent}{op3}\t{reg3},%lo({sym3})($2)\n"
         i = k + 1
@@ -963,6 +1026,7 @@ def main():
     lines = leaf_store_multi_symbol_delay_slot_swap(lines, gp_symbols)
     lines = leaf_interleaved_store_swap(lines, gp_symbols)
     lines = leaf_repeated_store_scratch_swap(lines, gp_symbols)
+    lines = aspsx_consecutive_lw_pair_swap(lines, gp_symbols)
     lines = aspsx_load_symbol_scratch_swap(lines)
     lines = expand_li_addiu(lines)
     filtered_text = "".join(lines)

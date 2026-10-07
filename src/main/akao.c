@@ -28,9 +28,15 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", EnsureSeLoopBlockInitialized);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_10_PlayMusic);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", ResetSoundSystem);
+void ResetSoundSystem(void) {
+    g_AkaoCommand.opcode = AKAO_STOP_MUSIC;
+    AkaoExec();
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002DF24);
+void AkaoCmd_40_SaveChannelState(void) {
+    g_AkaoCommand.opcode = AKAO_SAVE_CHANNEL_STATE;
+    AkaoExec();
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_12_PlayMusicFade);
 
@@ -130,7 +136,10 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002EB34);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", PlayMusicTrack_8002EBC8);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", StopAllMusic);
+void StopAllMusic(void) {
+    g_AkaoCommand.opcode = AKAO_STOP_STREAM;
+    AkaoExec();
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", SetActiveMusicBuffer);
 
@@ -148,7 +157,13 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002EEB8);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002EF3C);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002EFB4);
+s32 AkaoGetPlayingStreamTrack(void) {
+    s32 ret = -1;
+    if (!(g_AkaoStreamContext.flags & 0x02000000)) {
+        ret = g_AkaoStreamContext.trackId;
+    }
+    return ret;
+}
 
 s32 VerifyAkaoMagic(s32* akaoBuffer) { return *akaoBuffer - AKAO_MAGIC; }
 
@@ -423,7 +438,12 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoMain);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoGetNextNote);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80034C18);
+s32 AkaoAdjustInstrumentIndex(u32 flags, s32 instrument) {
+    if ((flags & 2) && ((u32)(instrument - 0x80) < 0x80)) {
+        return instrument + 0x40;
+    }
+    return instrument;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80034C40);
 
@@ -712,7 +732,13 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_F1_LoopBreakTimes);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_CA_LoopReturn);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_A2_NextNoteLength);
+void AkaoOp_A2_NextNoteLength(AkaoChannel* channel) {
+    u16 length = *channel->akaoSequencePointer++;
+    channel->lengthFixed = 0;
+    channel->length2 = length;
+    channel->length1 = length;
+    channel->lengthStored = length;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_DC_FixNoteLength);
 

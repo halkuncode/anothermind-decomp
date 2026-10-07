@@ -1,4 +1,4 @@
-//! CC1=2.8.0
+//! CC1=2.8.0 G=8
 #include "common.h"
 
 typedef enum {
@@ -292,7 +292,10 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_dinbrainoff);
 
 
 
-INCLUDE_ASM("asm/jp/matchings/main/script", Cmd_doutWithFaceSlotXX);
+void Cmd_doutWithFaceSlotXX(void) {
+    g_NeedToResetFaceSlots = 1;
+    Cmd_dout();
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_nin);
 
@@ -436,7 +439,12 @@ void LogArgumentString(char* argumentString) {
     strcat(g_LogBuffer, argumentString);
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", SetActiveScriptLabel);
+extern char g_ActiveScriptLabel[];
+extern char* strcpy(char*, const char*);
+
+void SetActiveScriptLabel(const char* label) {
+    strcpy(g_ActiveScriptLabel, label);
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", RecordCallLabel);
 

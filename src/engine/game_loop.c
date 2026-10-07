@@ -5,7 +5,9 @@
 typedef struct PortraitSlot {
     /* 0x00 */ u8 pad00[2];
     /* 0x02 */ s16 state;
-    /* 0x04 */ u8 pad04[0x36 - 0x04];
+    /* 0x04 */ u8 pad04[0x22 - 0x04];
+    /* 0x22 */ s16 msgBoxType;
+    /* 0x24 */ u8 pad24[0x36 - 0x24];
     /* 0x36 */ s16 unk36;
     /* 0x38 */ u8 pad38[0x3E - 0x38];
     /* 0x3E */ s16 unk3E;
@@ -163,7 +165,14 @@ INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010C820);
 // This changes the Portrait slot to state (expresion?) 3
 void func_8010C870(PortraitSlot* slot) { slot->state = 3; }
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010C87C);
+extern u8 g_MessageBoxType;
+
+void InitPortraitSlotMsgBoxType(PortraitSlot* slot) {
+    if (g_MessageBoxType >= 8) {
+        g_MessageBoxType = 0;
+    }
+    slot->msgBoxType = g_MessageBoxType;
+}
 
 void func_8010C8A4(PortraitSlot* slot) {
     slot->unk36 = 0;

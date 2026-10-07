@@ -88,14 +88,22 @@ s32 PlaySfx(s16 arg0) { PlaySingleSoundeffect(arg0); }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", SetVibrationMode_80015E70);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", SetVibrationMode_80015EBC);
-
-s32 IsVibrationEnabled(void) { return g_CurrVibrationMode; }
-
 extern s8 g_PrimaryVibrationBuffer;
 extern s8 g_VibrationCycleCounter;
 extern s32 g_VibrationStateFlag;
 extern s32 g_VibrationSegmentIndex;
+
+void SetVibrationModeDirect(s32 mode) {
+    g_CurrVibrationMode = mode;
+    if (mode == 0) {
+        g_VibrationStateFlag = 0;
+        g_PrimaryVibrationBuffer = 0;
+        g_VibrationSegmentIndex = 0;
+        g_VibrationCycleCounter = 0;
+    }
+}
+
+s32 IsVibrationEnabled(void) { return g_CurrVibrationMode; }
 
 void StopVibrationEffect(void) {
     g_VibrationStateFlag = 0;
@@ -122,7 +130,13 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", ResetVibrationSystem);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", UpdateVibrationAndInput);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", IsVibrationActive);
+s32 IsVibrationActive(void) {
+    s32 flag = (u32)g_VibrationStateFlag > 0;
+    if (g_VibrationSegmentIndex != 0) {
+        flag = 1;
+    }
+    return flag;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", func_800161A0);
 

@@ -244,3 +244,12 @@ typedef struct {
     /* 0x8 */ s16 currentKey;
     /* 0xA */ s16 padA;
 } AkaoVoiceWork; /* size = 0xC */
+
+typedef struct {
+    /* 0x00 */ u8 pad00[8];
+    /* 0x08 */ u32 flags;
+    /* 0x0C */ u8 pad0C[0x28 - 0x0C];
+    /* 0x28 */ s32 trackId;
+} AkaoStreamContext;
+
+extern AkaoStreamContext g_AkaoStreamContext;

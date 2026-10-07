@@ -182,8 +182,7 @@ typedef struct {
 } AkaoChannelConfig;
 
 typedef struct {
-    /* 0x00 */ u16 opcode;
-    /* 0x02 */ u16 pad;
+    /* 0x00 */ u32 opcode;
     /* 0x04 */ u16 param0;
     /* 0x06 */ u16 param0_hi;
     /* 0x08 */ s32 param1;

@@ -857,6 +857,7 @@ g_AudioInitialized = 0x800DCDB4;
 g_SeLoopChannelState = 0x800DCDB8;
 g_SeLoopMixBuffer = 0x800DCDBC;
 g_AkaoChannelConfig = 0x800DCDEC;
+g_AkaoCommand = 0x800DCE28;
 g_AkaoCdVol = 0x800DCE4C;
 g_AkaoMuteMusicMask = 0x800DCE50;
 g_AkaoPitchMulMusic = 0x800DE9B8;
@@ -992,3 +993,7 @@ g_CurrentMenuRequest = 0x801308EE;
 g_NewsMode = 0x80130CB0;
 g_CurrentKanjiSet = 0x80130D1A;
 g_TaiwaState = 0x80132AB0;
+
+g_NeedToResetFaceSlots = 0x80062108;
+
+g_LogBuffer = 0x800D5F6A;

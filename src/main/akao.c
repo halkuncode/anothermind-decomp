@@ -12,6 +12,7 @@ extern s32 g_AkaoCdVol;
 extern s32 g_SeLoopBufferMain;
 extern s32 g_SeLoopChannelState;
 extern s32 g_SeLoopMixBuffer;
+extern AkaoQueuedCommand g_AkaoCommand;
 
 s32 InitSoundDriver(void) {
     SetupSpuAndAudioEvents();
@@ -113,7 +114,11 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", OverrideMusicLayerTrackWithPan);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSendCmd_F0_StopMusic);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", CutSoundEffect);
+
+void CutSoundEffect(void) {
+    g_AkaoCommand.opcode = AKAO_STOP_ALL_SOUNDS;
+    AkaoExec();
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", DecompressWaveMusic);
 
@@ -147,7 +152,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002EFB4);
 
 s32 VerifyAkaoMagic(s32* akaoBuffer) { return *akaoBuffer - AKAO_MAGIC; }
 
-void func_8002EFF0(void) {
+void AkaoSpuTransferCallback(void) {
     SetSpuTransferCallback(0);
     g_AudioInitialized = 0;
 }

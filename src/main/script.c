@@ -1,3 +1,4 @@
+//! CC1=2.8.0
 #include "common.h"
 
 typedef enum {
@@ -23,6 +24,9 @@ typedef enum {
     EQ_OP_GTEQ = 0x14,
 
 } EqOpcodes;
+
+
+extern s8 g_NeedToResetFaceSlots;
 
 void ExecuteUnaryOpcode(s32 opcode);
 void ExecuteEquationOpcode(s32 opcode);
@@ -285,7 +289,10 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_preDinXX);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_dinbrainoff);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_doutWithFaceSlotXX);
+
+
+
+INCLUDE_ASM("asm/jp/matchings/main/script", Cmd_doutWithFaceSlotXX);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_nin);
 
@@ -421,7 +428,13 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", func_8002B494);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", LogCommand);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", LogArgumentString);
+
+extern char g_LogBuffer[];
+extern char* strcat(char*, const char*);
+
+void LogArgumentString(char* argumentString) {
+    strcat(g_LogBuffer, argumentString);
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", SetActiveScriptLabel);
 

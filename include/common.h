@@ -21,8 +21,10 @@ __asm__(".include \"macro.inc\"\n");
                 "\t.set reorder # maspsx-keep\n"                                                                       \
                 "\t.set at # maspsx-keep\n");                                                                          \
     }
+#define ALIGN_8 __asm__(".align 3\n")
 #else
 #define INCLUDE_ASM(FOLDER, NAME)
+#define ALIGN_8
 #endif
 
 typedef signed char s8;

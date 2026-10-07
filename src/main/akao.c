@@ -1,4 +1,4 @@
-//! PSYQ=4.0
+//! CC1=2.8.0
 #include "common.h"
 #include "akao_private.h"
 #include "akao.h"
@@ -144,7 +144,13 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002EFB4);
 
 s32 VerifyAkaoMagic(s32* akaoBuffer) { return *akaoBuffer - AKAO_MAGIC; }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002EFF0);
+
+
+void func_8002EFF0(void)
+{
+    SetSpuTransferCallback(0);
+    g_AudioInitialized = 0;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002F014);
 
@@ -391,7 +397,12 @@ void AkaoUpdateCdVolume(void) {
     SPU_REG(SPU_CD_VOL_R) = (s16)(g_AkaoCdVol >> 16);
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80034134);
+void func_80034134(s32* src, s32* dst, u32 count) {
+    count >>= 2;
+    do {
+        *dst++ = *src++;
+    } while (--count != 0);
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoUpdateGlobalSlides);
 
@@ -474,7 +485,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_AB_SetPanSlide);
 
 void AkaoOp_A5_SetOctave(AkaoChannel* track) {
     u8* seq = track->akaoSequencePointer;
-    u8 val = *seq++;
+    u16 val = *seq++;
     track->akaoSequencePointer = seq;
     track->octave = val;
 }
@@ -509,7 +520,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_A4_PitchBendSlide);
 
 void AkaoOp_DA_PortamentoOn(AkaoChannel* track) {
     u8* seq = track->akaoSequencePointer;
-    u8 val = *seq;
+    u16 val = *seq;
     track->akaoSequencePointer = seq + 1;
 
     track->portamentoSteps = val;
@@ -557,7 +568,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_BC_SetPanLfo);
 
 void AkaoOp_BD_PanLfoDepth(AkaoChannel* track) {
     u8* seq = track->akaoSequencePointer;
-    u8 val = *seq++;
+    u16 val = *seq++;
     track->akaoSequencePointer = seq;
 
     track->panLfoDepth = val << 7;

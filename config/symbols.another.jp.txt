@@ -988,3 +988,5 @@ g_CurrentMenuRequest = 0x801308EE;
 g_NewsMode = 0x80130CB0;
 g_CurrentKanjiSet = 0x80130D1A;
 g_TaiwaState = 0x80132AB0;
+g_Controllers = 0x800E49C8;
+

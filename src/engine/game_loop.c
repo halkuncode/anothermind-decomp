@@ -4,8 +4,12 @@
 // keep structs in c file
 typedef struct PortraitSlot {
     /* 0x00 */ u8 pad00[2];
-    /* 0x02 */ s16 state;          // or u16 (written with 3 here)
-    /* 0x04 */ u8 pad04[0x44 - 4]; // total size 0x44 (68 bytes)
+    /* 0x02 */ s16 state;
+    /* 0x04 */ u8 pad04[0x36 - 0x04];
+    /* 0x36 */ s16 unk36;
+    /* 0x38 */ u8 pad38[0x3E - 0x38];
+    /* 0x3E */ s16 unk3E;
+    /* 0x40 */ u8 pad40[0x44 - 0x40]; // total size 0x44 (68 bytes)
 } PortraitSlot;
 
 typedef struct NewsMode {
@@ -161,7 +165,13 @@ void func_8010C870(PortraitSlot* slot) { slot->state = 3; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010C87C);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010C8A4);
+
+
+void func_8010C8A4(PortraitSlot* slot) {
+    slot->unk36 = 0;
+    slot->unk3E = 0;
+    func_800F3780(slot);
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010C8C8);
 

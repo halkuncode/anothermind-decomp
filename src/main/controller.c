@@ -33,6 +33,7 @@ typedef struct ControllerState {
     /* 0x35 */ u8 pad35;
     /* 0x36 */ u8 configBufferLength;
     /* 0x37 */ u8 configMode;
+    /* 0x38 */ u8 pad38[0xF0 - 0x38];
 } ControllerState;
 
 typedef struct ControllerAttribute {
@@ -40,6 +41,12 @@ typedef struct ControllerAttribute {
     /* 0x37 */ u8 currCmdType;
     /* 0x38 */ u8 savedCmdType;
 } ControllerAttribute;
+
+
+extern s32 g_ControllerTimeoutStartTime;
+extern s32 g_ControllerTimeoutDuration;
+extern s32 g_ControllerReadyFlag;
+extern ControllerState g_Controllers[];
 
 void GsGetAndClearControllerReadyFlag(void) { GetAndClearControllerReadyFlag(); }
 
@@ -71,7 +78,6 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/controller", CheckAndHandleControllerInter
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller", HandleControllerFrameInterrupt);
 
-extern s32 g_ControllerReadyFlag;
 
 s32 GetAndClearControllerReadyFlag(void) {
     s32 readyFlag;
@@ -176,8 +182,8 @@ void SetControllerAbort(ControllerState* controller) {
     controller->configBufferLength = 0;
 }
 
-// TU Split (?)
-__asm__(".align 3\n");
+//Not sure what is going on here! (BUMP!)
+ALIGN_8;
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller", func_800485D8);
 
@@ -209,7 +215,19 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/controller", func_80048F70);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller", func_800491EC);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller", func_80049224);
+
+
+ControllerState* QueryControllerState(s32 port) {
+    ControllerState* controller = &g_Controllers[0];
+
+    if (port & 0xF0) {
+        controller = &g_Controllers[1];
+    }
+    return controller;
+}
+
+//and this is the other bump
+ALIGN_8;
 
 // BIOS syscall in assembly
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller", BIOS_bzero);
@@ -224,8 +242,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/controller", func_80049600);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller", func_800496E0);
 
-extern s32 g_ControllerTimeoutStartTime;
-extern s32 g_ControllerTimeoutDuration;
+
 
 void StartControllerTimeout(s32 duration) {
     g_ControllerTimeoutDuration = duration;

@@ -165,8 +165,6 @@ void func_8010C870(PortraitSlot* slot) { slot->state = 3; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010C87C);
 
-
-
 void func_8010C8A4(PortraitSlot* slot) {
     slot->unk36 = 0;
     slot->unk3E = 0;

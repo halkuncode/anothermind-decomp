@@ -147,10 +147,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002EFB4);
 
 s32 VerifyAkaoMagic(s32* akaoBuffer) { return *akaoBuffer - AKAO_MAGIC; }
 
-
-
-void func_8002EFF0(void)
-{
+void func_8002EFF0(void) {
     SetSpuTransferCallback(0);
     g_AudioInitialized = 0;
 }
@@ -170,11 +167,6 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", InstallAkaoAudioProgram);
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", ResetAudioState);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", SetupSpuAndAudioEvents);
-
-
-
-
-
 
 void InitSeLoopWorkArea(s32 baseAddress) {
     g_SeLoopBufferMain = baseAddress;
@@ -581,8 +573,6 @@ void AkaoOp_BA_TremoloOff(AkaoChannel* track) {
     track->updateFlags &= ~AKAO_UPDATE_TREMOLO;
     track->voiceAttr.mask |= AKAO_UPDATE_SPU_VOICE;
 }
-
-
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_BC_SetPanLfo);
 

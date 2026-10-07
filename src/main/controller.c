@@ -42,7 +42,6 @@ typedef struct ControllerAttribute {
     /* 0x38 */ u8 savedCmdType;
 } ControllerAttribute;
 
-
 extern s32 g_ControllerTimeoutStartTime;
 extern s32 g_ControllerTimeoutDuration;
 extern s32 g_ControllerReadyFlag;
@@ -77,7 +76,6 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/controller", SetupControllerIRQHandlers);
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller", CheckAndHandleControllerInterrupt);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller", HandleControllerFrameInterrupt);
-
 
 s32 GetAndClearControllerReadyFlag(void) {
     s32 readyFlag;
@@ -182,7 +180,7 @@ void SetControllerAbort(ControllerState* controller) {
     controller->configBufferLength = 0;
 }
 
-//Not sure what is going on here! (BUMP!)
+// Not sure what is going on here! (BUMP!)
 ALIGN_8;
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller", func_800485D8);
@@ -215,8 +213,6 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/controller", func_80048F70);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller", func_800491EC);
 
-
-
 ControllerState* QueryControllerState(s32 port) {
     ControllerState* controller = &g_Controllers[0];
 
@@ -226,7 +222,7 @@ ControllerState* QueryControllerState(s32 port) {
     return controller;
 }
 
-//and this is the other bump
+// and this is the other bump
 ALIGN_8;
 
 // BIOS syscall in assembly
@@ -241,8 +237,6 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/controller", HandleControllerPacketState);
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller", func_80049600);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller", func_800496E0);
-
-
 
 void StartControllerTimeout(s32 duration) {
     g_ControllerTimeoutDuration = duration;

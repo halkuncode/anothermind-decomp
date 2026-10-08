@@ -61,9 +61,19 @@ def compress_lzss(data: bytes) -> bytes:
             first3 = (data[src_idx], data[src_idx + 1], data[src_idx + 2])
             candidates = lookup.get(first3, [])
             for off in candidates:
-                match_len = 3
-                while match_len < max_look and buf[(off + match_len) & 0xFFF] == data[src_idx + match_len]:
+                distance = (r - off) & 0xFFF
+                if distance == 0:
+                    continue
+                match_len = 0
+                while match_len < max_look:
+                    if match_len < distance:
+                        expected = buf[(off + match_len) & 0xFFF]
+                    else:
+                        expected = data[src_idx + (match_len % distance)]
+                    if expected != data[src_idx + match_len]:
+                        break
                     match_len += 1
+
                 if match_len > best_len:
                     best_len = match_len
                     best_off = off

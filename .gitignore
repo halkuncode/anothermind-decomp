@@ -28,3 +28,5 @@ objdiff.json
 /permute*
 ctx.c
 docs/html/
+jp2en/
+docs/notes/

@@ -1,6 +1,0 @@
-Custom settings for decomp.me
-gcc 2.8.0-psx + maspsx
-
--O2 -G0 -g -gcoff -mcpu=3000 -mgas -fno-builtin -Wa,--aspsx-version=2.56
-
-

@@ -25,6 +25,19 @@ typedef enum {
 
 } EqOpcodes;
 
+typedef enum {
+    FILE_VIDEO = 0,
+    FILE_SYSTEM = 1,
+    FILE_DICT = 2,
+    FILE_DIALOG = 3,
+    FILE_MENU = 4,
+    FILE_SCRIPT = 5,
+    FILE_BACKGROUND = 6,
+    FILE_ANIMATION = 7,
+    FILE_AUDIO = 8,
+    FILE_DUMMY = 9
+} FileGroupType;
+
 extern s8 g_NeedToResetFaceSlots;
 extern s8 g_FaceSlotResetState[];
 
@@ -266,7 +279,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", LoadAudioStream);
 #else
 extern s32 D_800A05B8;
 
-void LoadAudioStream(s32 audioId) { LoadByFileIdGroupId(audioId, 8, &D_800A05B8, 0x10000); }
+void LoadAudioStream(s32 audioId) { LoadByFileIdGroupId(audioId, FILE_AUDIO, &D_800A05B8, 0x10000); }
 #endif
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_cdplay);

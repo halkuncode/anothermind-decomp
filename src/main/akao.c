@@ -500,7 +500,6 @@ void AkaoOp_A3_MasterVol(AkaoChannel* track) {
     track->masterVol = val << 8;
 }
 
-
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_FA_VolSlideFromCurr);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_A8_SetVol);

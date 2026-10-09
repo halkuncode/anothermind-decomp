@@ -266,11 +266,9 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", LoadAudioStream);
 #else
 extern s32 D_800A05B8;
 
-void LoadAudioStream(void)
-{
-    LoadByFileIdGroupId(8, &D_800A05B8, 0x10000);
-}
+void LoadAudioStream(s32 audioId) { LoadByFileIdGroupId(audioId, 8, &D_800A05B8, 0x10000); }
 #endif
+
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_cdplay);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_if);
@@ -293,11 +291,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_tset);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_byuu);
 
-
-
-
-void Cmd_preDinXX(void)
-{
+void Cmd_preDinXX(void) {
     g_NeedToResetFaceSlots = 1;
     g_FaceSlotResetState[0] = 1;
     Cmd_din();

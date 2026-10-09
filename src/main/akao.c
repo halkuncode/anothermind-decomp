@@ -859,7 +859,13 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037FA0);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80038020);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8003816C);
+
+
+void SetAkaoStopStreamCallback(void)
+{
+    SpuSetIRQAddr(0x1038);
+    SpuSetIRQCallback(AkaoStopStream);
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80038198);
 

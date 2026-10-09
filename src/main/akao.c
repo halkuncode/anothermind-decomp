@@ -252,9 +252,16 @@ void AkaoSpuSetVoiceSustainLevel(s32 voice, s32 susLevel)
 
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSpuSetVoiceSustainRate);
+void AkaoSpuSetVoiceSustainRate(s32 voice, s32 rate, u32 mode) {
+    SPU_VOICE_REG(voice, SPU_VOICE_ADSR_SMODE_OFFSET) =
+        (SPU_VOICE_REG(voice, SPU_VOICE_ADSR_SMODE_OFFSET) & 0x3F) | (((mode >> 1) << 14) | (rate << 6));
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSpuSetVoiceReleaseRate);
+void AkaoSpuSetVoiceReleaseRate(s32 voice, s32 rate, u32 mode)
+{
+SPU_VOICE_REG(voice, SPU_VOICE_ADSR_SMODE_OFFSET) =
+        (SPU_VOICE_REG(voice, SPU_VOICE_ADSR_SMODE_OFFSET) & 0xFFC0) | (((mode >> 2) << 5) | rate);
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoUpdateChannelParamsToSpu);
 

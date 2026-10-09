@@ -120,7 +120,6 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", OverrideMusicLayerTrackWithPan);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSendCmd_F0_StopMusic);
 
-
 void CutSoundEffect(void) {
     g_AkaoCommand.opcode = AKAO_STOP_ALL_SOUNDS;
     AkaoExec();
@@ -238,18 +237,14 @@ void AkaoSpuSetVoiceAttackRate(s32 voice, s32 rate, u32 mode) {
         SPU_VOICE_REG8(voice, SPU_VOICE_ADSR_AMODE_OFFSET) | (((mode >> 2) << 15) | (rate << 8));
 }
 
-
 void AkaoSpuSetVoiceDecayRate(s32 voice, s32 decay) {
     SPU_VOICE_REG(voice, SPU_VOICE_ADSR_AMODE_OFFSET) =
         (SPU_VOICE_REG(voice, SPU_VOICE_ADSR_AMODE_OFFSET) & 0xFF0F) | (decay << 4);
 }
 
-
-void AkaoSpuSetVoiceSustainLevel(s32 voice, s32 susLevel)
-{
-	SPU_VOICE_REG(voice, SPU_VOICE_ADSR_AMODE_OFFSET) =
+void AkaoSpuSetVoiceSustainLevel(s32 voice, s32 susLevel) {
+    SPU_VOICE_REG(voice, SPU_VOICE_ADSR_AMODE_OFFSET) =
         (SPU_VOICE_REG(voice, SPU_VOICE_ADSR_AMODE_OFFSET) & 0xFFF0) | susLevel;
-
 }
 
 void AkaoSpuSetVoiceSustainRate(s32 voice, s32 rate, u32 mode) {
@@ -257,9 +252,8 @@ void AkaoSpuSetVoiceSustainRate(s32 voice, s32 rate, u32 mode) {
         (SPU_VOICE_REG(voice, SPU_VOICE_ADSR_SMODE_OFFSET) & 0x3F) | (((mode >> 1) << 14) | (rate << 6));
 }
 
-void AkaoSpuSetVoiceReleaseRate(s32 voice, s32 rate, u32 mode)
-{
-SPU_VOICE_REG(voice, SPU_VOICE_ADSR_SMODE_OFFSET) =
+void AkaoSpuSetVoiceReleaseRate(s32 voice, s32 rate, u32 mode) {
+    SPU_VOICE_REG(voice, SPU_VOICE_ADSR_SMODE_OFFSET) =
         (SPU_VOICE_REG(voice, SPU_VOICE_ADSR_SMODE_OFFSET) & 0xFFC0) | (((mode >> 2) << 5) | rate);
 }
 
@@ -500,22 +494,12 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_EF_JumpConditional);
 void AkaoOp_A3_MasterVol(AkaoChannel* track) {
     u8* seq = track->akaoSequencePointer;
     u8 val = *seq++;
-	track->akaoSequencePointer = seq;
-
-    track->voiceAttr.mask |= SPU_VOICE_VOLL | SPU_VOICE_VOLR;
-    track->masterVol = val << 8;
-}
-
-/*
-void AkaoOp_A3_MasterVol(AkaoChannel* track) {
-    u8* seq = track->akaoSequencePointer;
-    u8 val = *seq++;
     track->akaoSequencePointer = seq;
 
     track->voiceAttr.mask |= SPU_VOICE_VOLL | SPU_VOICE_VOLR;
     track->masterVol = val << 8;
 }
-	*/
+
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_FA_VolSlideFromCurr);
 
@@ -859,10 +843,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037FA0);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80038020);
 
-
-
-void SetAkaoStopStreamCallback(void)
-{
+void SetAkaoStopStreamCallback(void) {
     SpuSetIRQAddr(0x1038);
     SpuSetIRQCallback(AkaoStopStream);
 }

@@ -25,8 +25,8 @@ typedef enum {
 
 } EqOpcodes;
 
-
 extern s8 g_NeedToResetFaceSlots;
+extern s8 g_FaceSlotResetState[];
 
 void ExecuteUnaryOpcode(s32 opcode);
 void ExecuteEquationOpcode(s32 opcode);
@@ -261,8 +261,16 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", LoadAudioId);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_loadwaveStream);
 
+#ifndef INCLIDE_MAP
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", LoadAudioStream);
+#else
+extern s32 D_800A05B8;
 
+void LoadAudioStream(void)
+{
+    LoadByFileIdGroupId(8, &D_800A05B8, 0x10000);
+}
+#endif
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_cdplay);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_if);
@@ -285,12 +293,17 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_tset);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_byuu);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_preDinXX);
+
+
+
+void Cmd_preDinXX(void)
+{
+    g_NeedToResetFaceSlots = 1;
+    g_FaceSlotResetState[0] = 1;
+    Cmd_din();
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_dinbrainoff);
-
-
-
 
 void Cmd_doutWithFaceSlotXX(void) {
     g_NeedToResetFaceSlots = 1;
@@ -431,20 +444,15 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", func_8002B494);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", LogCommand);
 
-
 extern char g_LogBuffer[];
 extern char* strcat(char*, const char*);
 
-void LogArgumentString(char* argumentString) {
-    strcat(g_LogBuffer, argumentString);
-}
+void LogArgumentString(char* argumentString) { strcat(g_LogBuffer, argumentString); }
 
 extern char g_ActiveScriptLabel[];
 extern char* strcpy(char*, const char*);
 
-void SetActiveScriptLabel(const char* label) {
-    strcpy(g_ActiveScriptLabel, label);
-}
+void SetActiveScriptLabel(const char* label) { strcpy(g_ActiveScriptLabel, label); }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", RecordCallLabel);
 

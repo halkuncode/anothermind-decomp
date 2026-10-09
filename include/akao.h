@@ -192,7 +192,6 @@ typedef enum {
 #define SPU_VOICE_ADSR_SMODE_OFFSET 0x0A
 #define SPU_VOICE_LOOP_ADDR_OFFSET 0x0E
 
-
 #define SPU_REG(addr) (*(u16*)(addr))
 
 // SPU Control Register Addresses

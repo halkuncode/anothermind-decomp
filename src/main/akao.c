@@ -233,11 +233,24 @@ void AkaoSpuSetVoiceLoopAddress(s32 voice, u32 loopAddr) {
     SPU_VOICE_REG(voice, SPU_VOICE_LOOP_ADDR_OFFSET) = loopAddr >> 3;
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSpuSetVoiceAttackRate);
+void AkaoSpuSetVoiceAttackRate(s32 voice, s32 rate, u32 mode) {
+    SPU_VOICE_REG(voice, SPU_VOICE_ADSR_AMODE_OFFSET) =
+        SPU_VOICE_REG8(voice, SPU_VOICE_ADSR_AMODE_OFFSET) | (((mode >> 2) << 15) | (rate << 8));
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSpuSetVoiceDecayRate);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSpuSetVoiceSustainLevel);
+void AkaoSpuSetVoiceDecayRate(s32 voice, s32 decay) {
+    SPU_VOICE_REG(voice, SPU_VOICE_ADSR_AMODE_OFFSET) =
+        (SPU_VOICE_REG(voice, SPU_VOICE_ADSR_AMODE_OFFSET) & 0xFF0F) | (decay << 4);
+}
+
+
+void AkaoSpuSetVoiceSustainLevel(s32 voice, s32 susLevel)
+{
+	SPU_VOICE_REG(voice, SPU_VOICE_ADSR_AMODE_OFFSET) =
+        (SPU_VOICE_REG(voice, SPU_VOICE_ADSR_AMODE_OFFSET) & 0xFFF0) | susLevel;
+
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSpuSetVoiceSustainRate);
 
@@ -477,7 +490,25 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_EE_Jump);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_EF_JumpConditional);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_A3_MasterVol);
+void AkaoOp_A3_MasterVol(AkaoChannel* track) {
+    u8* seq = track->akaoSequencePointer;
+    u8 val = *seq++;
+	track->akaoSequencePointer = seq;
+
+    track->voiceAttr.mask |= SPU_VOICE_VOLL | SPU_VOICE_VOLR;
+    track->masterVol = val << 8;
+}
+
+/*
+void AkaoOp_A3_MasterVol(AkaoChannel* track) {
+    u8* seq = track->akaoSequencePointer;
+    u8 val = *seq++;
+    track->akaoSequencePointer = seq;
+
+    track->voiceAttr.mask |= SPU_VOICE_VOLL | SPU_VOICE_VOLR;
+    track->masterVol = val << 8;
+}
+	*/
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_FA_VolSlideFromCurr);
 

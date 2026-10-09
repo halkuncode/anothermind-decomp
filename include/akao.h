@@ -181,6 +181,7 @@ typedef enum {
 } AkaoCommands;
 
 #define SPU_VOICE_REG(voice, offset) (*(volatile u16*)(0x1F801C00 + (offset) + ((voice) * 0x10)))
+#define SPU_VOICE_REG8(voice, offset) (*(volatile u8*)(0x1F801C00 + (offset) + ((voice) * 0x10)))
 
 // Voice channel register offsets (from 0x1F801C00 base)
 #define SPU_VOICE_VOL_L_OFFSET 0x00
@@ -190,6 +191,7 @@ typedef enum {
 #define SPU_VOICE_ADSR_AMODE_OFFSET 0x08
 #define SPU_VOICE_ADSR_SMODE_OFFSET 0x0A
 #define SPU_VOICE_LOOP_ADDR_OFFSET 0x0E
+
 
 #define SPU_REG(addr) (*(u16*)(addr))
 

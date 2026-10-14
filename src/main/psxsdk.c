@@ -1,5 +1,8 @@
 #include "common.h"
 
+/* Sony PlayStation libgte (Library ID 9) version 4.3 information tag */
+__asm__(".byte 'P', 's', 0x09, 0x25, 0x9B, 0x53, 0x43, 0x00\n\t.align 2");
+
 INCLUDE_ASM("asm/jp/nonmatchings/main/psxsdk", InitGeom);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/psxsdk", SetRotMatrix);

@@ -1,8 +1,17 @@
 #include "common.h"
+#include "game.h"
+
+#define VIBE_DATA_BUFFER_SIZE 1200
+
+
 
 extern u8 g_ControllerTypeId[16];
 extern s32 g_CurrVibrationMode;
 extern s32 g_VibrationEffectFrameCount;
+extern s32 g_VibeDataBuffer[VIBE_DATA_BUFFER_SIZE];
+
+
+
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", RunNameEntryScreen);
 
@@ -123,7 +132,13 @@ u8* GetControllerBuffer(s32 port) {
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", GetNextInterpolatedByte);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", LoadVibrationVIBFile);
+
+
+
+void LoadVibrationVIBFile(vibeId)
+{
+    LoadByFileIdGroupId(vibeId, 1, g_VibeDataBuffer, VIBE_DATA_BUFFER_SIZE);
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", ResetVibrationSystem);
 

@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game.h"
 
 typedef enum {
     EQ_OP_LOGIC_AND = 0x00,
@@ -24,21 +25,18 @@ typedef enum {
 
 } EqOpcodes;
 
-typedef enum {
-    FILE_VIDEO = 0,
-    FILE_SYSTEM = 1,
-    FILE_DICT = 2,
-    FILE_DIALOG = 3,
-    FILE_MENU = 4,
-    FILE_SCRIPT = 5,
-    FILE_BACKGROUND = 6,
-    FILE_ANIMATION = 7,
-    FILE_AUDIO = 8,
-    FILE_DUMMY = 9
-} FileGroupType;
+
+
+
+#define MUSIC_BUFFER_SIZE 0x7000
+#define SOUND_EFFECT_BUFFFER_SIZE 0x2000
+#define AUDIO_STREAM_BUFFER_SIZE 0x10000
 
 extern s8 g_NeedToResetFaceSlots;
 extern s8 g_FaceSlotResetState[];
+extern u8 g_SoundEffectBuffer[SOUND_EFFECT_BUFFFER_SIZE];
+extern u8 g_MusicBuffer[MUSIC_BUFFER_SIZE];
+extern u8 g_AudioStreamBuffer[AUDIO_STREAM_BUFFER_SIZE];
 
 void ExecuteUnaryOpcode(s32 opcode);
 void ExecuteEquationOpcode(s32 opcode);
@@ -241,7 +239,11 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_musiccut);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_loadmusic);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", LoadMusic);
+
+
+void LoadMusic(s32 MusicId) {
+    LoadByFileIdGroupId(MusicId, FILE_AUDIO, g_MusicBuffer, MUSIC_BUFFER_SIZE);
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_loadwavemusic);
 
@@ -265,7 +267,11 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_secut);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_loadse);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", LoadSoundEffect);
+
+void LoadSoundEffect(s32 SfxId)
+{
+    LoadByFileIdGroupId(SfxId, FILE_AUDIO, g_SoundEffectBuffer, SOUND_EFFECT_BUFFFER_SIZE);
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_loadwaveSE);
 
@@ -273,13 +279,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", LoadAudioId);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_loadwaveStream);
 
-#ifndef INCLIDE_MAP
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", LoadAudioStream);
-#else
-extern s32 D_800A05B8;
-
-void LoadAudioStream(s32 audioId) { LoadByFileIdGroupId(audioId, FILE_AUDIO, &D_800A05B8, 0x10000); }
-#endif
+void LoadAudioStream(s32 audioId) { LoadByFileIdGroupId(audioId, FILE_AUDIO, g_AudioStreamBuffer, AUDIO_STREAM_BUFFER_SIZE); }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_cdplay);
 

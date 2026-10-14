@@ -208,17 +208,4 @@ typedef enum {
 #define SPU_CD_VOL_L 0x1F801DB0
 #define SPU_CD_VOL_R 0x1F801DB2
 
-/*
- * Sony PlayStation Library Information Tag (__ps_libinfo__):
- * static unsigned char __ps_libinfo__[8] = {
- *     'P', 's',      // Tag ID "Ps"
- *     9,             // Library ID: 9 = Square Akao Sound Driver
- *     0x25,          // Reserved / flags
- *     0x9B,          // Library version 155
- *     'S', 'C',      // Vendor: "SC" (Square Co.)
- *     0x00           // Null / reserved
- * };
- */
-#define AKAO_LIBINFO_TAG() __asm__(".byte 'P', 's', 0x09, 0x25, 0x9B, 'S', 'C', 0x00\n\t.align 2")
-
 #endif

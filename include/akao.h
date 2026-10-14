@@ -180,32 +180,5 @@ typedef enum {
     AKAO_STREAM_REVERB_MASK_RESTORE = 0xF9,
 } AkaoCommands;
 
-#define SPU_VOICE_REG(voice, offset) (*(u16*)(0x1F801C00 + (offset) + ((voice) * 0x10)))
-#define SPU_VOICE_REG8(voice, offset) (*(u8*)(0x1F801C00 + (offset) + ((voice) * 0x10)))
-
-// Voice channel register offsets (from 0x1F801C00 base)
-#define SPU_VOICE_VOL_L_OFFSET 0x00
-#define SPU_VOICE_VOL_R_OFFSET 0x02
-#define SPU_VOICE_PITCH_OFFSET 0x04
-#define SPU_VOICE_START_ADDR_OFFSET 0x06
-#define SPU_VOICE_ADSR_AMODE_OFFSET 0x08
-#define SPU_VOICE_ADSR_SMODE_OFFSET 0x0A
-#define SPU_VOICE_LOOP_ADDR_OFFSET 0x0E
-
-#define SPU_REG(addr) (*(u16*)(addr))
-
-// SPU Control Register Addresses
-#define SPU_VOICE_KEY_ON_LO 0x1F801D88
-#define SPU_VOICE_KEY_ON_HI 0x1F801D8A
-#define SPU_VOICE_KEY_OFF_LO 0x1F801D8C
-#define SPU_VOICE_KEY_OFF_HI 0x1F801D8E
-#define SPU_VOICE_CHN_FM_LO 0x1F801D90
-#define SPU_VOICE_CHN_FM_HI 0x1F801D92
-#define SPU_VOICE_CHN_NOISE_LO 0x1F801D94
-#define SPU_VOICE_CHN_NOISE_HI 0x1F801D96
-#define SPU_VOICE_CHN_REVERB_LO 0x1F801D98
-#define SPU_VOICE_CHN_REVERB_HI 0x1F801D9A
-#define SPU_CD_VOL_L 0x1F801DB0
-#define SPU_CD_VOL_R 0x1F801DB2
-
 #endif
+

@@ -4,15 +4,12 @@
 #include "akao.h"
 #include "libspu.h"
 
-extern s32 g_AudioInitialized;
-extern AkaoChannelConfig* g_AkaoChannelConfig;
+extern volatile s32 g_AudioInitialized; // voltile need for critical loop per style.md 
 extern s16 g_AkaoPitchMulMusicSlideSteps;
 extern s32 g_AkaoPitchMulMusic;
-extern s32 g_AkaoCdVol;
 extern s32 g_SeLoopBufferMain;
 extern s32 g_SeLoopChannelState;
 extern s32 g_SeLoopMixBuffer;
-extern AkaoQueuedCommand g_AkaoCommand;
 
 s32 InitSoundDriver(void) {
     SetupSpuAndAudioEvents();
@@ -177,7 +174,12 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", SetupAudioEventHandler);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002F094);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", WaitForAudioShutdown);
+void WaitForAudioShutdown(void) {
+    if (g_AudioInitialized == 1) {
+        do {
+        } while (g_AudioInitialized == 1);
+    }
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", ProcessAkaoBlockIfValid);
 
@@ -299,7 +301,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80031394);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8003166C);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_800316F8);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoPlaySoundPair);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80031A40);
 
@@ -331,7 +333,11 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80032380);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_800323E8);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80032520);
+
+
+void AkaoCmd_21_PlayTwoSounds(AkaoPlayTwoSoundsCommand* cmd) {
+    AkaoPlaySoundPair(cmd->soundId1, cmd->soundId2);
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8003254C);
 
@@ -430,11 +436,9 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", ClearMusicStateIfMatches);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoExec);
 
-extern s32 g_AkaoCdVol;
-
 void AkaoUpdateCdVolume(void) {
-    SPU_REG(SPU_CD_VOL_L) = (s16)(g_AkaoCdVol >> 16);
-    SPU_REG(SPU_CD_VOL_R) = (s16)(g_AkaoCdVol >> 16);
+    SPU_REG(SPU_CD_VOL_L) = (s16)(g_AkaoCdVol.val >> 16);
+    SPU_REG(SPU_CD_VOL_R) = (s16)(g_AkaoCdVol.val >> 16);
 }
 
 void func_80034134(s32* src, s32* dst, u32 count) {

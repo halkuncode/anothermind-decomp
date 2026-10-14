@@ -38,6 +38,77 @@ extern u8 g_SoundEffectBuffer[SOUND_EFFECT_BUFFFER_SIZE];
 extern u8 g_MusicBuffer[MUSIC_BUFFER_SIZE];
 extern u8 g_AudioStreamBuffer[AUDIO_STREAM_BUFFER_SIZE];
 
+typedef struct {
+    /* 0x00 */ u8 compilerMonth;
+    /* 0x01 */ u8 compilerDay;
+    /* 0x02 */ u8 compilerHour;
+    /* 0x03 */ u8 compilerMin;
+    /* 0x04 */ u16 flags;
+    /* 0x06 */ u16 totalFileSize;
+    /* 0x08 */ u16 labelCount;
+} ZzsHeader; /* size = 0x0A */
+
+typedef struct {
+    /* 0x00 */ char wordStr[17];
+    /* 0x11 */ u8 pos;
+    /* 0x12 */ u16 semanticIds[2][10];
+    /* 0x3A */ u8 semanticWts[2][10];
+    /* 0x4E */ u8 flags4e[2];
+    /* 0x50 */ u8 tailFlags[3];
+    /* 0x53 */ u8 pad53;
+    /* 0x54 */ u16 pad54;
+} JDictEntry; /* size = 0x56 */
+
+typedef struct {
+    /* 0x00 */ char prefixStr[17];
+    /* 0x11 */ u8 attr;
+    /* 0x12 */ u16 nextNodes[10];
+} MDictNode; /* size = 0x26 */
+
+typedef struct {
+    /* 0x00 */ char nameStr[10];
+    /* 0x0A */ u16 entityIds[3][5];
+    /* 0x28 */ u8 slotCounts[3];
+    /* 0x2B */ u8 pad2B;
+} NameEntity; /* size = 0x2C */
+
+typedef struct {
+    /* 0x00 */ char formRenyou[15];
+    /* 0x0F */ char formMizen[15];
+    /* 0x1E */ char formKatei[15];
+    /* 0x2D */ char formMeirei[15];
+} KatsuyouRule; /* size = 0x3C */
+
+extern JDictEntry g_JDictEntries[];
+extern MDictNode g_MDictNodes[];
+extern NameEntity g_NameEntities[];
+extern KatsuyouRule g_KatsuyouRules[];
+
+typedef struct {
+    /* 0x00 */ u16 dialogueScriptOffset;
+    /* 0x02 */ u8 characterDialogueLineIndex;
+    /* 0x03 */ u8 unk03;
+} ScriptDialogueLine;
+
+typedef struct {
+    /* 0x00 */ u8* ptr;
+    /* 0x04 */ u8* start;
+    /* 0x08 */ u8* end;
+    /* 0x0C */ u8 isExecuting;
+    /* 0x0D */ u8 pad0D[3];
+    /* 0x10 */ s32 memoryLimitEnd;
+    /* 0x14 */ u8 command;
+    /* 0x15 */ u8 pad15;
+    /* 0x16 */ ScriptDialogueLine dialogueLines[20];
+    /* 0x66 */ u16 activeTaiwaCharacterIds[3];
+    /* 0x6C */ u8 taiwaCharacterCount;
+    /* 0x6D */ u8 faceSlotResetState;
+    /* 0x6E */ u16 pad6E;
+    /* 0x70 */ u8* returnStack[10];
+} ScriptYPre; /* size = 0x98 */
+
+extern ScriptYPre g_ScriptYprePtr;
+
 void ExecuteUnaryOpcode(s32 opcode);
 void ExecuteEquationOpcode(s32 opcode);
 
@@ -488,4 +559,10 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", AdvanceScriptOperandPtr);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", ReadLE16FromScript);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", SkipNext8ScriptBytes);
+void SkipNext8ScriptBytes(void) {
+    s32 i;
+
+    for (i = 0; i < 8; i++) {
+        g_ScriptYprePtr.ptr++;
+    }
+}

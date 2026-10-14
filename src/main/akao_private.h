@@ -1,3 +1,8 @@
+#ifndef AKAO_PRIVATE_H
+#define AKAO_PRIVATE_H
+
+#include "common.h"
+
 // For akao.c, stucts go here
 //  16.16 fixed point volume
 typedef union {
@@ -7,6 +12,8 @@ typedef union {
         s16 hi;
     } i;
 } AkaoCdVol; /* size = 0x4 */
+
+extern AkaoCdVol g_AkaoCdVol;
 
 typedef struct {
     /* 0x0 */ s32 opcode;
@@ -49,6 +56,8 @@ typedef struct {
     /* 0x3E */ u8 sMode;
     /* 0x3F */ u8 rMode;
 } AkaoInstrument; /* size = 0x40 */
+
+extern AkaoInstrument D_800D8B38[];
 
 typedef struct AkaoChannel {
     /* 0x00 */ u8* akaoSequencePointer;
@@ -146,6 +155,8 @@ typedef struct AkaoChannel {
     /* 0xF4 */ AkaoVoiceAttr voiceAttr;
 } AkaoChannel; /* size = 0x124 */
 
+extern AkaoChannel D_800D7B60[];
+
 // Each sound effect slot occupies a stereo voice pair (2 audio channels, 0x248 bytes).
 typedef struct {
     AkaoChannel voices[2];
@@ -181,6 +192,8 @@ typedef struct {
     /* 0x5E */ u16 timerTopCur;
 } AkaoChannelConfig;
 
+extern AkaoChannelConfig* g_AkaoChannelConfig;
+
 typedef struct {
     /* 0x00 */ u32 opcode;
     /* 0x04 */ u16 param0;
@@ -193,6 +206,8 @@ typedef struct {
     /* 0x1C */ s32 param6;
     /* 0x20 */ s32 param7;
 } AkaoQueuedCommand; /* size = 0x24 */
+
+extern AkaoQueuedCommand g_AkaoCommand;
 
 typedef struct {
     /* 0x0 */ u32 opcode;
@@ -253,3 +268,43 @@ typedef struct {
 } AkaoStreamContext;
 
 extern AkaoStreamContext g_AkaoStreamContext;
+
+typedef struct {
+    /* 0x0 */ u32 opcode;
+    /* 0x4 */ s32 soundId1;
+    /* 0x8 */ s32 soundId2;
+} AkaoPlayTwoSoundsCommand;
+
+void AkaoPlaySoundPair(s32 soundId1, s32 soundId2);
+void AkaoCmd_21_PlayTwoSounds(AkaoPlayTwoSoundsCommand* cmd);
+
+// SPU Hardware Registers & Macros
+#define SPU_VOICE_REG(voice, offset) (*(u16*)(0x1F801C00 + (offset) + ((voice) * 0x10)))
+#define SPU_VOICE_REG8(voice, offset) (*(u8*)(0x1F801C00 + (offset) + ((voice) * 0x10)))
+
+// Voice channel register offsets (from 0x1F801C00 base)
+#define SPU_VOICE_VOL_L_OFFSET 0x00
+#define SPU_VOICE_VOL_R_OFFSET 0x02
+#define SPU_VOICE_PITCH_OFFSET 0x04
+#define SPU_VOICE_START_ADDR_OFFSET 0x06
+#define SPU_VOICE_ADSR_AMODE_OFFSET 0x08
+#define SPU_VOICE_ADSR_SMODE_OFFSET 0x0A
+#define SPU_VOICE_LOOP_ADDR_OFFSET 0x0E
+
+#define SPU_REG(addr) (*(u16*)(addr))
+
+// SPU Control Register Addresses
+#define SPU_VOICE_KEY_ON_LO 0x1F801D88
+#define SPU_VOICE_KEY_ON_HI 0x1F801D8A
+#define SPU_VOICE_KEY_OFF_LO 0x1F801D8C
+#define SPU_VOICE_KEY_OFF_HI 0x1F801D8E
+#define SPU_VOICE_CHN_FM_LO 0x1F801D90
+#define SPU_VOICE_CHN_FM_HI 0x1F801D92
+#define SPU_VOICE_CHN_NOISE_LO 0x1F801D94
+#define SPU_VOICE_CHN_NOISE_HI 0x1F801D96
+#define SPU_VOICE_CHN_REVERB_LO 0x1F801D98
+#define SPU_VOICE_CHN_REVERB_HI 0x1F801D9A
+#define SPU_CD_VOL_L 0x1F801DB0
+#define SPU_CD_VOL_R 0x1F801DB2
+
+#endif

@@ -1002,6 +1002,7 @@ SaveAndClearControllerCommandCode = 0x80048EA4;
 HandleControllerBufferFilled = 0x80048EB4;
 HandleControllerPacketReady = 0x80048F70;
 HandleControllerTransferComplete = 0x800491EC;
+QueryControllerState = 0x80049224;
 BIOS_bzero = 0x80049248;
 SetupControllerIRQFunctionPointers = 0x80049258;
 UpdateControllerState = 0x8004928C;

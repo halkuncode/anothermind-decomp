@@ -224,29 +224,6 @@ def add_s(cfg: any, file_name: str):
     )
 
 
-def add_hasm(cfg: any, file_name: str):
-    in_path = f"{src_path(cfg)}/{file_name}.s"
-    out_path = f"{build_path(cfg)}/{in_path}.o"
-
-    if out_path in objs:
-        return
-
-    objs.append(out_path)
-
-    nw.build(
-        rule=f"{platform(cfg)}-as",
-        outputs=[out_path],
-        inputs=[in_path],
-        order_only=[ld_path(cfg)],
-    )
-
-    nw.build(
-        rule="phony",
-        outputs=[in_path],
-        implicit=[ld_path(cfg)],
-    )
-
-
 def add_c(cfg: any, file_name: str):
     in_path = f"{src_path(cfg)}/{file_name}.c"
     out_path = f"{build_path(cfg)}/{in_path}.o"
@@ -367,9 +344,6 @@ def add_splat_config(file_name: str):
             elif kind == "asm":
                 add_s(cfg, name)
 
-            elif kind == "hasm":
-                add_hasm(cfg, name)
-
             elif kind == "c" or kind == ".data":
                 add_c(cfg, name)
 
@@ -453,7 +427,6 @@ with open("build.ninja", "w") as f:
             " | iconv --from-code=UTF-8 --to-code=Shift-JIS"
             " | bin/$cc1 -quiet -mcpu=3000 -mgas -fno-builtin $cc_flags"
             " | python3 tools/maspsx/maspsx.py $as_flags"
-            " | python3 tools/maspsx_exceptions.py"
             " | mipsel-linux-gnu-as "
             "-Iinclude "
             "-march=r3000 "

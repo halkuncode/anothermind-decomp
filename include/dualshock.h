@@ -1,5 +1,5 @@
-#ifndef CONTROLLER_H
-#define CONTROLLER_H
+#ifndef DUALSHOCK_H
+#define DUALSHOCK_H
 
 #include "common.h"
 
@@ -98,8 +98,10 @@ extern u8 g_ControllerPort1Buffer[];
 extern u8 g_ControllerPort2Buffer[];
 extern u8 g_ControllerPacketBuffer0[];
 extern u8 g_ControllerPacketBuffer1[];
+extern s32 g_ControllerPacketIRQStatus;
+extern u8* g_ControllerProcessingBufferBase;
 
 void BIOS_bzero(void* ptr, s32 size);
 #define bzero(ptr, size) BIOS_bzero((ptr), (size))
 
-#endif // CONTROLLER_H
+#endif // DUALSHOCK_H

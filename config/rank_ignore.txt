@@ -1,6 +1,8 @@
 # Functions, directories, or patterns to exclude from decompilation ranking (`./mako.sh rank`).
 # Lines starting with # are comments.
 
-# External PSX SDK library code
+# External PSX SDK / Sony driver code
+#dualshock may reqire Psy-Q 4.2+ that needs a different assembler. 
 psxsdk
+dualshock
 

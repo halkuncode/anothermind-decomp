@@ -52,23 +52,7 @@ extern ControllerState g_Controllers[];
 void BIOS_bzero(void* ptr, s32 size);
 #define bzero(ptr, size) BIOS_bzero((ptr), (size))
 
-// Assembly trampoline stub for BIOS bzero syscall (A0 table function 0x28)
-#define DEFINE_BIOS_BZERO()                                                                                            \
-    void __maspsx_include_asm_hack_BIOS_bzero() {                                                                      \
-        __asm__(".text # maspsx-keep\n"                                                                                \
-                "\t.align\t2 # maspsx-keep\n"                                                                          \
-                "\t.globl\tBIOS_bzero # maspsx-keep\n"                                                                 \
-                "BIOS_bzero: # maspsx-keep\n"                                                                          \
-                "\t.set\tnoreorder # maspsx-keep\n"                                                                    \
-                "\t.set\tnoat # maspsx-keep\n"                                                                         \
-                "\taddiu\t$10,$0,0xA0 # maspsx-keep\n"                                                                 \
-                "\tjr\t$10 # maspsx-keep\n"                                                                            \
-                "\taddiu\t$9,$0,0x28 # maspsx-keep\n"                                                                  \
-                "\tnop # maspsx-keep\n"                                                                                \
-                "\t.set\treorder # maspsx-keep\n"                                                                      \
-                "\t.set\tat # maspsx-keep\n");                                                                         \
-    }
-
 #endif // CONTROLLER_H
+
 
 

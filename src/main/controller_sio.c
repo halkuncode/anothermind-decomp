@@ -2,8 +2,6 @@
 #include "common.h"
 #include "controller.h"
 
-DEFINE_BIOS_BZERO();
-
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller_sio", SetupControllerIRQFunctionPointers);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller_sio", UpdateControllerState);

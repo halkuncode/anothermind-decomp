@@ -277,6 +277,15 @@ typedef struct {
 void AkaoPlaySoundPair(s32 soundId1, s32 soundId2);
 void AkaoCmd_21_PlayTwoSounds(AkaoPlayTwoSoundsCommand* cmd);
 
+void AkaoStreamFeedBlock(s32 bufStart, s32 bufMid, s32 blockSize, void (*nextIrq)(void));
+void AkaoStreamPumpBuffer(s32 bufStart, s32 bufMid, s32 blockSize, void (*nextIrq)(void));
+void AkaoStreamIrqAlt0(void);
+void AkaoStreamIrqAlt1(void);
+void AkaoStreamIrqChain0(void);
+void AkaoStreamIrqChain1(void);
+void AkaoStreamIrqHalf0(void);
+void AkaoStreamIrqHalf1(void);
+
 // SPU Hardware Registers & Macros
 #define SPU_VOICE_REG(voice, offset) (*(u16*)(0x1F801C00 + (offset) + ((voice) * 0x10)))
 #define SPU_VOICE_REG8(voice, offset) (*(u8*)(0x1F801C00 + (offset) + ((voice) * 0x10)))

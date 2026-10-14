@@ -180,7 +180,10 @@ void AkaoSpuTransferCallback(void) {
     g_AudioInitialized = 0;
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSetSpuTransferCallback);
+void AkaoSetSpuTransferCallback(void) {
+    g_AudioInitialized = 1;
+    SetSpuTransferCallback(AkaoSpuTransferCallback);
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", SetupAudioEventHandler);
 
@@ -843,9 +846,13 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamIrqHalf0);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamIrqHalf1);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamIrqAlt0);
+void AkaoStreamIrqAlt0(void) {
+    AkaoStreamFeedBlock(AKAO_STREAM_BUF0_ADDR, AKAO_STREAM_BUF0_MID, AKAO_STREAM_BLOCK_SIZE, AkaoStreamIrqAlt1);
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamIrqAlt1);
+void AkaoStreamIrqAlt1(void) {
+    AkaoStreamFeedBlock(AKAO_STREAM_BUF1_ADDR, AKAO_STREAM_BUF1_MID, AKAO_STREAM_BLOCK_SIZE, AkaoStreamIrqAlt0);
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStartStreamWithMask);
 
@@ -888,8 +895,12 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamCallbackPrimary);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamPumpBuffer);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamIrqChain0);
+void AkaoStreamIrqChain0(void) {
+    AkaoStreamPumpBuffer(AKAO_STREAM_BUF0_ADDR, AKAO_STREAM_BUF0_MID, AKAO_STREAM_BLOCK_SIZE, AkaoStreamIrqChain1);
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamIrqChain1);
+void AkaoStreamIrqChain1(void) {
+    AkaoStreamPumpBuffer(AKAO_STREAM_BUF1_ADDR, AKAO_STREAM_BUF1_MID, AKAO_STREAM_BLOCK_SIZE, AkaoStreamIrqChain0);
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamHalt);

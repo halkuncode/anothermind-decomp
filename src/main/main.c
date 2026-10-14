@@ -1,4 +1,3 @@
-//! PSYQ=4.0
 #include "common.h"
 #include <libetc.h>
 #include <libgpu.h>

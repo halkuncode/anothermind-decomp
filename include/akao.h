@@ -180,8 +180,8 @@ typedef enum {
     AKAO_STREAM_REVERB_MASK_RESTORE = 0xF9,
 } AkaoCommands;
 
-#define SPU_VOICE_REG(voice, offset) (*(volatile u16*)(0x1F801C00 + (offset) + ((voice) * 0x10)))
-#define SPU_VOICE_REG8(voice, offset) (*(volatile u8*)(0x1F801C00 + (offset) + ((voice) * 0x10)))
+#define SPU_VOICE_REG(voice, offset) (*(u16*)(0x1F801C00 + (offset) + ((voice) * 0x10)))
+#define SPU_VOICE_REG8(voice, offset) (*(u8*)(0x1F801C00 + (offset) + ((voice) * 0x10)))
 
 // Voice channel register offsets (from 0x1F801C00 base)
 #define SPU_VOICE_VOL_L_OFFSET 0x00

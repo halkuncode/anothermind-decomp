@@ -1,7 +1,6 @@
-//! CC1=2.8.0 G=8
 #include "common.h"
 
-extern u8 g_ControllerTypeId;
+extern u8 g_ControllerTypeId[16];
 extern s32 g_CurrVibrationMode;
 extern s32 g_VibrationEffectFrameCount;
 
@@ -90,15 +89,15 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", SetVibrationMode_80015E70);
 
 extern s8 g_PrimaryVibrationBuffer;
 extern s8 g_VibrationCycleCounter;
-extern s32 g_VibrationStateFlag;
-extern s32 g_VibrationSegmentIndex;
+extern s32 g_VibrationStateFlag[4];
+extern s32 g_VibrationSegmentIndex[4];
 
 void SetVibrationModeDirect(s32 mode) {
     g_CurrVibrationMode = mode;
     if (mode == 0) {
-        g_VibrationStateFlag = 0;
+        g_VibrationStateFlag[0] = 0;
         g_PrimaryVibrationBuffer = 0;
-        g_VibrationSegmentIndex = 0;
+        g_VibrationSegmentIndex[0] = 0;
         g_VibrationCycleCounter = 0;
     }
 }
@@ -106,9 +105,9 @@ void SetVibrationModeDirect(s32 mode) {
 s32 IsVibrationEnabled(void) { return g_CurrVibrationMode; }
 
 void StopVibrationEffect(void) {
-    g_VibrationStateFlag = 0;
+    g_VibrationStateFlag[0] = 0;
     g_PrimaryVibrationBuffer = 0;
-    g_VibrationSegmentIndex = 0;
+    g_VibrationSegmentIndex[0] = 0;
     g_VibrationCycleCounter = 0;
 }
 
@@ -131,8 +130,8 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", ResetVibrationSystem);
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", UpdateVibrationAndInput);
 
 s32 IsVibrationActive(void) {
-    s32 flag = (u32)g_VibrationStateFlag > 0;
-    if (g_VibrationSegmentIndex != 0) {
+    s32 flag = (u32)g_VibrationStateFlag[0] > 0;
+    if (g_VibrationSegmentIndex[0] != 0) {
         flag = 1;
     }
     return flag;
@@ -140,7 +139,7 @@ s32 IsVibrationActive(void) {
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", func_800161A0);
 
-u8 GetControllerType(void) { return g_ControllerTypeId >> 4; }
+u8 GetControllerType(void) { return g_ControllerTypeId[0] >> 4; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", func_80016200);
 

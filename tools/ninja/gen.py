@@ -73,19 +73,20 @@ class CompilerParams:
     gcoff_opt: str
 
 
-def default_compiler_params() -> CompilerParams:
+def default_compiler_params(source_file_name: str = "") -> CompilerParams:
+    gp = "-G8" if "src/main/" in source_file_name else "-G0"
     return CompilerParams(
-        "cc1-psx-272",
+        "cc1-psx-280",
         "-O2",
-        "-G0",
-        "--expand-div --aspsx-version=2.34",
+        gp,
+        "--expand-div --aspsx-version=2.56",
         "-g",
         "-gcoff",
     )
 
 
-def parse_compiler_params(line: str) -> CompilerParams:
-    c = default_compiler_params()
+def parse_compiler_params(line: str, source_file_name: str = "") -> CompilerParams:
+    c = default_compiler_params(source_file_name)
 
     for param in line.strip().split(" "):
         pair = param.split("=")
@@ -104,15 +105,19 @@ def parse_compiler_params(line: str) -> CompilerParams:
             if value == "3.3":
                 c.cc1 = "cc1-psx-26"
                 c.as_flags = "--expand-div --aspsx-version=2.21"
+                c.cc_gp = "-G0"
             elif value == "3.5":
                 c.cc1 = "cc1-psx-26"
                 c.as_flags = "--expand-div --aspsx-version=2.34"
+                c.cc_gp = "-G0"
             elif value == "3.6":
                 c.cc1 = "cc1-psx-272"
                 c.as_flags = "--expand-div --aspsx-version=2.34"
+                c.cc_gp = "-G0"
             elif value == "4.0":
                 c.cc1 = "cc1-psx-272"
                 c.as_flags = "--expand-div --aspsx-version=2.56"
+                c.cc_gp = "-G0"
             elif value == "4.1":
                 c.cc1 = "cc1-psx-280"
                 c.as_flags = "--expand-div --aspsx-version=2.56"
@@ -175,7 +180,7 @@ def parse_compiler_params(line: str) -> CompilerParams:
 
 def get_compiler_params(source_file_name: str) -> CompilerParams:
     if not os.path.exists(source_file_name):
-        return default_compiler_params()
+        return default_compiler_params(source_file_name)
 
     with open(source_file_name, "r") as file:
         for _ in range(10):
@@ -185,9 +190,9 @@ def get_compiler_params(source_file_name: str) -> CompilerParams:
                 break
 
             if line.startswith("//!"):
-                return parse_compiler_params(line[3:])
+                return parse_compiler_params(line[3:], source_file_name)
 
-    return default_compiler_params()
+    return default_compiler_params(source_file_name)
 
 
 def add_s(cfg: any, file_name: str):
@@ -242,6 +247,7 @@ def add_c(cfg: any, file_name: str):
         variables={
             "cc1": compiler_flags.cc1,
             "as_flags": compiler_flags.as_flags,
+            "cc_gp": compiler_flags.cc_gp,
             "cc_flags": (
                 f"{compiler_flags.cc_opt} "
                 f"{compiler_flags.cc_gp} "
@@ -427,7 +433,7 @@ with open("build.ninja", "w") as f:
             "-mtune=r3000 "
             "-no-pad-sections "
             "-O1 "
-            "-G0 "
+            "$cc_gp "
             "-o $out"
         ),
         depfile="$out.d",

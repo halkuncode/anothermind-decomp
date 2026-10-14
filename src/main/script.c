@@ -1,4 +1,3 @@
-//! CC1=2.8.0 G=8
 #include "common.h"
 
 typedef enum {

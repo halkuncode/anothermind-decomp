@@ -77,13 +77,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/controller", CheckAndHandleControllerInter
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller", HandleControllerFrameInterrupt);
 
-s32 GetAndClearControllerReadyFlag(void) {
-    s32 readyFlag;
-
-    readyFlag = g_ControllerReadyFlag;
-    g_ControllerReadyFlag = 0;
-    return readyFlag;
-}
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller", GetAndClearControllerReadyFlag);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller", ResetInterruptHandlersAndTimers);
 
@@ -238,9 +232,6 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/controller", func_80049600);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller", func_800496E0);
 
-void StartControllerTimeout(s32 duration) {
-    g_ControllerTimeoutDuration = duration;
-    g_ControllerTimeoutStartTime = RCNT_REG(RCNT2_COUNT);
-}
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller", StartControllerTimeout);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller", func_80049738);

@@ -1,4 +1,4 @@
-//! CC1=2.8.0
+//! G=0
 #include "common.h"
 #include "akao_private.h"
 #include "akao.h"

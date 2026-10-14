@@ -1,4 +1,3 @@
-//! PSYQ=4.0
 #include "common.h"
 
 extern s32 g_LastDisplayBufferIndex;
@@ -111,9 +110,9 @@ void StopScriptedMovieDecoder(void) { ShutdownMovieDecoder(); }
 
 s32 IsMovieDecoderActive(void) { return g_MovieDecoderActive; }
 
-extern s32 g_CurrentFrameNum;
+extern s32 g_CurrentFrameNum[5];
 
-s32 GetCurrentMovieFrame(void) { return g_CurrentFrameNum; }
+s32 GetCurrentMovieFrame(void) { return g_CurrentFrameNum[0]; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", PlayDefaultMovieSegment);
 

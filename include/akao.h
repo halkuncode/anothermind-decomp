@@ -208,4 +208,12 @@ typedef enum {
 #define SPU_CD_VOL_L 0x1F801DB0
 #define SPU_CD_VOL_R 0x1F801DB2
 
+// Build watermark stamp at the end of the Akao sound driver text section
+#define AKAO_BUILD_WATERMARK()                                                                                         \
+    __asm__(".text\n"                                                                                                  \
+            "\t.align\t2\n"                                                                                            \
+            "\t.word\t0x25097350\n"                                                                                    \
+            "\t.word\t0x0043539B\n")
+
 #endif
+

@@ -879,4 +879,4 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80038BE8);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80038C18);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80038C64);
+AKAO_BUILD_WATERMARK();

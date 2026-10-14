@@ -2,8 +2,7 @@
 #include "common.h"
 #include "controller.h"
 
-// BIOS syscall in assembly
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_sio", BIOS_bzero);
+DEFINE_BIOS_BZERO();
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller_sio", SetupControllerIRQFunctionPointers);
 

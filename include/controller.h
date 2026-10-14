@@ -53,6 +53,3 @@ void BIOS_bzero(void* ptr, s32 size);
 #define bzero(ptr, size) BIOS_bzero((ptr), (size))
 
 #endif // CONTROLLER_H
-
-
-

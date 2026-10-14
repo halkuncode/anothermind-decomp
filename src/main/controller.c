@@ -1,4 +1,4 @@
-//! PSYQ=4.0
+//! CC1=2.7.2 G=0
 #include "common.h"
 
 // Note 'volitile' is allowed here as a deviation from

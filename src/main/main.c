@@ -30,7 +30,7 @@ void abort(void) { M2C_BREAK(1); }
 
 extern void DoGame(void);
 
-void main(void) {
+int main(void) {
     StopCallback();
     ResetCallback();
     ResetGraph(0);

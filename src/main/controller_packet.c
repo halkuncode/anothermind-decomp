@@ -2,21 +2,21 @@
 #include "common.h"
 #include "controller.h"
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", func_800485D8);
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", MovieCmd_SetupType3);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", func_80048620);
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", MovieCmd_SetupType2);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", func_800486F8);
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", MovieCmd_SetupType4);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", func_800487A4);
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", MovieCmd_Abort);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", func_80048830);
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", InitMovieIRQSystem);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", InitControllerIRQSystem);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", func_80048D48);
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", FlushMovieDecodeBuffer);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", func_80048DB0);
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", HandleMovieFrameDecoded);
 
 void SaveAndClearControllerCommandCode(ControllerAttribute* state) {
     u8 savedCommandType;
@@ -26,11 +26,11 @@ void SaveAndClearControllerCommandCode(ControllerAttribute* state) {
     state->savedCmdType = savedCommandType;
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", func_80048EB4);
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", HandleMovieBufferFilled);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", func_80048F70);
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", HandleMovieFrameReady);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", func_800491EC);
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", HandleMoviePlaybackComplete);
 
 ControllerState* QueryControllerState(s32 port) {
     ControllerState* controller = &g_Controllers[0];

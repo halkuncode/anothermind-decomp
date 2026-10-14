@@ -57,7 +57,7 @@ typedef struct {
     /* 0x3F */ u8 rMode;
 } AkaoInstrument; /* size = 0x40 */
 
-extern AkaoInstrument D_800D8B38[];
+extern AkaoInstrument g_AkaoInstruments[];
 
 typedef struct AkaoChannel {
     /* 0x00 */ u8* akaoSequencePointer;
@@ -155,7 +155,7 @@ typedef struct AkaoChannel {
     /* 0xF4 */ AkaoVoiceAttr voiceAttr;
 } AkaoChannel; /* size = 0x124 */
 
-extern AkaoChannel D_800D7B60[];
+extern AkaoChannel g_AkaoChannels[];
 
 // Each sound effect slot occupies a stereo voice pair (2 audio channels, 0x248 bytes).
 typedef struct {

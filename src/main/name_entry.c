@@ -3,31 +3,26 @@
 
 #define VIBE_DATA_BUFFER_SIZE 1200
 
-
-
 extern u8 g_ControllerTypeId[16];
 extern s32 g_CurrVibrationMode;
 extern s32 g_VibrationEffectFrameCount;
 extern s32 g_VibeDataBuffer[VIBE_DATA_BUFFER_SIZE];
 
-
-
-
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", RunNameEntryScreen);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", func_80013CE4);
+INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", UpdateNameEntryKeyboardInput);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", func_800141E8);
+INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", StartKanaToKanjiConversion);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", LoadTextGraphics);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", func_80014530);
+INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", LookupFepCandidates);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", InitDrawEnvEffects);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", RenderNameEntryScreen);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", func_80014C90);
+INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", DebugPrintNameBuffers);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", InitNameEntryScreen);
 
@@ -57,13 +52,13 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", DrawNameBufferPreview);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", WriteNameGlyphAndMetadata);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", func_800156F8);
+INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", InsertNameSpaceOrAdvance);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", HandleNameConfirmOrCancel);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", func_80015800);
+INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", CommitKanaWithoutConversion);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", func_80015868);
+INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", ConvertKanaToKatakana);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", GetEnteredNameLength_800158E8);
 
@@ -132,13 +127,7 @@ u8* GetControllerBuffer(s32 port) {
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", GetNextInterpolatedByte);
 
-
-
-
-void LoadVibrationVIBFile(vibeId)
-{
-    LoadByFileIdGroupId(vibeId, 1, g_VibeDataBuffer, VIBE_DATA_BUFFER_SIZE);
-}
+void LoadVibrationVIBFile(vibeId) { LoadByFileIdGroupId(vibeId, 1, g_VibeDataBuffer, VIBE_DATA_BUFFER_SIZE); }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", ResetVibrationSystem);
 
@@ -152,18 +141,18 @@ s32 IsVibrationActive(void) {
     return flag;
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", func_800161A0);
+INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", GetControllerPadButtons);
 
 u8 GetControllerType(void) { return g_ControllerTypeId[0] >> 4; }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", func_80016200);
+INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", DisplayPadDebugNumber);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", func_8001623C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", DisplayControllerTypeDebug);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", func_80016300);
+INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", DisplayPort2ControllerTypeDebug);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", func_800163B0);
+INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", DisplayVibrationBufferDebug);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", func_80016404);
+INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", DisplayVibrationStateDebug);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", func_80016468);
+INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", DisplayVibrationModeDebug);

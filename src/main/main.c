@@ -75,11 +75,11 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/main", IntToAscii);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/main", ReportIssue);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/main", func_80012DEC);
+INCLUDE_ASM("asm/jp/nonmatchings/main/main", UnpackAmpackArchiveData);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/main", DecompressLZSS);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/main", func_800130BC);
+INCLUDE_ASM("asm/jp/nonmatchings/main/main", DebugUnpackAmpack);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/main", CheckAndUnpackAmpack);
 

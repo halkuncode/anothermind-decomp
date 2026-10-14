@@ -4,7 +4,7 @@
 #include "akao.h"
 #include "libspu.h"
 
-extern volatile s32 g_AudioInitialized; // voltile need for critical loop per style.md 
+extern volatile s32 g_AudioInitialized; // voltile need for critical loop per style.md
 extern s16 g_AkaoPitchMulMusicSlideSteps;
 extern s32 g_AkaoPitchMulMusic;
 extern s32 g_SeLoopBufferMain;
@@ -37,7 +37,7 @@ void AkaoCmd_40_SaveChannelState(void) {
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_12_PlayMusicFade);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002DF80);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", InitAkao);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", PlaySoundEffect_8002DFB4);
 
@@ -47,7 +47,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", StopSoundEffect);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_30_PlayMenuSound);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002E104);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoInitSpuVoices);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", IsResourceLoaded);
 
@@ -128,7 +128,7 @@ s32 IsAudioInitialized(void) { return g_AudioInitialized; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", InstallAkaoProgramFromBuffer);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002EB34);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSpuDmaCallback);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", PlayMusicTrack_8002EBC8);
 
@@ -283,7 +283,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCollectChannelsVoicesMask);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoUpdateKeysOff);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80031134);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoUpdateNoiseVoicesMask);
 
 void AkaoUpdateNoiseVoices(void) { g_AkaoControl.updateFlags |= AKAO_UPDATE_VOICE_MODES; }
 
@@ -333,11 +333,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80032380);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_800323E8);
 
-
-
-void AkaoCmd_21_PlayTwoSounds(AkaoPlayTwoSoundsCommand* cmd) {
-    AkaoPlaySoundPair(cmd->soundId1, cmd->soundId2);
-}
+void AkaoCmd_21_PlayTwoSounds(AkaoPlayTwoSoundsCommand* cmd) { AkaoPlaySoundPair(cmd->soundId1, cmd->soundId2); }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8003254C);
 
@@ -424,7 +420,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80033A94);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80033AE4);
 
-void func_80033B38(void) {}
+void AkaoDummySub_80033B38(void) {}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoExecuteCommandsQueue);
 
@@ -441,7 +437,7 @@ void AkaoUpdateCdVolume(void) {
     SPU_REG(SPU_CD_VOL_R) = (s16)(g_AkaoCdVol.val >> 16);
 }
 
-void func_80034134(s32* src, s32* dst, u32 count) {
+void AkaoDummySub_80034134(s32* src, s32* dst, u32 count) {
     count >>= 2;
     do {
         *dst++ = *src++;

@@ -31,35 +31,35 @@ extern TaiwaState g_TaiwaState;
 extern NewsMode g_NewsMode;
 extern s16 g_CurrentKanjiSet;
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_80102DC8);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", RunSaveLoadMenu);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_80103604);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", VerifyMemoryCardSlots);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_80103914);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", RunConfigMenu);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_80103E34);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", RunDialogueHistoryMenu);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_80104A64);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", ResetMenuSelectionState);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_80104AF4);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", ProcessSaveConfirmation);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_80104E48);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", TrySaveGameToMemoryCard);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_801050FC);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", FadeInMenuUI);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_801051CC);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", FadeOutMenuUI);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", UpdateMenuEffectState);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010666C);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", LoadChapterSceneBackground);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_801067C8);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", UpdateInGameMenuTransitions);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_80106A84);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", DispatchInGameMenu);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", RunGameLoop);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_80106D44);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", RenderEngineDebugAndUI);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", ResetAndSubmitDebugOverlayPrimitives);
 
@@ -81,7 +81,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", SendPortraitCommand);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", CallScriptFunctionById);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010BDA8);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", DrawTaiwaBrainEffect);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", DoEffectB);
 
@@ -135,34 +135,34 @@ INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", WriteCharToDebugBuffer);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", DbgScreenPrintString);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010C300);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", CheckPortraitCoordinateBounds);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", AdvanceFramesWithDebugUpdate);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010C3D4);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", LoadPortraitFileToBuffer);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010C45C);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", DispatchPortraitCommandMode);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010C530);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", InitDrawBufferPortraitAnimTiles);
 
-void func_8010C5F4(void) {}
+void StubPortraitCallback1(void) {}
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010C5FC);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", ValidateOperandAndLoadPortraitImage);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", ResetPortraitSlotsAndDrawAreas);
 
-void func_8010C704(void) {}
+void StubPortraitCallback2(void) {}
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010C70C);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", UpdatePortraitSlotVisibility);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010C768);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", CalculatePortraitSlotScreenOffset);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010C7DC);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", PlayPortraitConfirmationSfx);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010C820);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", PlayPortraitCancelSfx);
 
 // This changes the Portrait slot to state (expresion?) 3
-void func_8010C870(PortraitSlot* slot) { slot->state = 3; }
+void SetPortraitSlotStateTo3(PortraitSlot* slot) { slot->state = 3; }
 
 extern u8 g_MessageBoxType;
 
@@ -173,13 +173,13 @@ void InitPortraitSlotMsgBoxType(PortraitSlot* slot) {
     slot->msgBoxType = g_MessageBoxType;
 }
 
-void func_8010C8A4(PortraitSlot* slot) {
+void ClearPortraitSlotStateAndUploadClut(PortraitSlot* slot) {
     slot->unk36 = 0;
     slot->unk3E = 0;
-    func_800F3780(slot);
+    UploadPortraitClutToVram(slot);
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010C8C8);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", PreparePortraitSlotAndLoadAsset);
 
 void ResetTaiwaFadeTimers(void) {
     g_TaiwaBarX = 0;
@@ -193,6 +193,6 @@ INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", PlayDialogueMessage);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", PlaySystemMessage);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", func_8010CB14);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game_loop", StepGameFrameAndProcessInput);
 
 void DoGame(void) { RunGameLoop(); }

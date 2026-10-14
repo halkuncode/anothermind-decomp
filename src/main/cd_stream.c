@@ -38,7 +38,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", GetFileCountInGroup);
 
 s32 IsDebugDisabled(void) { return -1; }
 
-s32 func_80019CF4(void) { return 0; }
+s32 LoadScriptByFilename(void) { return 0; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", SeekToCdFileEntry);
 
@@ -46,33 +46,33 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", SeekCdToFileStart);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", PlayCdAudioTrack);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", func_80019E24);
+INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", DebugRunCdLoadTest);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", GetSectorForMovieId);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", func_80019EC4);
+INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", SeekCdFileHeader);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", func_80019F88);
+INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", PlayCdMusicTrack);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", func_8001A01C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", LookupMovieSector);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", func_8001A0B0);
+INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", CheckCdTransferStatus);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", func_8001A124);
+INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", CheckDebugDisabledFlag);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", func_8001A160);
+INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", GetGroupFileCount);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", func_8001A1F4);
+INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", WaitForCdDriveIdle);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", UpdateCdTransferState);
 
-void func_8001A2A4(void) {}
+void DebugOnController2L2Press(void) {}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", StartPlayMovie);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", PlayScriptedMovieCutscene);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", func_8001A890);
+INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", ProcessMovieInterruptAndDecode);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", UpdateMoviePlaybackFrame);
 
@@ -84,7 +84,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", SetupMovieStream);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", ProcessNextVideoBlock);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", func_8001B248);
+INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", StGetNextBlock);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", WaitForFrameReadyOrFallback);
 
@@ -102,9 +102,9 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", PlayTitleScreenCutscene);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", StartScriptedMovieWithFade);
 
-void func_8001B854(void) {}
+void StubStopXAPlayback(void) {}
 
-void func_8001B85C(void) {}
+void StubResetStreamRing(void) {}
 
 void StopScriptedMovieDecoder(void) { ShutdownMovieDecoder(); }
 
@@ -126,13 +126,13 @@ void ResetMovieDecoderState(void) { g_MovieDecoderActive = 0; }
 
 s32 GetLastDisplayBufferIndex(void) { return g_LastDisplayBufferIndex; }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", func_8001B9D0);
+INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", PlayDefaultMovieSegment_8001B9D0);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", func_8001BA64);
+INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", PlayMovieSegmentUsingOffsetOrDefault_8001BA64);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", func_8001BAC0);
+INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", LoopMovieById_8001BAC0);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", func_8001BB00);
+INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", ShutdownMovieDecoder_8001BB00);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", SetCdBusyStatus);
 
@@ -142,6 +142,6 @@ void ClearCdTransferReadyFlag(void) { g_CdTransferReady = 0; }
 
 s32 IsCdTransferReady(void) { return g_CdTransferReady; }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", func_8001BCE8);
+INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", ResetMovieDecoderState_8001BCE8);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", DisplayCdControlStatusToDebugScreen);

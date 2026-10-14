@@ -2,7 +2,7 @@
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", RecordDemoInputFrame);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", func_800F4524);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", PlaybackDemoInputFrame);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", CancelDemoPlaybackAndResetState);
 
@@ -14,7 +14,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", UpdatePortraitDebugSlot);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", SetupDebugHighlightDrawModes);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", func_800F5248);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", InitDebugMenuBuffers);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", LoadInGameMenuBackground);
 
@@ -22,35 +22,35 @@ INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", InitSaveLoadMenuResources);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", UpdateDebugMenuState);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", func_800F5D04);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", RunDebugMenuPage1);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", func_800F5F6C);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", RunDebugMenuPage2);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", func_800F6090);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", RunDebugMenuPage3);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", func_800F61D8);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", RunDebugSoundTestMenu);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", func_800F6454);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", RunDebugScheduleViewer);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", func_800F6534);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", RunDebugSceneJumpMenu);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", func_800F6704);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", RunDebugFlagEditor);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", func_800F694C);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", RunDebugMemoryViewer);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", func_800F6B38);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", RunDebugScriptViewer);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", func_800F6BD0);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", RunDebugSaveDataManager);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", func_800F6D04);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", RunDebugPaletteEditor);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", func_800F6E7C);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", RunDebugFontViewer);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", func_800F6FA0);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", RunDebugVramViewer);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", func_800F7134);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", RunDebugMovieViewer);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", func_800F73AC);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", RunDebugTaiwaViewer);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", TestGpuAndCdromEventState);
 
@@ -64,6 +64,6 @@ INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", LoadMemoryCardSaveHeaders);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", LoadSaveSlotNamesFromMemoryCard);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", func_800F9D44);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", PackSaveDataBuffer);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", func_800FA16C);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/demo_menu", ExecuteSaveGame);

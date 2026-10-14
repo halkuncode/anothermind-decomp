@@ -25,9 +25,6 @@ typedef enum {
 
 } EqOpcodes;
 
-
-
-
 #define MUSIC_BUFFER_SIZE 0x7000
 #define SOUND_EFFECT_BUFFFER_SIZE 0x2000
 #define AUDIO_STREAM_BUFFER_SIZE 0x10000
@@ -109,6 +106,67 @@ typedef struct {
 
 extern ScriptYPre g_ScriptYprePtr;
 
+typedef struct {
+    /* 0x00 */ u8 faceSlotId;
+    /* 0x01 */ u8 pad01;
+    /* 0x02 */ s16 unk02;
+    /* 0x04 */ s16 msgBoxPosX;
+    /* 0x06 */ s16 msgBoxPosY;
+    /* 0x08 */ s16 msgBoxWidth;
+    /* 0x0A */ s16 msgBoxHeight;
+    /* 0x0C */ s16 poseId;
+    /* 0x0E */ s16 poseVariant;
+    /* 0x10 */ s16 faceId;
+    /* 0x12 */ u8 facingDirection;
+    /* 0x13 */ u8 blendMode;
+    /* 0x14 */ u8 faceNeedsRedraw;
+    /* 0x15 */ u8 windowWidth;
+} ScriptCharacterSlot; /* size = 0x16 */
+
+extern ScriptCharacterSlot g_CharacterSlotTable[];
+
+typedef struct {
+    /* 0x00 */ s32 characterId;
+    /* 0x04 */ s16 speed;
+    /* 0x06 */ s16 faceSlotId;
+    /* 0x08 */ s32 startX;
+    /* 0x0C */ s32 startY;
+    /* 0x10 */ s32 targetX;
+    /* 0x14 */ s32 targetY;
+    /* 0x18 */ s32 xAccum;
+    /* 0x1C */ s32 yAccum;
+    /* 0x20 */ s32 stepX;
+    /* 0x24 */ s32 stepY;
+    /* 0x28 */ s32 currentX;
+    /* 0x2C */ s32 currentY;
+    /* 0x30 */ s32 waitCounter;
+} ScriptPmoveState; /* size = 0x34 */
+
+extern ScriptPmoveState g_PmoveState;
+
+typedef struct {
+    /* 0x00 */ u8 active;
+    /* 0x01 */ u8 wasActive;
+    /* 0x02 */ u8* entryPointer;
+    /* 0x06 */ u8* currentPointer;
+    /* 0x0A */ u8 canRun;
+    /* 0x0B */ u8 backupJumpOpcodeTemp;
+    /* 0x0C */ u8 needsInit;
+    /* 0x0D */ u8 timer;
+    /* 0x0E */ u8 waitCounter;
+    /* 0x0F */ u8 backupPortraitStateTemp;
+} ScriptThread; /* size = 0x10 */
+
+typedef struct {
+    /* 0x00 */ u8* instructionPtr;
+    /* 0x04 */ u8 canAdvance;
+    /* 0x05 */ u8 jumpOpcode;
+    /* 0x06 */ u8 waitMovieFlag;
+    /* 0x07 */ u8 portraitWait;
+    /* 0x08 */ u8 autoAdvance;
+    /* 0x09 */ u8 portraitState;
+} ScriptSavedContext; /* size = 0x0A */
+
 void ExecuteUnaryOpcode(s32 opcode);
 void ExecuteEquationOpcode(s32 opcode);
 
@@ -122,7 +180,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", LoadPortraitLoopCutData);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", LoadPortraitTextGridData);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", func_8001D48C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/script", SaveScriptGameState);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", ApplySaveGameState);
 
@@ -258,7 +316,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", PlaySingleSoundeffect);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", PlayConditionalSoundEffect);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", func_80026CB0);
+INCLUDE_ASM("asm/jp/nonmatchings/main/script", ResetPortraitSlotFade);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", MaybeStartTaiwaVibration);
 
@@ -310,11 +368,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_musiccut);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_loadmusic);
 
-
-
-void LoadMusic(s32 MusicId) {
-    LoadByFileIdGroupId(MusicId, FILE_AUDIO, g_MusicBuffer, MUSIC_BUFFER_SIZE);
-}
+void LoadMusic(s32 MusicId) { LoadByFileIdGroupId(MusicId, FILE_AUDIO, g_MusicBuffer, MUSIC_BUFFER_SIZE); }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_loadwavemusic);
 
@@ -338,9 +392,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_secut);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_loadse);
 
-
-void LoadSoundEffect(s32 SfxId)
-{
+void LoadSoundEffect(s32 SfxId) {
     LoadByFileIdGroupId(SfxId, FILE_AUDIO, g_SoundEffectBuffer, SOUND_EFFECT_BUFFFER_SIZE);
 }
 
@@ -350,7 +402,9 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", LoadAudioId);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_loadwaveStream);
 
-void LoadAudioStream(s32 audioId) { LoadByFileIdGroupId(audioId, FILE_AUDIO, g_AudioStreamBuffer, AUDIO_STREAM_BUFFER_SIZE); }
+void LoadAudioStream(s32 audioId) {
+    LoadByFileIdGroupId(audioId, FILE_AUDIO, g_AudioStreamBuffer, AUDIO_STREAM_BUFFER_SIZE);
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_cdplay);
 
@@ -405,7 +459,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_present);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_tagon);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", func_80028FA4);
+INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_tagoff);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_brainon);
 
@@ -517,7 +571,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", PrintDebugBinaryGroupString);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", LogDecimalNumber);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", func_8002B494);
+INCLUDE_ASM("asm/jp/nonmatchings/main/script", LogHexNumber);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", LogCommand);
 
@@ -535,21 +589,21 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", RecordCallLabel);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", ConvertIntToAscii);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", func_8002B680);
+INCLUDE_ASM("asm/jp/nonmatchings/main/script", LookupTaiwaGrammarRule);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", func_8002BA98);
+INCLUDE_ASM("asm/jp/nonmatchings/main/script", MatchTaiwaVocabularyEntry);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", func_8002BEF8);
+INCLUDE_ASM("asm/jp/nonmatchings/main/script", ParseTaiwaSentenceStructure);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", func_8002C3CC);
+INCLUDE_ASM("asm/jp/nonmatchings/main/script", ValidateTaiwaPhraseLength);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", func_8002C5D8);
+INCLUDE_ASM("asm/jp/nonmatchings/main/script", CheckTaiwaModifierFlags);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", func_8002C6BC);
+INCLUDE_ASM("asm/jp/nonmatchings/main/script", IsTaiwaNounValid);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", func_8002C70C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/script", LookupVerbConjugation);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", func_8002C7FC);
+INCLUDE_ASM("asm/jp/nonmatchings/main/script", GetDictionaryByteField);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", ResetDialogueTrackingState);
 

@@ -8,13 +8,13 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/controller_sio", UpdateControllerState);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller_sio", HandleControllerPacketState);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_sio", func_80049600);
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller_sio", StepControllerPacketTimeout);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_sio", func_800496E0);
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller_sio", CheckVibrationBusyStat);
 
 void StartControllerTimeout(s32 duration) {
     g_ControllerTimeoutDuration = duration;
     g_ControllerTimeoutStartTime = RCNT_REG(RCNT2_COUNT);
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_sio", func_80049738);
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller_sio", WaitRC2Ready);

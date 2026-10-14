@@ -52,15 +52,15 @@ INCLUDE_ASM("asm/jp/nonmatchings/engine/taiwa", DrawTaiwaScreenUI);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/taiwa", ResetPortraitClutAndUpload);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/taiwa", func_800F3598);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/taiwa", UploadPortraitSpriteToVram);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/taiwa", func_800F3780);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/taiwa", UploadPortraitClutToVram);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/taiwa", func_800F39C4);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/taiwa", PreparePortraitSlot);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/taiwa", UpdatePortraitSlotDrawArea);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/taiwa", func_800F3DC8);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/taiwa", UpdatePortraitSlotLayout);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/taiwa", AllocatePortraitAnimSlot);
 

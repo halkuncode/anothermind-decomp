@@ -143,15 +143,15 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", CrossfadeToBuffer);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", SetSecondaryMusicBuffer);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002ED04);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoLoadSoundBank);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002EDD0);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSendStreamCommand);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002EE0C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoExecCommandIfValid);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002EEB8);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSetupStreamIRQ);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002EF3C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoProcessStreamBuffer);
 
 s32 AkaoGetPlayingStreamTrack(void) {
     s32 ret = -1;
@@ -168,11 +168,11 @@ void AkaoSpuTransferCallback(void) {
     g_AudioInitialized = 0;
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002F014);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSetSpuTransferCallback);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", SetupAudioEventHandler);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8002F094);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSpuReadWithCallback);
 
 void WaitForAudioShutdown(void) {
     if (g_AudioInitialized == 1) {
@@ -271,11 +271,11 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSoundUpdatePitchAndVol);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoAllocateVoice);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80030928);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoAllocateAndAssignVoice);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80030BE4);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoReleaseVoice);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80030C1C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoPollVoiceEnvelopes);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoUpdateKeysOn);
 
@@ -291,85 +291,85 @@ void AkaoUpdateReverbVoices(void) { g_AkaoControl.updateFlags |= AKAO_UPDATE_VOI
 
 void AkaoUpdatePitchLfoVoices(void) { g_AkaoControl.updateFlags |= AKAO_UPDATE_VOICE_MODES; }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8003127C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoInitChannelState);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80031314);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoResetChannelVolPan);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AdjustAudioEventAddresses);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80031394);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStartSequencePlayback);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8003166C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSetChannelMasks);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoPlaySoundPair);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80031A40);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSetupChannelSequence);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80031B98);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStopChannelPlayback);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80031BF4);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoTriggerSoundEffectPair);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80031DEC);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSetSeLoopBufferPointers);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80031E64);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoClearChannelAllocation);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80031EAC);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStopAllActiveChannels);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80031F00);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoInitAudioSlot1);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8003214C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoGetAudioSlot1Id);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8003217C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoPlayMusicOnSlot);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8003220C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoFadeOutAudioSlot);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80032260);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCheckAndPlayPendingMusic);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_800322B4);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoTriggerSfxTrack);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80032300);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoTriggerSeLoopSlot0);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80032380);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoTriggerSeLoopSlot1);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_800323E8);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoTriggerSfxPriority);
 
 void AkaoCmd_21_PlayTwoSounds(AkaoPlayTwoSoundsCommand* cmd) { AkaoPlaySoundPair(cmd->soundId1, cmd->soundId2); }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8003254C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStopSfxChannel0);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_800325B4);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStopSfxChannel1);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80032668);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStopSfxChannel2);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8003272C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSetCdVolumeInstant);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80032760);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoInitCdVolumeSlide);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_800327C8);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStepCdVolumeSlide);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80032838);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoInitChannelVolSlide);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80032920);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStepChannelVolSlide);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80032AA0);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoResetChannelVolSlide);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80032B1C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoApplyChannelVolSlide);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80032BE4);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoInitChannelPanSlide);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80032CC4);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStepChannelPanSlide);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80032E3C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoResetChannelPanSlide);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80032EB4);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoApplyChannelPanSlide);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80032F78);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoInitChannelPitchSlide);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80033058);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStepChannelPitchSlide);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_800331E0);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoResetChannelPitchSlide);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80033258);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoApplyChannelPitchSlide);
 
 extern s16 g_AkaoTempoMulMusicSlideSteps;
 extern s32 g_AkaoTempoMulMusic;
@@ -408,17 +408,17 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_90_SetMuteMusicMask);
 
 void AkaoSetChannelCondition(AkaoQueuedCommand* cmd) { g_AkaoChannelConfig->condition = cmd->param0; }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8003374C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoFlushChannelVoiceToSpu);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8003383C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoFlushGlobalVoiceModes);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_800338E0);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoFlushAllChannelsToSpu);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_800339FC);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoFlushActiveChannelModes);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80033A94);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSetStreamVoiceLeftPitch);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80033AE4);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSetStreamVoiceRightPitch);
 
 void AkaoDummySub_80033B38(void) {}
 
@@ -459,23 +459,23 @@ s32 AkaoAdjustInstrumentIndex(u32 flags, s32 instrument) {
     return instrument;
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80034C40);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoFindInstrumentKeySplitLow);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80034D5C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoFindInstrumentKeySplitHigh);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80034E78);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoResolveInstrumentSplit);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80034ECC);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCalcNotePitch);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80034F68);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoTriggerNoteOn);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoExecuteSequence);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80035878);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoGetInstrumentSampleRate);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8003591C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoInitInstrumentTuning);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80035954);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCheckVoiceBusy);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_A0_FinishChannel);
 
@@ -804,77 +804,77 @@ void AkaoOp_E0_VoiceBusRoutingOn(AkaoChannel* track) { track->updateFlags |= AKA
 
 void AkaoOp_Null(void) { AkaoOp_A0_FinishChannel(); }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037578);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoPollSoundCommandQueue);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStopStream);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037690);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoAllocateStreamVoicePair);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037708);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamDmaTransfer);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037750);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSetupStreamPlayback);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037968);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoConfigureStreamVoices);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037B24);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoInitStreamIrqAndCallbacks);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037BF4);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamBuffer0Callback);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037C58);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamBuffer1Callback);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037CBC);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamFeedBlock);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037E08);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamIrqHalf0);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037E38);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamIrqHalf1);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037E68);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamIrqAlt0);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037E98);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamIrqAlt1);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037EC8);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStartStreamWithMask);
 
 void AkaoCmd_E2_StopStream(void) { AkaoStopStream(); }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037F30);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSetStreamVolumeDirect);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80037FA0);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSetStreamVolumeTarget);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80038020);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStepStreamVolumeSlide);
 
 void SetAkaoStopStreamCallback(void) {
     SpuSetIRQAddr(0x1038);
     SpuSetIRQCallback(AkaoStopStream);
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80038198);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamDmaCallback);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8003826C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStartStreamDma);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80038434);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStartStreamLoop);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_800385D0);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStartStreamTrack0);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_8003861C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStartStreamTrack1);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80038660);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoGetStreamStatus);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80038698);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamGetAvailableBytes);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_800386E4);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamInitRingBuffer);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80038830);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamTransferNextChunk);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_800388AC);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamWriteData);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80038948);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamSetupTransferIrq);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80038A18);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamCallbackPrimary);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80038A7C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamPumpBuffer);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80038BB8);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamIrqChain0);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80038BE8);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamIrqChain1);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", func_80038C18);
+INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoStreamHalt);

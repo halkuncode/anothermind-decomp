@@ -32,7 +32,11 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/controller_api", CheckAndHandleControllerI
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller_api", HandleControllerFrameInterrupt);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_api", GetAndClearControllerReadyFlag);
+s32 GetAndClearControllerReadyFlag(void) {
+    s32 flag = g_ControllerReadyFlag;
+    g_ControllerReadyFlag = 0;
+    return flag;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller_api", ResetInterruptHandlersAndTimers);
 

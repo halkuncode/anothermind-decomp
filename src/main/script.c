@@ -537,7 +537,13 @@ void Cmd_greaterThan(void) { ExecuteEquationOpcode(EQ_OP_GT); }
 
 void Cmd_graterThanOrEqualTo(void) { ExecuteEquationOpcode(EQ_OP_GTEQ); }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", ReadScript16bitBE);
+extern u8* g_ScriptInstructionPointer;
+
+s32 ReadScript16bitBE(void) {
+    u32 b1 = *g_ScriptInstructionPointer++;
+    u32 b2 = *g_ScriptInstructionPointer++;
+    return b2 | (b1 << 8);
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", ReportError);
 

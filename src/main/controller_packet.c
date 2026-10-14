@@ -2,21 +2,21 @@
 #include "common.h"
 #include "controller.h"
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", MovieCmd_SetupType3);
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", ControllerCmd_SetupType3);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", MovieCmd_SetupType2);
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", ControllerCmd_SetupType2);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", MovieCmd_SetupType4);
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", ControllerCmd_SetupType4);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", MovieCmd_Abort);
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", ControllerCmd_Abort);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", InitMovieIRQSystem);
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", InitControllerPacketIRQSystem);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", InitControllerIRQSystem);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", FlushMovieDecodeBuffer);
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", FlushControllerPacketBuffer);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", HandleMovieFrameDecoded);
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", HandleControllerPacketProcessed);
 
 void SaveAndClearControllerCommandCode(ControllerAttribute* state) {
     u8 savedCommandType;
@@ -26,11 +26,11 @@ void SaveAndClearControllerCommandCode(ControllerAttribute* state) {
     state->savedCmdType = savedCommandType;
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", HandleMovieBufferFilled);
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", HandleControllerBufferFilled);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", HandleMovieFrameReady);
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", HandleControllerPacketReady);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", HandleMoviePlaybackComplete);
+INCLUDE_ASM("asm/jp/nonmatchings/main/controller_packet", HandleControllerTransferComplete);
 
 ControllerState* QueryControllerState(s32 port) {
     ControllerState* controller = &g_Controllers[0];

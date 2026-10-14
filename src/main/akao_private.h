@@ -196,8 +196,7 @@ extern AkaoChannelConfig* g_AkaoChannelConfig;
 
 typedef struct {
     /* 0x00 */ u32 opcode;
-    /* 0x04 */ u16 param0;
-    /* 0x06 */ u16 param0_hi;
+    /* 0x04 */ s32 param0;
     /* 0x08 */ s32 param1;
     /* 0x0C */ s32 param2;
     /* 0x10 */ s32 param3;

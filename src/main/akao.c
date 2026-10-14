@@ -23,7 +23,11 @@ s32 ShutdownSoundSystem(void) {
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", EnsureSeLoopBlockInitialized);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_10_PlayMusic);
+void AkaoCmd_10_PlayMusic(s32 trackId) {
+    g_AkaoCommand.opcode = AKAO_PLAY_MUSIC;
+    g_AkaoCommand.param0 = trackId;
+    AkaoExec();
+}
 
 void ResetSoundSystem(void) {
     g_AkaoCommand.opcode = AKAO_STOP_MUSIC;
@@ -55,7 +59,11 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSetStereoMonoMode);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoSendCmd_90_SetMuteMusicMask);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_92_SetCondition);
+void AkaoCmd_92_SetCondition(s32 condition) {
+    g_AkaoCommand.opcode = AKAO_SET_CONDITION;
+    g_AkaoCommand.param0 = condition;
+    AkaoExec();
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", ApplySoundProfile);
 
@@ -91,7 +99,11 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", SendMusicStopCommand);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", PlayMusicTrackWithPanVol);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_C8_SetCdVol);
+void AkaoCmd_C8_SetCdVol(s32 volume) {
+    g_AkaoCommand.opcode = AKAO_SET_CD_VOL;
+    g_AkaoCommand.param0 = volume;
+    AkaoExec();
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoCmd_C9_CdVolSlideFromCurr);
 
@@ -487,7 +499,10 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_EA_ReverbDepth);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_EB_ReverbDepthSlide);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_EE_Jump);
+void AkaoOp_EE_Jump(AkaoChannel* track) {
+    u8* seq = track->akaoSequencePointer;
+    track->akaoSequencePointer = seq + (s16)(seq[0] | (seq[1] << 8));
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoOp_EF_JumpConditional);
 

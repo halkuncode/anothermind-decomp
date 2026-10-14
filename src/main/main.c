@@ -83,6 +83,12 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/main", DebugUnpackAmpack);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/main", CheckAndUnpackAmpack);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/main", ReadLittleEndian32);
+s32 ReadLittleEndian32(u8* data) {
+    u32 ret = data[0];
+    ret += data[1] << 8;
+    ret += data[2] << 16;
+    ret += data[3] << 24;
+    return ret;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/main", LoadProgdata);

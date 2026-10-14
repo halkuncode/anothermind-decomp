@@ -185,7 +185,7 @@ def main():
         print(f"Error: Base ISO not found at {args.base_iso}")
         sys.exit(1)
 
-    cdlookup_path = os.path.join(os.path.dirname(__file__), "..", "docs", "cdlookup.md")
+    cdlookup_path = os.path.join(os.path.dirname(__file__), "..", "docs" , "md_reference", "cdlookup.md")
     if not os.path.exists(cdlookup_path):
         print(f"Error: {cdlookup_path} not found.")
         sys.exit(1)

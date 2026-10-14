@@ -61,6 +61,9 @@ Opcodes that take parameters use an operand descriptor byte parsed by `decodeScr
 
 ## 4. Key Bytecode Opcodes
 
+> [!NOTE]
+> For the complete exhaustive manual of all 140 opcodes, their byte streams, addressing modes, parameter decoders, and operational behaviors, see [`docs/md_reference/ZZS_OPCODE_REFERENCE.md`](file:///home/halkun/reverse/anothermind/anothermind-decomp/docs/md_reference/ZZS_OPCODE_REFERENCE.md).
+
 The opcode handler jump table is initialized in `InitOpcodeHandlerTable` (`0x8001BE64`):
 
 | Opcode | Handler Name | Functionality |

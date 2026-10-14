@@ -36,9 +36,9 @@ assets/jp/progdata/
 ├── dictionary/     # Group 02: Dialogue parsing dictionaries (.DCT, .KAT, .BBB)
 ├── dialogue/       # Group 03: Dialogue boxes, fonts, chapter banners (.TIM)
 ├── menus/          # Group 04: Subsystem UI, newspapers, schedule data (.TIM, .BIN)
-├── scripts/        # Group 05: VM scenario bytecode organized by author (.ZZS)
-├── backgrounds/    # Group 06: Photographic stills organized by chapter (.TIM)
-├── animations/     # Group 07: Live-action actor portrait animations (.ANM)
+├── scripts/        # Group 05: VM scenario bytecode organized by chapter & subsystem (.ZZS)
+├── backgrounds/    # Group 06: Photographic stills organized by chapter & scene (.TIM)
+├── animations/     # Group 07: Live-action actor portrait animations organized by scene reel (.ANM)
 ├── audio/          # Group 08: SPU sound effects, music, and wave banks (.DAT, .SNG)
 └── dummy/          # Group 09: Outer-edge disc padding (.BIN)
 ```
@@ -83,16 +83,17 @@ Core system presentation, typography, and hardware control:
 ---
 
 ### Group 02: `dictionary` (40 files)
-**Target**: `assets/jp/progdata/dictionary/`
+**Target**: `assets/jp/progdata/dictionary/<category>/`  
+**Specification**: See [`docs/md_reference/DICTIONARY_SPECIFICATION.md`](file:///home/halkun/reverse/anothermind/anothermind-decomp/docs/md_reference/DICTIONARY_SPECIFICATION.md) for full binary layout, struct definitions, and parser routines.
 
-Natural language dialogue parsing dictionary tables for Another Mind's interactive dialogue input system:
+Natural language dialogue parsing dictionary tables for Another Mind's interactive dialogue input system, organized into 4 subfolders based on physical disc mastering order:
 
-| Pattern | Meaning | Examples |
-|---|---|---|
-| `JDICT<XX>.DCT` | Japanese vocabulary dictionary for dialogue parser: `01`–`0A` = Chapters 1–10; `B1`–`B7` = Branch paths; `TD` = Tutorial / Demo | `JDICT01.DCT`, `JDICT0A.DCT`, `JDICTB1.DCT`, `JDICTTD.DCT` |
-| `MDICT<XX>.DCT` | Morphological / grammar dictionary paired with each `JDICT` table | `MDICT01.DCT`, `MDICT0A.DCT`, `MDICTB1.DCT`, `MDICTTD.DCT` |
-| `KATSU.KAT` | Grammatical inflection / conjugation rules table (*Katsuyou* = 活用) | `KATSU.KAT` |
-| `NAME.BBB` | Proper noun and character name recognition database | `NAME.BBB` |
+| Subfolder | File Pattern | Count | Description | Examples |
+|---|---|---|---|---|
+| `common/` | `KATSU.KAT`, `NAME.BBB` | 2 files | Global conjugation tables (`KATSU.KAT`) and character / proper noun database (`NAME.BBB`) | `common/KATSU.KAT`, `common/NAME.BBB` |
+| `chapters/` | `JDICT<01-0A>.DCT`, `MDICT<01-0A>.DCT` | 20 files | Vocabulary and grammar dictionaries for Chapters 1 through 10 | `chapters/JDICT01.DCT`, `chapters/MDICT01.DCT` |
+| `branches/` | `JDICTB<1-7>.DCT`, `MDICTB<1-7>.DCT` | 14 files | Vocabulary and grammar dictionaries for Branch scenarios 1 through 7 | `branches/JDICTB1.DCT`, `branches/MDICTB1.DCT` |
+| `demo/` | `JDICTTD.DCT`, `MDICTTD.DCT`, `JDICT06B.DCT`, `MDICT06B.DCT` | 4 files | Interactive demo / tutorial dictionaries and Chapter 6 alternate route | `demo/JDICTTD.DCT`, `demo/JDICT06B.DCT` |
 
 ---
 
@@ -132,37 +133,37 @@ Game sub-screens, investigation notebook dossiers, newspapers, and memory card m
 ### Group 05: `scripts` (343 files)
 **Target**: `assets/jp/progdata/scripts/<author>/<script>.ZZS`
 
-Virtual machine bytecode controlling cutscenes, dialogue branches, and scenario state.
+Virtual machine bytecode controlling cutscenes, dialogue branches, and scenario state. Following the physical mastering order on disc, scripts are organized into chapter and system directories:
 
-#### Author Directory Organization
-The script compiler embedded an author attribution header starting with opcode `0x29` followed by an 8-byte ASCII username. The extractor routes each script into its author's directory:
+#### Chapter Directory Organization
 
-| Author Directory | Script Count | Prominent Content |
+| Directory | Script Count | Content & Naming Patterns |
 |---|---|---|
-| `fujii/` | 99 files | Main scenario branches, Chapter 6, investigation sequences |
-| `Iwabuchi/` | 84 files | Chapter 1, Chapter 7, Chapter 8, character events |
-| `dragon/` | 75 files | Chapter 2, Chapter 5, high-tension branch scenarios |
-| `okkey/` | 18 files | Sub-scenarios, event mini-games |
-| `Kurihara/` | 13 files | Branch routes, ending variations |
-| `muhuhu/` | 11 files | Scenario events, character sub-plots |
-| `koku/` | 8 files | Chapter 3, Chapter 9, Chapter 10 (*CHAPTERA*) |
-| `yoshi/` | 7 files | `DEFAULT.ZZS`, system scripts, flow control |
-| `kabira/` | 4 files | Chapter 4 scenarios |
-| `mminori/` | 4 files | Scenario sequences |
-| `take/` | 3 files | Scenario sequences |
-| `minori/` | 2 files | Scenario sequences |
-| `kiyo/` | 1 file | Scenario sequence |
-| `mutoh/` | 1 file | Scenario sequence |
-| `testyosh/` | 1 file | Engine test script |
-| `buchi/` | 1 file | Alternate handle for Iwabuchi |
-| `Fujii/` | 1 file | Capitalized handle for Fujii |
-| `scripts/` (root) | 10 files | Global/common scripts without an author header (`KABIRA.ZZS`, `HAYASHI.ZZS`, etc.) |
+| `common/` | 13 files | Flow control & system routines: `DEFAULT.ZZS`, `TUTOS.ZZS`, `TUTOD.ZZS`, `FTALK1.ZZS`–`FTALK8.ZZS`, `MENUSAVE.ZZS` |
+| `chapter_01/` | 25 files | Chapter 1 master (`CHAPTER1.ZZS`), intermission (`BREAK1.ZZS`), main story dialogue (`DIA0101`–`DIA0118`), Branch 1 (`DIAB101`–`DIAB105`) |
+| `chapter_02/` | 44 files | Chapter 2 master (`CHAPTER2.ZZS`), intermission (`BREAK2.ZZS`), main story dialogue (`DIA0201`–`DIA0240`), Branch 2 (`DIAB201`–`DIAB202`) |
+| `chapter_03/` | 45 files | Chapter 3 master (`CHAPTER3.ZZS`), intermission (`BREAK3.ZZS`), main story dialogue (`DIA0301`–`DIA0340`), Branch 3 (`DIAB300`–`DIAB302`) |
+| `chapter_04/` | 16 files | Chapter 4 master (`CHAPTER4.ZZS`), intermission (`BREAK4.ZZS`), main story dialogue (`DIA0400`–`DIA0410`), Branch 4 (`DIAB400`–`DIAB402`) |
+| `chapter_05/` | 43 files | Chapter 5 master (`CHAPTER5.ZZS`), intermission (`BREAK5.ZZS`), main story dialogue (`DIA0501`–`DIA0531`), Branch 5 (`DIAB501`–`DIAB510`) |
+| `chapter_06/` | 62 files | Chapter 6 master (`CHAPTER6.ZZS`), intermission (`BREAK6.ZZS`), main story dialogue (`DIA0601`–`DIA0650`), Branch 6 (`DIAB601`–`DIAB610`) |
+| `chapter_07/` | 26 files | Chapter 7 master (`CHAPTER7.ZZS`), intermission (`BREAK7.ZZS`), main story dialogue (`DIA0701`–`DIA0724`) |
+| `chapter_08/` | 19 files | Chapter 8 master (`CHAPTER8.ZZS`), intermission (`BREAK8.ZZS`), main story dialogue (`DIA0801`–`DIA0817`) |
+| `chapter_09/` | 7 files | Chapter 9 master (`CHAPTER9.ZZS`), intermission (`BREAK9.ZZS`), main story dialogue (`DIA0901`–`DIA0905`) |
+| `chapter_10/` | 2 files | Chapter 10 master (`CHAPTERA.ZZS`), intermission (`BREAKA.ZZS`) |
+| `chapter_11/` | 1 file | Chapter 11 master controller (`CHAPTERB.ZZS`) |
+| `chapter_12/` | 1 file | Chapter 12 master controller (`CHAPTERC.ZZS`) |
+| `chapter_13/` | 1 file | Epilogue / Credits master controller (`CHAPTERD.ZZS`) |
+| `demo/` | 5 files | Attract mode / interactive demo dialogue scripts (`DIADM01.ZZS`–`DIADM05.ZZS`) |
+| `omake/` | 5 files | Post-game bonus content and character omake: `OMAKE1.ZZS`, `OMAKE2.ZZS`, `HITOMI.ZZS`, `MUKAI.ZZS`, `CHAPT.ZZS` |
+| `debug/` | 28 files | Developer scratch and test routines: `BUCHI1`–`5`, `DRAGON1`–`5`, `MINORI1`–`4`, `FUJII`, `KURI`, `KOKU`, `HAYASHI`, `MUTO`, `TTEST`, `DEMO` |
 
 #### Script Filename Conventions
-- `CHAPTER<1-A>.ZZS`: Primary chapter entry-point scripts (`CHAPTERA` = Chapter 10).
-- `S<Chap>_<Sec>.ZZS`: Scene / section scripts within chapters (e.g. `S1_01.ZZS`, `S2_04.ZZS`).
-- `<NAME>.ZZS`: Character-focused or author-named scenarios (`HAYASHI.ZZS`, `KURI.ZZS`, `UCHI.ZZS`).
-- `DEBUG.ZZS`, `TEST.ZZS`, `DEFAULT.ZZS`: Developer test routines and fallback loops.
+- `CHAPTER<1-D>.ZZS`: Primary chapter entry-point controllers (`CHAPTERA` = Chapter 10, `B` = 11, `C` = 12, `D` = 13).
+- `BREAK<1-A>.ZZS`: Chapter break / intermission save point scripts.
+- `DIA<Chap><Scene>.ZZS`: Scene dialogue script bytecode (`DIA0101`–`DIA0905`).
+- `DIAB<Branch><Scene>.ZZS`: Branching scenario dialogue scripts (`DIAB101`–`DIAB610`).
+- `DIADM<N>.ZZS`: Demo mode dialogue scripts.
+- `FTALK<N>.ZZS`: Free-talk / Taiwa conversation subsystem routines.
 
 ---
 
@@ -175,18 +176,19 @@ High-resolution digitized photographic stills (all standard 320×160 16-bit PSX 
 
 | Subfolder | File Count | Description & Naming Patterns |
 |---|---|---|
-| `chapter_00_common/` | 394 files | Face bust shots (`KAO0001`–`0066`, 顔 = Face), cut-in action stills (`JET0001`–`0050`, `KKK0001`–`0035`, `RRR0001`–`0024`), non-numeric title & system stills (`TITLELOG`, `BLACK`, `WHITE`, `BUG`, `CUTIN`, `DOWNTOWN`, `H_GAKKO`, `H_HAWAI`, `H_PARK`, `H_RASSEN`, `INPOxx`) |
-| `chapter_01/` | 47 files | Scene number `1xxx`: `ADD1001`, `B1003_1`–`3`, `DEN1014`, `KAI1015`–`16`, `KAN1001`, `KEI1002`, `KEN1009`, `MON1024`, `NUR1012`, `REI1009`–`21`, `M01_04`, `M01_09` |
-| `chapter_02/` | 155 files | Scene number `2xxx`: `ADD2000`–`03`, `BUN2084`–`85`, `COP2086`–`87`, `EX2000B`–`K`, `KIT2038`, `MA2002`, `MI2005`, `TA2049_1`–`3`, `TA20492B`–`F`, `M02_02`, `M02_11` |
+| `chapter_00_common/` | 200 files | True shared assets, organized into 4 functional subfolders:<br>• `faces/` (66 files): Face-bust dialogue portraits (`KAO0001`–`0066`, 顔 = Face)<br>• `cutins/` (24 files): Dramatic action reaction cut-ins (`RRR0001`–`0025`)<br>• `ending/` (70 files): End-game credits and staff roll stills (`MEE0001`–`09`, `R0000`–`48`, `INPO00`–`15`)<br>• `system/` (40 files): Title, UI, and test cards (`BLACK`, `WHITE`, `TITLELOG`, `MS01`–`MS08`, `G_OVER01`, `BUG`, `TEST_*`, `TUTO01`–`02`) |
+| `chapter_01/` | 49 files | Scene number `1xxx` and opening stills: `ADD1001`, `B1003_1`–`3`, `DEN1014`, `KAI1015`–`16`, `KAN1001`, `KEI1002`, `KEN1009`, `MON1024`, `NUR1012`, `REI1009`–`21`, `ROW0001`–`02`, `M01_04`, `M01_09` |
+| `chapter_02/` | 164 files | Scene number `2xxx` and school/hospital stills: `ADD2000`–`03`, `BUN2084`–`85`, `COP2086`–`87`, `EX2000B`–`K`, `KIT2038`, `MA2002`, `MI2005`, `TA2049_1`–`3`, `TA20492B`–`F`, `YAI0001`–`09`, `M02_02`, `M02_11` |
 | `chapter_03/` | 125 files | Scene number `3xxx`: `BUS3010`, `BUS3012`, `EKI3001`–`05`, `GIN3001`–`02`, `HIR3003`, `KAI3002`, `RYO3020`, `M03_04`, `M03_05`, `M03_09` |
-| `chapter_04/` | 176 files | Scene number `4xxx`: `ARA4001`, `AKU4079`, `EX4201`–`09`, `JIN4001`, `M4S2_01`–`57` (Chapter 4 Scene 2 series), `S4_MIR01`–`03` (Scene 4 Mirror) |
+| `chapter_04/` | 213 files | Scene number `4xxx` and investigation stills, with sequential scene subfolders:<br>• `tui/` (40 files): High-speed pursuit / highway chase sequence (`TUI0001`–`05`, `KKK0000`–`34`)<br>• `scene_02/` (57 files): Chapter 4 Scene 2 series (`M4S2_01`–`57`)<br>• Root `chapter_04/` (116 files): Town & investigation stills (`ARA4001`–`4112`, `HIT4002`, `HO4024`, `EX4000`–`4210`, `JIN4001`) |
 | `chapter_05/` | 68 files | Scene number `5xxx`: `ASA5016`, `HIR5001`, `KAI5002`, `KOU5001`, `YOL5020`, `M05_02`, `M05_04` |
+| `chapter_06/` | 124 files | Chapter 6 confrontation & pursuit stills, with scene subfolders:<br>• `jet/` (50 files): Jet / high-speed vehicle action cut-ins (`JET0000`–`49`)<br>• `brain/` (15 files): Psychic link / thought cut-ins (`BRA0001`–`16`)<br>• Root `chapter_06/` (59 files): Scenario stills (`TUE0001`–`22`, `TUH0001`–`07`, `TUM`, `TUY`, `RIN`, `HNE`, `POK0001`–`04`) |
 | `chapter_07/` | 52 files | Scene number `7xxx`: `AIS7046`, `ARI7001`, `HIL7020`, `JIN7001`, `KOB7001`, `TAT7001` |
-| `chapter_08/` | 81 files | Scene number `8xxx`: `ADD8000`–`20`, `CHI8020`, `KAI8028`, `KOG8002`, `LIV8031`, `M08_02`, `M08_05` |
-| `chapter_09/` | 88 files | Scene number `9xxx`: `ABL9026`, `ADD9000`, `BAC9020`, `KAI9001`, `M09_05`, `M09_06` |
+| `chapter_08/` | 83 files | Scene number `8xxx`: `ADD8000`–`20`, `CHI8020`, `KAI8028`, `KOG8002`, `LIV8031`, `SAA0001`, `M08_02`, `M08_05` |
+| `chapter_09/` | 101 files | Scene number `9xxx`: `ABL9026`, `ADD9000`, `BAC9020`, `KAI9001`, `KIR0001`, `NAT0001`–`08`, `RCO0001`–`03`, `M09_05`, `M09_06` |
 | `chapter_10/` | 23 files | Scene number `10xxx`: `AL10010`, `DEN10014`–`15`, `KI10016`–`20`, `MIC10021`–`23`, `RI10012`, `M10_02`, `M10_12` |
-| `chapter_11/` | 4 files | Scene number `11xxx`: `ATU11001`, `OFI11002`, `SHI11003`, `HAI11004` |
-| `chapter_12/` | 6 files | Scene number `12xxx`: `NAT12001`–`03`, `TAB12004`, `ROW12005`, `MET12006` |
+| `chapter_11/` | 9 files | Scene number `11xxx` and office/club stills: `ATU11001`, `OFI11002`, `SHI11003`, `HAI11004`, `BOO0001`–`04`, `BIL0001` |
+| `chapter_12/` | 8 files | Scene number `12xxx` and epilogue stills: `NAT12001`–`03`, `TAB12004`, `ROW12005`, `MET12006`, `NBI0001`–`02` |
 
 #### Location / Subject Prefixes
 The 2–4 letter prefix before the scene number designates the setting or subject:
@@ -202,33 +204,32 @@ The 2–4 letter prefix before the scene number designates the setting or subjec
 ---
 
 ### Group 07: `animations` (811 files)
-**Target**: `assets/jp/progdata/animations/<character>/<animation>.ANM`
+**Target**: `assets/jp/progdata/animations/<scene>/<character>/<animation>.ANM`
 
-Portrait facial animations and emotional expressions of the live-action cast, organized into subfolders named by each character:
+Portrait facial animations and emotional expressions of the live-action cast. Following the physical mastering order on disc, animations are organized into 16 scene reels with character subfolders inside each scene:
 
-#### Character Subdirectory Organization
+#### Scene Directory Organization
 
-| Subfolder | Cast Member / Character | File Count |
-|---|---|---|
-| `hitomi/` | Hitomi Mano (真野 ひろみ - Protagonist) | 232 files |
-| `masato/` | Nanami Masato / Male Lead | 117 files |
-| `hitomi_night/` | Hitomi (Night attire / alternate outfit) | 64 files |
-| `mayumi/` | Mayumi (including `R_MY` reflection takes) | 41 files |
-| `shun/` | Shun / Secondary character | 33 files |
-| `nurse/` | Nurse (村井 薫 - Murai Kaoru) | 27 files |
-| `nanami/` | Nanami (鳴海 健一 - Narumi Kenichi) | 26 files |
-| `kurata/` | Kurata (桐原 育夫 - Kirihara Ikuo) | 21 files |
-| `ritsuko/` | Ritsuko (渡瀬 鈴 - Watase Rin) | 20 files |
-| `reiko/` | Reiko (渡瀬 玲 / 亜月 レイカ) | 17 files |
-| `arai/` | Arai (青西 高嗣 / 荒井) | 14 files |
-| `akane/` | Akane (阿久津 安弘 - Akutsu Yasuhiro) | 13 files |
-| `kaneko/` | Kaneko (金田 俊樹 - Kaneda Toshiki) | 13 files |
-| `hitoshi/` | Hitoshi | 12 files |
-| `kitani/` | Kitani | 12 files |
-| `yoshida/` | Yoshida | 12 files |
-| `shimada/` | Shimada | 10 files |
-| `sahara/`, `kiba/`, `mukai/`, `hiura/`, `okada/`, `kazuo/`, `bri/`, `nj/`, `kg/`, `nn/`, `rk/`, `ry/`, `st/`, `ju/`, `os/`, `bl/`, `kan/`, `sk/`, `u/`, `yk/`, `b/`, `bn/`, `ca/`, `is/`, `p/`, `sue/`, `wa/`, `ke/` | Supporting cast and extras (28 folders) | 136 files |
-| `common/` | Static effect assets (`NOISE.ANM`, `NULL.TIM`) | 2 files |
+| Scene Directory | Anchor / Lead | Characters Present in Scene | File Count |
+|---|---|---|---|
+| `common/` | Static effect assets | `NULL.TIM`, `NOISE.ANM` | 2 files |
+| `scene_002/` | Hitomi (`H002`) | `hitomi/`, `rk/` | 31 files |
+| `scene_017/` | Hitomi (`H017`) | `hitomi/`, `masato/`, `kazuo/`, `kurata/`, `hiura/`, `kan/`, `ke/`, `p/`, `u/` | 49 files |
+| `scene_018/` | Hitomi (`H018`) | `hitomi/` | 30 files |
+| `scene_019/` | Masato (`M019`) | `masato/`, `mayumi/`, `nurse/`, `yoshida/`, `kaneko/`, `hitoshi/`, `kitani/`, `b/`, `nn/`, `sk/` | 116 files |
+| `scene_029/` | Hitomi (`H029`) | `hitomi/` | 3 files |
+| `scene_039/` | Hitomi (`H039`) | `hitomi/` | 20 files |
+| `scene_042/` | Hitomi (`H042`) | `hitomi/` | 28 files |
+| `scene_043/` | Masato (`M043`) | `masato/`, `shun/`, `nanami/`, `mayumi/`, `nurse/`, `shimada/`, `okada/`, `ju/`, `nj/`, `os/` | 119 files |
+| `scene_044/` | Masato (`M044`) | `masato/`, `nanami/`, `shun/` | 65 files |
+| `scene_046/` | Masato (`M046`) | `masato/`, `arai/` | 41 files |
+| `scene_068/` | Hitomi (`H068`) | `hitomi/`, `akane/`, `bn/`, `kg/`, `st/` | 28 files |
+| `scene_085/` | Hitomi (`H085`) | `hitomi/` | 6 files |
+| `scene_086/` | Hitomi (`H086`) | `hitomi/`, `ritsuko/`, `reiko/`, `sahara/`, `hiura/`, `mukai/`, `bri/`, `is/`, `kazuo/`, `ry/`, `yk/` | 108 files |
+| `scene_115/` | Hitomi (`H115`) | `hitomi/`, `kurata/`, `kiba/`, `bl/`, `ca/`, `kg/`, `sue/`, `wa/` | 56 files |
+| `scene_130/` | Hitomi (`H130`) | `hitomi/` | 46 files |
+| `scene_173_night/` | Hitomi Night (`HN173`) | `hitomi/` | 64 files |
+
 
 #### Emotion & Variation Suffixes
 Following the character code and shot index, letters denote specific emotional states:

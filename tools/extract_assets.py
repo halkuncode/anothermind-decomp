@@ -204,23 +204,100 @@ def extract_zzs_author(data: bytes) -> str:
     return None
 
 
+SCRIPT_PATH_CACHE = None
+
+
+def get_script_subfolder(fname: str) -> str:
+    """Categorizes scenario script ZZS files into chapter/system subfolders based on cdlookup.md."""
+    global SCRIPT_PATH_CACHE
+    if SCRIPT_PATH_CACHE is None:
+        SCRIPT_PATH_CACHE = {}
+        cdlookup_file = os.path.join(os.path.dirname(__file__), "..", "docs", "md_reference", "cdlookup.md")
+        if os.path.exists(cdlookup_file):
+            with open(cdlookup_file, "r") as f:
+                in_g5 = False
+                for line in f:
+                    if "## Group 05" in line:
+                        in_g5 = True
+                        continue
+                    if in_g5 and line.startswith("## Group"):
+                        break
+                    if in_g5 and line.startswith("|") and not line.startswith("| File ID") and not line.startswith("|---"):
+                        parts = [p.strip().strip("`") for p in line.split("|")[1:-1]]
+                        if len(parts) >= 3:
+                            rel = parts[2]
+                            base = os.path.basename(rel)
+                            sub = os.path.dirname(rel)
+                            SCRIPT_PATH_CACHE[base] = sub
+
+    base = os.path.basename(fname)
+    if SCRIPT_PATH_CACHE and base in SCRIPT_PATH_CACHE:
+        return SCRIPT_PATH_CACHE[base]
+    return "common"
+
+
+BG_PATH_CACHE = None
+
+
 def get_background_subfolder(fname: str) -> str:
-    """Categorizes background TIM image into chapter subfolders."""
-    base = os.path.splitext(fname)[0]
-    if base.startswith("TA2049"):
-        return "chapter_02"
-    m = re.match(r"^M(\d{2})_\d+", base)
-    if m:
-        return f"chapter_{int(m.group(1)):02d}"
-    if base.startswith("M4S2_") or base.startswith("S4_"):
-        return "chapter_04"
-    m = re.search(r"(\d{4,5})", base)
-    if m:
-        num = int(m.group(1))
-        chap = num // 1000
-        if chap > 0:
-            return f"chapter_{chap:02d}"
+    """Categorizes background TIM image into chapter subfolders based on cdlookup.md."""
+    global BG_PATH_CACHE
+    if BG_PATH_CACHE is None:
+        BG_PATH_CACHE = {}
+        cdlookup_file = os.path.join(os.path.dirname(__file__), "..", "docs", "md_reference", "cdlookup.md")
+        if os.path.exists(cdlookup_file):
+            with open(cdlookup_file, "r") as f:
+                in_g6 = False
+                for line in f:
+                    if "## Group 06" in line:
+                        in_g6 = True
+                        continue
+                    if in_g6 and line.startswith("## Group"):
+                        break
+                    if in_g6 and line.startswith("|") and not line.startswith("| File ID") and not line.startswith("|---"):
+                        parts = [p.strip().strip("`") for p in line.split("|")[1:-1]]
+                        if len(parts) >= 3:
+                            rel = parts[2]
+                            base = os.path.basename(rel)
+                            sub = os.path.dirname(rel)
+                            BG_PATH_CACHE[base] = sub
+
+    base = os.path.basename(fname)
+    if BG_PATH_CACHE and base in BG_PATH_CACHE:
+        return BG_PATH_CACHE[base]
     return "chapter_00_common"
+
+
+DICT_PATH_CACHE = None
+
+
+def get_dictionary_subfolder(fname: str) -> str:
+    """Categorizes dictionary files into common/chapters/branches/demo subfolders based on cdlookup.md."""
+    global DICT_PATH_CACHE
+    if DICT_PATH_CACHE is None:
+        DICT_PATH_CACHE = {}
+        cdlookup_file = os.path.join(os.path.dirname(__file__), "..", "docs", "md_reference", "cdlookup.md")
+        if os.path.exists(cdlookup_file):
+            with open(cdlookup_file, "r") as f:
+                in_g2 = False
+                for line in f:
+                    if "## Group 02" in line:
+                        in_g2 = True
+                        continue
+                    if in_g2 and line.startswith("## Group"):
+                        break
+                    if in_g2 and line.startswith("|") and not line.startswith("| File ID") and not line.startswith("|---"):
+                        parts = [p.strip().strip("`") for p in line.split("|")[1:-1]]
+                        if len(parts) >= 3:
+                            rel = parts[2]
+                            base = os.path.basename(rel)
+                            sub = os.path.dirname(rel)
+                            DICT_PATH_CACHE[base] = sub
+
+    base = os.path.basename(fname)
+    if DICT_PATH_CACHE and base in DICT_PATH_CACHE:
+        return DICT_PATH_CACHE[base]
+    return "common"
 
 
 ANIM_CHAR_NAMES = {
@@ -273,17 +350,38 @@ ANIM_CHAR_NAMES = {
 }
 
 
+ANIM_PATH_CACHE = None
+
+
 def get_animation_subfolder(fname: str) -> str:
-    """Categorizes animation ANM/TIM files into character subfolders named by character."""
-    base = os.path.splitext(fname)[0]
-    if base in ("NOISE", "NULL"):
-        code = "common"
-    elif base.startswith("R_MY"):
-        code = "MY"
-    else:
-        m = re.match(r"^([A-Za-z]+)", base)
-        code = m.group(1).upper() if m else "common"
-    return ANIM_CHAR_NAMES.get(code, code.lower())
+    """Categorizes animation ANM/TIM files into scene/character subfolders based on cdlookup.md."""
+    global ANIM_PATH_CACHE
+    if ANIM_PATH_CACHE is None:
+        ANIM_PATH_CACHE = {}
+        cdlookup_file = os.path.join(os.path.dirname(__file__), "..", "docs", "md_reference", "cdlookup.md")
+        if os.path.exists(cdlookup_file):
+            with open(cdlookup_file, "r") as f:
+                in_g7 = False
+                for line in f:
+                    if "## Group 07" in line:
+                        in_g7 = True
+                        continue
+                    if in_g7 and line.startswith("## Group"):
+                        break
+                    if in_g7 and line.startswith("|") and not line.startswith("| File ID") and not line.startswith("|---"):
+                        parts = [p.strip().strip("`") for p in line.split("|")[1:-1]]
+                        if len(parts) >= 3:
+                            rel = parts[2]
+                            base = os.path.basename(rel)
+                            sub = os.path.dirname(rel)
+                            ANIM_PATH_CACHE[base] = sub
+
+    base = os.path.basename(fname)
+    if ANIM_PATH_CACHE and base in ANIM_PATH_CACHE:
+        return ANIM_PATH_CACHE[base]
+    if base.startswith("NULL") or base.startswith("NOISE"):
+        return "common"
+    return "common"
 
 
 def get_audio_subfolder(fname: str) -> str:
@@ -325,11 +423,10 @@ def process_file_task(task_args):
         else:
             out_bytes = raw
 
-        # Check if ZZS script has an author header
-        if dst_path.endswith(".ZZS"):
-            author = extract_zzs_author(out_bytes)
-            if author:
-                dst_path = os.path.join(os.path.dirname(dst_path), author, os.path.basename(dst_path))
+        # Route ZZS scripts into chapter/system subfolders
+        if dst_path.endswith(".ZZS") and "scripts" in dst_path:
+            sub = get_script_subfolder(os.path.basename(dst_path))
+            dst_path = os.path.join(os.path.dirname(dst_path), sub, os.path.basename(dst_path))
         elif dst_path.endswith(".TIM") and "backgrounds" in dst_path:
             sub = get_background_subfolder(os.path.basename(dst_path))
             dst_path = os.path.join(os.path.dirname(dst_path), sub, os.path.basename(dst_path))
@@ -342,6 +439,9 @@ def process_file_task(task_args):
                 dst_path = os.path.join(os.path.dirname(dst_path), sub, os.path.basename(dst_path))
         elif "menus" in dst_path:
             sub = get_menu_subfolder(os.path.basename(dst_path))
+            dst_path = os.path.join(os.path.dirname(dst_path), sub, os.path.basename(dst_path))
+        elif "dictionary" in dst_path:
+            sub = get_dictionary_subfolder(os.path.basename(dst_path))
             dst_path = os.path.join(os.path.dirname(dst_path), sub, os.path.basename(dst_path))
 
         os.makedirs(os.path.dirname(dst_path), exist_ok=True)
@@ -407,8 +507,8 @@ def main():
             tasks.append((src_file, dst_file, is_comp))
             group_counts[g] += 1
 
-    # Clean up any loose scripts, backgrounds, animations, audio, or menus before extraction
-    for clean_folder in ["scripts", "backgrounds", "animations", "audio", "menus"]:
+    # Clean up any loose scripts, backgrounds, animations, audio, menus, or dictionary before extraction
+    for clean_folder in ["scripts", "backgrounds", "animations", "audio", "menus", "dictionary"]:
         d = os.path.join(args.out_dir, clean_folder)
         if os.path.exists(d):
             import shutil
@@ -419,6 +519,7 @@ def main():
     anim_dir = os.path.join(args.out_dir, "animations")
     audio_dir = os.path.join(args.out_dir, "audio")
     menus_dir = os.path.join(args.out_dir, "menus")
+    dict_dir = os.path.join(args.out_dir, "dictionary")
 
     print(f"Extracting {len(tasks)} files into '{args.out_dir}' across {os.cpu_count() or 4} cores...")
     t0 = time.time()
@@ -505,6 +606,17 @@ def main():
             print(f"  - audio/{sd}/: {count} files")
         if loose_audio:
             print(f"  - audio/ (root): {len(loose_audio)} files")
+
+    # Report dictionary breakdown
+    if os.path.exists(dict_dir):
+        dict_subdirs = [d for d in os.listdir(dict_dir) if os.path.isdir(os.path.join(dict_dir, d))]
+        loose_dict = [f for f in os.listdir(dict_dir) if os.path.isfile(os.path.join(dict_dir, f))]
+        print(f"\nDictionary organized into categories ({len(dict_subdirs)} subfolders):")
+        for dd in sorted(dict_subdirs):
+            count = len(os.listdir(os.path.join(dict_dir, dd)))
+            print(f"  - dictionary/{dd}/: {count} files")
+        if loose_dict:
+            print(f"  - dictionary/ (root): {len(loose_dict)} files")
 
 
 if __name__ == "__main__":

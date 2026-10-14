@@ -36,17 +36,17 @@ overlays:
           - [0x5221C, sdata]
           - [0x527B8, sbss]
           - [0x527C0, bss]
-      - name: engine
+      - name: vm_engine
         start: 0xD53B0
         vram: 0x800E4BB0
         subsegments:
           - [0xD53B0, rodata]
-          - [0xD5CE8, c, engine/vram_cache]
-          - [0xD9120, c, engine/portrait_anim]
-          - [0xDC620, c, engine/taiwa]
-          - [0xE4CA8, c, engine/demo_menu]
-          - [0xEACF8, c, engine/memcard]
-          - [0xEF640, c, engine/portrait_select]
-          - [0xF35C8, c, engine/game_loop]
+          - [0xD5CE8, c, vm_engine/vram_cache]
+          - [0xD9120, c, vm_engine/portrait_anim]
+          - [0xDC620, c, vm_engine/taiwa]
+          - [0xE4CA8, c, vm_engine/demo_menu]
+          - [0xEACF8, c, vm_engine/memcard]
+          - [0xEF640, c, vm_engine/portrait_select]
+          - [0xF35C8, c, vm_engine/vm_main]
           - [0xFD390, data]
           - [0xFD9B0, bss]

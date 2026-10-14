@@ -25,10 +25,10 @@ typedef struct {
 
 extern SaveSlotHeader g_SaveSlotIndex[];
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/memcard", TryLoadGameFromMemoryCard);
+INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/memcard", TryLoadGameFromMemoryCard);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/memcard", LoadPortraitAnimationScript);
+INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/memcard", LoadPortraitAnimationScript);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/memcard", RunDebugChapterSelectionMenu);
+INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/memcard", RunDebugChapterSelectionMenu);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/memcard", EnableInitialGlobalVars);
+INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/memcard", EnableInitialGlobalVars);

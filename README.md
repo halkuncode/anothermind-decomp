@@ -1,16 +1,35 @@
 # Another Mind Decompilation Project
 
-<p align="center">
-  <img src="docs/pics/Another_Mind_Coverart.png" alt="Another Mind Cover Art" width="320">
-</p>
+<!-- PROGRESS_START -->
+<table>
+  <tr>
+    <td width="340" align="center" valign="middle">
+      <img src="docs/pics/Another_Mind_Coverart.png" alt="Another Mind Cover Art" width="320">
+    </td>
+    <td valign="middle">
+      <p>
+        <strong>Main</strong>: 151 / 696 functions (21.70%)<br>
+        <img src="docs/pics/progress_main.svg" alt="Main Progress" width="260" height="16">
+      </p>
+      <p>
+        <strong>VM Engine</strong>: 13 / 204 functions (6.37%)<br>
+        <img src="docs/pics/progress_vm_engine.svg" alt="VM Engine Progress" width="260" height="16">
+      </p>
+      <p>
+        <a href="docs/md_reference/report.md">See full stats</a>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- PROGRESS_END -->
 
 ### A decompilation of Squaresoft's FMV visual novel *Another Mind* for the PlayStation 1.
 
 ---
 
-Set in modern-day Japan, you awaken as a voice inside the mind of 16-year-old high school student Hitomi Hayama. Together, you are thrust into the center of a mystery involving a murder, suicide attempts, and an attempted bombing. 
+Set in modern-day Japan, you wake up as a voice inside the mind of 16-year-old high school student Hitomi Hayama. Together, you are put into the center of a mystery involving a murder, suicide attempts, and an attempted bombing. 
 
-You communicate with Hitomi using an innovative dialogue system, constructing your own sentences out of context-sensitive keywords and phrases provided by the game, rather than simply choosing from predetermined options.
+You communicate with Hitomi using the "Taiwa" dialogue system, constructing your own sentences out of context-sensitive keywords and phrases provided by the game, rather than simply choosing from predetermined options.
 
 This game was never released outside Japan.
 

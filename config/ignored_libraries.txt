@@ -1,4 +1,4 @@
-# Functions, directories, or patterns to exclude from decompilation ranking (`./mako.sh rank`).
+# Functions, directories, or patterns to exclude from decompilation ranking (`./mako.sh rank`) and progress report (`./mako.sh report`).
 # Lines starting with # are comments.
 
 # External PSX SDK / Sony driver code

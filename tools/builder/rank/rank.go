@@ -261,66 +261,11 @@ func rankFunction(path string) (float32, int, error) {
 }
 
 func loadIgnoreRules(cliExcludes []string) []string {
-	var rules []string
-	rules = append(rules, cliExcludes...)
-
-	ignoreFiles := []string{
-		filepath.Join("config", "rank_ignore.txt"),
-		".rankignore",
-	}
-
-	for _, ignoreFile := range ignoreFiles {
-		file, err := os.Open(ignoreFile)
-		if err != nil {
-			continue
-		}
-		scanner := bufio.NewScanner(file)
-		for scanner.Scan() {
-			line := strings.TrimSpace(scanner.Text())
-			if line == "" || strings.HasPrefix(line, "#") {
-				continue
-			}
-			rules = append(rules, line)
-		}
-		file.Close()
-	}
-
-	return rules
+	return builder.LoadIgnoreRules(cliExcludes)
 }
 
 func isIgnored(path string, funcName string, rules []string) bool {
-	cleanPath := filepath.ToSlash(path)
-	for _, rule := range rules {
-		rule = strings.TrimSpace(rule)
-		if rule == "" {
-			continue
-		}
-		// Exact function name match
-		if funcName == rule {
-			return true
-		}
-		// Match path segments or substring (e.g. "psxsdk", "main/psxsdk")
-		cleanRule := strings.Trim(filepath.ToSlash(rule), "/")
-		if cleanRule != "" {
-			if strings.Contains(cleanPath, "/"+cleanRule+"/") ||
-				strings.HasSuffix(cleanPath, "/"+cleanRule) ||
-				strings.HasPrefix(cleanPath, cleanRule+"/") ||
-				cleanPath == cleanRule {
-				return true
-			}
-			if strings.Contains(cleanPath, cleanRule) {
-				return true
-			}
-		}
-		// Glob pattern match
-		if matched, _ := filepath.Match(rule, funcName); matched {
-			return true
-		}
-		if matched, _ := filepath.Match(rule, cleanPath); matched {
-			return true
-		}
-	}
-	return false
+	return builder.IsIgnored(path, funcName, rules)
 }
 
 func loadActiveIncludeAsm() (map[string]bool, error) {

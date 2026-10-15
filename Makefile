@@ -32,6 +32,10 @@ rebuild:
 format:
 	@./mako.sh format
 
+.PHONY: report
+report:
+	@./mako.sh report
+
 .PHONY: submit
 submit:
 	@./mako.sh clean

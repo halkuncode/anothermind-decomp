@@ -1,4 +1,4 @@
-# Another Mind Decompilation Project
+# Another Mind Rearc Project
 
 <!-- PROGRESS_START -->
 <table>
@@ -23,8 +23,7 @@
 </table>
 <!-- PROGRESS_END -->
 
-### A decompilation of Squaresoft's FMV visual novel *Another Mind* for the PlayStation 1.
-
+### Squaresoft's Live Action FMV visual novel *Another Mind* : A Rearc* for the PlayStation 1 
 ---
 
 Set in modern-day Japan, you wake up as a voice inside the head of 16-year-old high school student named Hitomi Hayama. Together, you are put into the center of a mystery involving a murder, suicide attempts, and an attempted bombing. 
@@ -32,6 +31,8 @@ Set in modern-day Japan, you wake up as a voice inside the head of 16-year-old h
 You communicate with Hitomi using the "Taiwa" dialogue system, constructing your own sentences out of context-sensitive keywords and phrases provided by the game, rather than simply choosing from predetermined options like a typical visual novel.
 
 This game was never released outside Japan.
+
+<sup>[What is a Rearc? <sup>[?]</sup>](docs/md_reference/rearc.md)</sup>
 
 | | |
 |:---:|:---:|

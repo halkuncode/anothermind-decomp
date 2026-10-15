@@ -162,7 +162,7 @@ void func_80123456(s32 arg0) {
     }
 }
 
-// consider instead using a struct, and remember to update symbols.{OVERLAY}.txt to reflect the new struct size on a
+// consider instead using a struct, and remember to update symbols.another.jp.txt to reflect the new struct size on a
 // symbol with D_8000B004 = 0x8000B004; // size:0x08
 typedef struct {
     /* 0x00 */ s16 unk0;

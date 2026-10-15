@@ -27,9 +27,9 @@
 
 ---
 
-Set in modern-day Japan, you wake up as a voice inside the mind of 16-year-old high school student Hitomi Hayama. Together, you are put into the center of a mystery involving a murder, suicide attempts, and an attempted bombing. 
+Set in modern-day Japan, you wake up as a voice inside the head of 16-year-old high school student named Hitomi Hayama. Together, you are put into the center of a mystery involving a murder, suicide attempts, and an attempted bombing. 
 
-You communicate with Hitomi using the "Taiwa" dialogue system, constructing your own sentences out of context-sensitive keywords and phrases provided by the game, rather than simply choosing from predetermined options.
+You communicate with Hitomi using the "Taiwa" dialogue system, constructing your own sentences out of context-sensitive keywords and phrases provided by the game, rather than simply choosing from predetermined options like a typical visual novel.
 
 This game was never released outside Japan.
 

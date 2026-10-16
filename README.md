@@ -8,12 +8,12 @@
     </td>
     <td valign="middle">
       <p>
-        <strong>Main</strong>: 167 / 696 functions (23.99%)<br>
-        <img src="docs/pics/progress_main.svg" alt="Main Progress" width="260" height="16">
+        <strong>Engine</strong>: 14 / 204 functions (6.86%)<br>
+        <img src="docs/pics/progress_engine.svg" alt="Engine Progress" width="260" height="16">
       </p>
       <p>
-        <strong>VM Engine</strong>: 14 / 204 functions (6.86%)<br>
-        <img src="docs/pics/progress_vm_engine.svg" alt="VM Engine Progress" width="260" height="16">
+        <strong>Kernel</strong>: 167 / 696 functions (23.99%)<br>
+        <img src="docs/pics/progress_kernel.svg" alt="Kernel Progress" width="260" height="16">
       </p>
       <p>
         <a href="docs/md_reference/report.md">See full stats</a>

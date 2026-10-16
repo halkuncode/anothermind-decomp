@@ -74,7 +74,15 @@ class CompilerParams:
 
 
 def default_compiler_params(source_file_name: str = "") -> CompilerParams:
-    gp = "-G8" if "src/main/" in source_file_name else "-G0"
+    gp = (
+        "-G8"
+        if (
+            "src/main/" in source_file_name
+            or "src/kernel/" in source_file_name
+            or "src/lib/" in source_file_name
+        )
+        else "-G0"
+    )
     return CompilerParams(
         "cc1-psx-280",
         "-O2",

@@ -57,6 +57,10 @@ func Report(version string) error {
 			mod = parts[0]
 		}
 
+		if mod == "lib" {
+			return nil
+		}
+
 		if _, exists := modules[mod]; !exists {
 			modules[mod] = &moduleStats{}
 		}
@@ -237,8 +241,12 @@ func formatModuleName(name string) string {
 	switch name {
 	case "main":
 		return "Main"
+	case "kernel":
+		return "Kernel"
 	case "vm_engine":
 		return "VM Engine"
+	case "engine":
+		return "Engine"
 	default:
 		parts := strings.Split(name, "_")
 		for i, p := range parts {

@@ -18,36 +18,36 @@ overlays:
     vram_start: 0x80010000
     gp_value: 0x80061a1c
     code_segments:
-      - name: main
+      - name: kernel
         start: 0x800
         vram: 0x80010000
         subsegments:
           - [0x800, rodata]
-          - [0x2FAC, c, main/main]
-          - [0x3BB8, c, main/name_entry]
-          - [0x6CA4, c, main/chapter_title]
-          - [0x8268, c, main/title]
-          - [0x9C60, c, main/cd_stream]
-          - [0xC664, c, main/opcodes]
-          - [0x1E648, c, main/akao]
-          - [0x29464, c, main/psxsdk]
-          - [0x36F48, c, main/dualshock]
+          - [0x2FAC, c, kernel/main]
+          - [0x3BB8, c, kernel/name]
+          - [0x6CA4, c, kernel/splashscreen]
+          - [0x9C60, c, kernel/cdrom]
+          - [0xC664, c, kernel/opcodes]
+          - [0x1E648, c, kernel/akao]
+          - [0x29464, c, lib/psxsdk]
+          - [0x36F48, c, lib/dualshock]
           - [0x39FD8, data]
           - [0x5221C, sdata]
           - [0x527B8, sbss]
           - [0x527C0, bss]
-      - name: vm_engine
+      - name: engine
         start: 0xD53B0
         vram: 0x800E4BB0
         subsegments:
           - [0xD53B0, rodata]
-          - [0xD5CE8, c, vm_engine/vram_cache]
-          - [0xD9120, c, vm_engine/face_anim]
-          - [0xDC620, c, vm_engine/screen_ui]
-          - [0xE4CA8, c, vm_engine/demo_menu]
-          - [0xE989C, c, vm_engine/memcard]
-          - [0xEF640, c, vm_engine/title_menu]
-          - [0xEFC78, c, vm_engine/taiwa]
-          - [0xF35C8, c, vm_engine/vm_main]
+          - [0xD5CE8, c, engine/display]
+          - [0xD9120, c, engine/font]
+          - [0xD996C, c, engine/portrait]
+          - [0xDC620, c, engine/scene]
+          - [0xE4CA8, c, engine/debug]
+          - [0xE988C, c, engine/memcard]
+          - [0xEB3D8, c, engine/title]
+          - [0xEFC78, c, engine/taiwa]
+          - [0xF35C8, c, engine/game]
           - [0xFD390, data]
           - [0xFD9B0, bss]

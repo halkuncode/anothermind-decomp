@@ -28,29 +28,29 @@ INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", RunDebugMenuPage2);
 
 INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", RunDebugMenuPage3);
 
-INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", RunDebugSoundTestMenu);
+INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", CalcTaiwaWordSlotLayout);
 
-INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", RunDebugScheduleViewer);
+INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", PositionTaiwaSelectionCursor);
 
 INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", RunDebugSceneJumpMenu);
 
-INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", RunDebugFlagEditor);
+INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", ApplyTaiwaSpriteTintAndOffsets);
 
-INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", RunDebugMemoryViewer);
+INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", UpdateTaiwaChoiceEntry);
 
-INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", RunDebugScriptViewer);
+INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", FreePortraitTileSlot);
 
 INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", RunDebugSaveDataManager);
 
-INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", RunDebugPaletteEditor);
+INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", ParseTaiwaSentenceAndConjugation);
 
-INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", RunDebugFontViewer);
+INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", CalcTaiwaChoiceYPositions);
 
 INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", RunDebugVramViewer);
 
 INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", RunDebugMovieViewer);
 
-INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", RunDebugTaiwaViewer);
+INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", ProcessTaiwaStateMachine);
 
 INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", TestGpuAndCdromEventState);
 

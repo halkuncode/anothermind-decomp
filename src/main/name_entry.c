@@ -32,7 +32,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", DebugPrintNameBuffers);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", InitNameEntryScreen);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", GetEnteredNameLength_80014F5C);
+INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", GetHeroEnteredNameLength);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", DrawNameEntryTitle);
 
@@ -66,7 +66,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", CommitKanaWithoutConversion);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", ConvertKanaToKatakana);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", GetEnteredNameLength_800158E8);
+INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", GetHeroineEnteredNameLength);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", StartVibrationEffect);
 
@@ -95,7 +95,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", GetRawControllerInput);
 
 s32 PlaySfx(s16 arg0) { PlaySingleSoundeffect(arg0); }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", SetVibrationMode_80015E70);
+INCLUDE_ASM("asm/jp/nonmatchings/main/name_entry", ApplyControllerVibrationDirect);
 
 void SetVibrationModeDirect(s32 mode) {
     g_CurrVibrationMode = mode;

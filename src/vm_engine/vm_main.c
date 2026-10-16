@@ -66,7 +66,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/vm_main", RenderEngineDebugAndUI);
 
 INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/vm_main", ResetAndSubmitDebugOverlayPrimitives);
 
-INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/vm_main", ResetFullGameRuntimeState_80109064);
+INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/vm_main", ResetVMEngineRuntimeState);
 
 INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/vm_main", DrawDebugHorizontalCursorMarker);
 

@@ -31,6 +31,7 @@ rebuild:
 .PHONY: format
 format:
 	@./mako.sh format
+	@./mako.sh report
 
 .PHONY: report
 report:

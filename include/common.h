@@ -40,9 +40,13 @@ typedef unsigned int* unk_ptr;
 
 #if defined(M2CTX) || defined(PERMUTER)
 #define M2C_BREAK(x) ((void)0)
+#define SCHEDULE_BARRIER() ((void)0)
 #else
 #ifndef M2C_BREAK
 #define M2C_BREAK(x) __asm__ volatile("break %0" : : "i"((x) << 10))
+#endif
+#ifndef SCHEDULE_BARRIER
+#define SCHEDULE_BARRIER() __asm__ volatile("")
 #endif
 #endif
 

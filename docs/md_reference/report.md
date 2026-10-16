@@ -1,17 +1,17 @@
 # Decompilation Progress Report
 
 ```text
-Decompiled: 164 / 900 functions (18.22%)
+Decompiled: 180 / 900 functions (20.00%)
 
-  main      :  151 /  696 functions ( 21.70%)
-    - main/akao.c              :  85 / 315 ( 27.0%)
-    - main/cd_stream.c         :  15 /  65 ( 23.1%)
+  main      :  167 /  696 functions ( 23.99%)
+    - main/akao.c              :  91 / 315 ( 28.9%)
+    - main/cd_stream.c         :  16 /  65 ( 24.6%)
     - main/chapter_title.c     :   1 /  18 (  5.6%)
     - main/dualshock.c         : [System library - Excluded]
-    - main/main.c              :   8 /  16 ( 50.0%)
+    - main/main.c              :  16 /  16 (100.0%)
     - main/name_entry.c        :  11 /  53 ( 20.8%)
     - main/psxsdk.c            : [System library - Excluded]
-    - main/script.c            :  30 / 214 ( 14.0%)
+    - main/script.c            :  31 / 214 ( 14.5%)
     - main/title.c             :   1 /  15 (  6.7%)
 
   vm_engine :   13 /  204 functions (  6.37%)

@@ -170,6 +170,7 @@ typedef struct {
     /* 0x09 */ u8 portraitState;
 } ScriptSavedContext; /* size = 0x0A */
 
+void Cmd_setVariableByType(s32 type);
 void ExecuteUnaryOpcode(s32 opcode);
 void ExecuteEquationOpcode(s32 opcode);
 
@@ -177,7 +178,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", InitOpcodeHandlerTable);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", InitializeScriptInterpreter);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", ResetFullGameRuntimeState_8001CA18);
+INCLUDE_ASM("asm/jp/nonmatchings/main/script", ResetScriptInterpreterState);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", LoadPortraitLoopCutData);
 
@@ -295,7 +296,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", MatchNameExpression);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_newsel);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_getnews_80025CCC);
+INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_getnews);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", ValidateScriptHeader);
 
@@ -492,7 +493,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_menuMode);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_menuOpen);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_getnews_80029820);
+INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_news);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_newsput);
 
@@ -522,7 +523,7 @@ void Cmd_divide(void) { ExecuteEquationOpcode(EQ_OP_DIV); }
 
 void Cmd_modulo(void) { ExecuteEquationOpcode(EQ_OP_MOD); }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/script", Cmd_setVariable);
+void Cmd_setVariable(void) { Cmd_setVariableByType(*g_ScriptInstructionPointer++); }
 
 void Cmd_shiftLeft(void) { ExecuteEquationOpcode(EQ_OP_SHIF_L); }
 

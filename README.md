@@ -8,7 +8,7 @@
     </td>
     <td valign="middle">
       <p>
-        <strong>Main</strong>: 151 / 696 functions (21.70%)<br>
+        <strong>Main</strong>: 167 / 696 functions (23.99%)<br>
         <img src="docs/pics/progress_main.svg" alt="Main Progress" width="260" height="16">
       </p>
       <p>

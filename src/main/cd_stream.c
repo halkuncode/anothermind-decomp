@@ -1,14 +1,22 @@
 #include "common.h"
 
-extern s32 g_LastDisplayBufferIndex;
-extern s32 g_MovieDecoderActive;
-extern s32 g_CdTransferReady;
+typedef struct {
+    /* 0x00 */ s32 startSector;
+    /* 0x04 */ s32 byteCount;
+} CdFileSectorInfo; // size:0x08
+
 extern char s_cdFileName[];
 extern s32 g_CdState;
 extern s32 g_CdReadStartSector;
 extern s32 g_CdReadByteCount;
 extern s32 g_CdReadTargetAddr;
+extern s32 g_LastDisplayBufferIndex;
+extern s32 g_MovieDecoderActive;
+extern s32 g_CdTransferReady;
 extern s32 g_CurrentFrameNum[5];
+
+CdFileSectorInfo GetCdFileSectorInfo(s32 fileId, s32 groupId);
+void ShutdownMovieDecoder(void);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", LoadChapterEndGraphic);
 
@@ -49,7 +57,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", PlayCdAudioTrack);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", DebugRunCdLoadTest);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", GetSectorForMovieId);
+s32 GetSectorForMovieId(s32 fileId, s32 groupId) { return GetCdFileSectorInfo(fileId, groupId).startSector; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", SeekCdFileHeader);
 
@@ -59,7 +67,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", LookupMovieSector);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", CheckCdTransferStatus);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", CheckDebugDisabledFlag);
+INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", DbgPrintDebugStringTest);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", GetGroupFileCount);
 
@@ -125,13 +133,13 @@ void ResetMovieDecoderState(void) { g_MovieDecoderActive = 0; }
 
 s32 GetLastDisplayBufferIndex(void) { return g_LastDisplayBufferIndex; }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", PlayDefaultMovieSegment_8001B9D0);
+INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", PlayDefaultMovieStream);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", PlayMovieSegmentUsingOffsetOrDefault_8001BA64);
+INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", PlayMovieStreamWithOffset);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", LoopMovieById_8001BAC0);
+INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", PlayMovieStreamLooping);
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", ShutdownMovieDecoder_8001BB00);
+INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", AbortAndShutdownMovieDecoder);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", SetCdBusyStatus);
 
@@ -141,6 +149,6 @@ void ClearCdTransferReadyFlag(void) { g_CdTransferReady = 0; }
 
 s32 IsCdTransferReady(void) { return g_CdTransferReady; }
 
-INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", ResetMovieDecoderState_8001BCE8);
+INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", ClearMovieDecoderActiveFlag);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", DisplayCdControlStatusToDebugScreen);

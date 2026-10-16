@@ -1,6 +1,25 @@
 #ifndef GAME_H
 #define GAME_H
 
+/* Display resolution */
+#define SCREEN_WIDTH 320
+#define SCREEN_HEIGHT 240
+
+/* Ampack archive header magic bytes */
+#define AMPACK_MAGIC_0 0xC3
+#define AMPACK_MAGIC_1 0xFF
+
+/* LZSS compression parameters */
+#define LZSS_WINDOW_SIZE 4096
+#define LZSS_WINDOW_MASK (LZSS_WINDOW_SIZE - 1) /* 0xFFF */
+#define LZSS_WINDOW_INIT_INDEX 0xFEE
+
+/* Well-known memory buffer addresses */
+#define PROGDATA_LOAD_ADDR ((u8*)0x80138000)
+#define PROGDATA_LOAD_MAX_SIZE 0x30000
+#define PROGDATA_UNPACK_ADDR ((u8*)0x80168000)
+#define DEBUG_UNPACK_SRC_ADDR ((u8*)0x80160000)
+
 typedef enum {
     FILE_VIDEO = 0,
     FILE_SYSTEM = 1,

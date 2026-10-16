@@ -37,6 +37,12 @@ static void FunctionLocalOnlyToTheSourcFile(s32 param) {
 }
 ```
 
+## Naming conventions
+
+* **Functions and global variables**: Use `PascalCase` (global variables must still be prefixed with `g_`, e.g., `g_DebugLockState`).
+* **Local variables and struct members**: Use `camelCase`.
+* **Descriptive names**: Do not use vague single- or two-letter variable names unless their use is traditional for loop counters (`i`, `j`, `k`).
+
 ## Prohibited C keywords
 
 * `register` use is strictly prohibited. It is just an assembly artifact, not true C code.

@@ -173,8 +173,8 @@ The table below lists all 140 active opcodes registered in `InitOpcodeHandlerTab
 | `0x5E` | 94 | `Cmd_ifc` | `IFC` | `count, [val_desc, val, block_be]...` | Conditionals |
 | `0x5F` | 95 | `Cmd_ifo2` | `IFO2` | `count, [val_desc, val, block_be]...` | Conditionals |
 | `0x60` | 96 | `Cmd_newsel` | `NEWSEL` | `count, [desc, news_id]...` | Newspaper System |
-| `0x61` | 97 | `Cmd_getnews_80029820` | `GETNEWS` | `desc(1), news_id` | Newspaper System |
-| `0x62` | 98 | `Cmd_getnews_80025CCC` | `GETNEWS2` | `desc(1), news_id` | Newspaper System |
+| `0x61` | 97 | `Cmd_news` | `GETNEWS` | `desc(1), news_id` | Newspaper System |
+| `0x62` | 98 | `Cmd_getnews` | `GETNEWS2` | `desc(1), news_id` | Newspaper System |
 | `0x63` | 99 | `Cmd_ifc2` | `IFC2` | `count, [val_desc, val, block_be]...` | Conditionals |
 | `0x64` | 100 | `Cmd_ifs2` | `IFS2` | `count, [val_desc, val, block_be]...` | Conditionals |
 | `0x65` | 101 | `Cmd_loaddict` | `LOADDICT` | `desc(2), slot(0/1), file_id` | Dialogue & Text UI |

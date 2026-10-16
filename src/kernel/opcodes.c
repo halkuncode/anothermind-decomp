@@ -192,37 +192,37 @@ INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", UpdateScriptStateAndDebugInput
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_interpreterStep);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_handleScriptBlock);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_01_handleScriptBlock);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_print_a);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_7F_print_a);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", DecodePortraitAnimBlock);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_call);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_02_call);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_thread);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_52_thread);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_bg2);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_07_bg2);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_kbg2);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_58_kbg2);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_movie2);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_7A_movie2);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_movieflash2);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_8D_movieflash2);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_movieFstate);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_38_movieFstate);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_movieFframe);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_39_movieFframe);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_allmuisc);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_77_allmuisc);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_seloop);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_88_seloop);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_allSE);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_76_allSE);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_oneSE);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_87_oneSE);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_allStream);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_78_allStream);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_setVariableByType);
 
@@ -230,73 +230,73 @@ INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", ExecuteUnaryOpcode);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", ExecuteEquationOpcode);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_ifv);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_1D_ifv);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_ifs);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_1E_ifs);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_ifs2);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_64_ifs2);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_ifo);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_1F_ifo);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_ifo2);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_5F_ifo2);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_ifc);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_5E_ifc);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_ifc2);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_63_ifc2);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_ifvar);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_20_ifvar);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_face_a);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_09_face_a);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_facer_a);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_0A_facer_a);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_pset_a);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_0B_pset_a);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_mset_a);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_0C_mset_a);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_mwin);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_7E_mwin);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_exec);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_0E_exec);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_enter);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_0D_enter);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_exit);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_0F_exit);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_pmove_a);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_5A_pmove_a);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_facelight);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_55_facelight);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_faceEffect);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_5C_faceEffect);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_din);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_18_din);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_dout);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_19_dout);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_sjump);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_04_sjump);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_jsel);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_23_jsel);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_mdel_s);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_24_mdel_s);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_vardel_j);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_5D_vardel_j);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_loaddict);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_65_loaddict);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", LoadDictionaryData);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_watch);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_27_watch);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_watch16);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_66_watch16);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_watchflag);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_28_watchflag);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_getRandom);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_3B_getRandom);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", MatchNameExpression);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_newsel);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_60_newsel);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_getnews);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_62_getnews);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", ValidateScriptHeader);
 
@@ -330,216 +330,216 @@ INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", JumpOpcodeFuncViaTable);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_errorUnknownOpcode);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_wait);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_05_wait);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", ResetPortraitState);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_mspeed);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_14_mspeed);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_loadkanji);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_7C_loadkanji);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_return);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_03_return);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_threadret);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_53_threadret);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_threadstop);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_54_threadstop);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_bg);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_06_bg);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_kbg);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_57_kbg);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_movie);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_33_movie);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_movieflash);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_6E_movieflash);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_vibrateflash);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_7D_vibrateflash);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_movieF);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_34_movieF);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_movieF2);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_35_movieF2);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_movieFstop);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_36_movieFstop);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_movieFblock);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_37_movieFblock);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_movieFloop);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_3A_movieFloop);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_soundmode);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_85_soundmode);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_music);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_70_music);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_musiccut);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_71_musiccut);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_loadmusic);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_75_loadmusic);
 
 void LoadMusic(s32 MusicId) { LoadByFileIdGroupId(MusicId, FILE_AUDIO, g_MusicBuffer, MUSIC_BUFFER_SIZE); }
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_loadwavemusic);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_6F_loadwavemusic);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", LoadWaveMusic);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_channelMute);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_8E_channelMute);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_finale);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_8F_finale);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_se);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_11_se);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_sse);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_8B_sse);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_ve);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_84_ve);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_vestop);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_8C_vestop);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_seStop);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_12_seStop);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_secut);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_6D_secut);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_loadse);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_6A_loadse);
 
 void LoadSoundEffect(s32 SfxId) {
     LoadByFileIdGroupId(SfxId, FILE_AUDIO, g_SoundEffectBuffer, SOUND_EFFECT_BUFFFER_SIZE);
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_loadwaveSE);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_6B_loadwaveSE);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", LoadAudioId);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_loadwaveStream);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_79_loadwaveStream);
 
 void LoadAudioStream(s32 audioId) {
     LoadByFileIdGroupId(audioId, FILE_AUDIO, g_AudioStreamBuffer, AUDIO_STREAM_BUFFER_SIZE);
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_cdplay);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_13_cdplay);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_if);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_08_if);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", ComputeMovementStep);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_effectB);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_10_effectB);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_seekF);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_16_seekF);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_seekB);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_15_seekB);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_backF);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_17_backF);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_talk);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_1C_talk);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_ltalk);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_69_ltalk);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_tset);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_59_tset);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_byuu);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_83_byuu);
 
-void Cmd_preDinXX(void) {
+void Cmd_74_preDinXX(void) {
     g_NeedToResetFaceSlots = 1;
     g_FaceSlotResetState[0] = 1;
-    Cmd_din();
+    Cmd_18_din();
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_dinbrainoff);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_8A_dinbrainoff);
 
-void Cmd_doutWithFaceSlotXX(void) {
+void Cmd_72_doutWithFaceSlotXX(void) {
     g_NeedToResetFaceSlots = 1;
-    Cmd_dout();
+    Cmd_19_dout();
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_nin);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_1A_nin);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_ninjump);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_73_ninjump);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_nincall);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_7B_nincall);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_ninwait);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_82_ninwait);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_nout);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_1B_nout);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_end);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_FF_end);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_bp);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_5B_bp);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_present);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_FC_present);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_tagon);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_2F_tagon);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_tagoff);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_30_tagoff);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_brainon);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_31_brainon);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_brainoff);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_32_brainoff);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_aurthor);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_29_aurthor);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_place);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_2A_place);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_date);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_2C_date);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_time);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_2B_time);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_chapter);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_2D_chapter);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_chapterTitle);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_6C_chapterTitle);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_endTitle);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_80_endTitle);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_scene);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_2E_scene);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_inputName);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_56_inputName);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_vibrateMode);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_68_vibrateMode);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_menuMode);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_86_menuMode);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_menuOpen);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_89_menuOpen);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_news);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_61_news);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_newsput);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_67_newsput);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_newsquit);
+INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_81_newsquit);
 
-void Cmd_logicalAnd(void) { ExecuteEquationOpcode(EQ_OP_LOGIC_AND); }
+void Cmd_3D_logicalAnd(void) { ExecuteEquationOpcode(EQ_OP_LOGIC_AND); }
 
-void Cmd_logicalOr(void) { ExecuteEquationOpcode(EQ_OP_LOGIC_OR); }
+void Cmd_3E_logicalOr(void) { ExecuteEquationOpcode(EQ_OP_LOGIC_OR); }
 
-void Cmd_bitwiseAnd(void) { ExecuteEquationOpcode(EQ_OP_BIT_AND); }
+void Cmd_3F_bitwiseAnd(void) { ExecuteEquationOpcode(EQ_OP_BIT_AND); }
 
-void Cmd_bitwiseOr(void) { ExecuteEquationOpcode(EQ_OP_BIT_OR); }
+void Cmd_40_bitwiseOr(void) { ExecuteEquationOpcode(EQ_OP_BIT_OR); }
 
-void Cmd_bitwiseXor(void) { ExecuteEquationOpcode(EQ_OP_BIT_XOR); }
+void Cmd_41_bitwiseXor(void) { ExecuteEquationOpcode(EQ_OP_BIT_XOR); }
 
-void Cmd_logicalNot(void) { ExecuteUnaryOpcode(EQ_OP_LOGIC_NOT); }
+void Cmd_42_logicalNot(void) { ExecuteUnaryOpcode(EQ_OP_LOGIC_NOT); }
 
-void Cmd_negate(void) { ExecuteUnaryOpcode(EQ_OP_NEG); }
+void Cmd_43_negate(void) { ExecuteUnaryOpcode(EQ_OP_NEG); }
 
-void Cmd_add(void) { ExecuteEquationOpcode(EQ_OP_ADD); }
+void Cmd_44_add(void) { ExecuteEquationOpcode(EQ_OP_ADD); }
 
-void Cmd_subtract(void) { ExecuteEquationOpcode(EQ_OP_SUB); }
+void Cmd_45_subtract(void) { ExecuteEquationOpcode(EQ_OP_SUB); }
 
-void Cmd_multiply(void) { ExecuteEquationOpcode(EQ_OP_MUL); }
+void Cmd_46_multiply(void) { ExecuteEquationOpcode(EQ_OP_MUL); }
 
-void Cmd_divide(void) { ExecuteEquationOpcode(EQ_OP_DIV); }
+void Cmd_47_divide(void) { ExecuteEquationOpcode(EQ_OP_DIV); }
 
-void Cmd_modulo(void) { ExecuteEquationOpcode(EQ_OP_MOD); }
+void Cmd_48_modulo(void) { ExecuteEquationOpcode(EQ_OP_MOD); }
 
-void Cmd_setVariable(void) { Cmd_setVariableByType(*g_ScriptInstructionPointer++); }
+void Cmd_49_setVariable(void) { Cmd_setVariableByType(*g_ScriptInstructionPointer++); }
 
-void Cmd_shiftLeft(void) { ExecuteEquationOpcode(EQ_OP_SHIF_L); }
+void Cmd_4A_shiftLeft(void) { ExecuteEquationOpcode(EQ_OP_SHIF_L); }
 
-void Cmd_shiftRight(void) { ExecuteEquationOpcode(EQ_OP_SHIF_R); }
+void Cmd_4B_shiftRight(void) { ExecuteEquationOpcode(EQ_OP_SHIF_R); }
 
-void Cmd_equal(void) { ExecuteEquationOpcode(EQ_OP_EQU); }
+void Cmd_4C_equal(void) { ExecuteEquationOpcode(EQ_OP_EQU); }
 
-void Cmd_notEqual(void) { ExecuteEquationOpcode(EQ_OP_NOT_EUQ); }
+void Cmd_4D_notEqual(void) { ExecuteEquationOpcode(EQ_OP_NOT_EUQ); }
 
-void Cmd_lessThan(void) { ExecuteEquationOpcode(EQ_OP_LT); }
+void Cmd_4E_lessThan(void) { ExecuteEquationOpcode(EQ_OP_LT); }
 
-void Cmd_lessThanOrEqual(void) { ExecuteEquationOpcode(EQ_OP_LTEQ); }
+void Cmd_4F_lessThanOrEqual(void) { ExecuteEquationOpcode(EQ_OP_LTEQ); }
 
-void Cmd_greaterThan(void) { ExecuteEquationOpcode(EQ_OP_GT); }
+void Cmd_50_greaterThan(void) { ExecuteEquationOpcode(EQ_OP_GT); }
 
-void Cmd_graterThanOrEqualTo(void) { ExecuteEquationOpcode(EQ_OP_GTEQ); }
+void Cmd_51_graterThanOrEqualTo(void) { ExecuteEquationOpcode(EQ_OP_GTEQ); }
 
 s32 ReadScript16bitBE(void) {
     u32 b1 = *g_ScriptInstructionPointer++;

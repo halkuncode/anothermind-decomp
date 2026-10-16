@@ -372,7 +372,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_71_musiccut);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_75_loadmusic);
 
-void LoadMusic(s32 MusicId) { LoadByFileIdGroupId(MusicId, FILE_AUDIO, g_MusicBuffer, MUSIC_BUFFER_SIZE); }
+void LoadMusic(s32 MusicId) { LoadByFileIdGroupId(MusicId, DIR_AUDIO, g_MusicBuffer, MUSIC_BUFFER_SIZE); }
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_6F_loadwavemusic);
 
@@ -397,7 +397,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_6D_secut);
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_6A_loadse);
 
 void LoadSoundEffect(s32 SfxId) {
-    LoadByFileIdGroupId(SfxId, FILE_AUDIO, g_SoundEffectBuffer, SOUND_EFFECT_BUFFFER_SIZE);
+    LoadByFileIdGroupId(SfxId, DIR_AUDIO, g_SoundEffectBuffer, SOUND_EFFECT_BUFFFER_SIZE);
 }
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_6B_loadwaveSE);
@@ -407,7 +407,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", LoadAudioId);
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_79_loadwaveStream);
 
 void LoadAudioStream(s32 audioId) {
-    LoadByFileIdGroupId(audioId, FILE_AUDIO, g_AudioStreamBuffer, AUDIO_STREAM_BUFFER_SIZE);
+    LoadByFileIdGroupId(audioId, DIR_AUDIO, g_AudioStreamBuffer, AUDIO_STREAM_BUFFER_SIZE);
 }
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_13_cdplay);

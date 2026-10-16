@@ -1,6 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "progdata.h"
+
 /* Display resolution */
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 240
@@ -21,16 +23,16 @@
 #define DEBUG_UNPACK_SRC_ADDR ((u8*)0x80160000)
 
 typedef enum {
-    FILE_VIDEO = 0,
-    FILE_SYSTEM = 1,
-    FILE_DICT = 2,
-    FILE_DIALOG = 3,
-    FILE_MENU = 4,
-    FILE_SCRIPT = 5,
-    FILE_BACKGROUND = 6,
-    FILE_ANIMATION = 7,
-    FILE_AUDIO = 8,
-    FILE_DUMMY = 9
+    DIR_VIDEO = 0,
+    DIR_SYSTEM = 1,
+    DIR_DICT = 2,
+    DIR_DIALOG = 3,
+    DIR_MENU = 4,
+    DIR_SCRIPT = 5,
+    DIR_BACKGROUND = 6,
+    DIR_ANIMATION = 7,
+    DIR_AUDIO = 8,
+    DIR_DUMMY = 9
 } FileGroupType;
 
 /* Vibration effect IDs passed to StartVibrationEffect() */

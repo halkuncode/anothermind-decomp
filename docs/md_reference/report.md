@@ -1,7 +1,7 @@
 # Decompilation Progress Report
 
 ```text
-Decompiled: 180 / 900 functions (20.00%)
+Decompiled: 181 / 900 functions (20.11%)
 
   main      :  167 /  696 functions ( 23.99%)
     - main/akao.c              :  91 / 315 ( 28.9%)
@@ -14,9 +14,9 @@ Decompiled: 180 / 900 functions (20.00%)
     - main/script.c            :  31 / 214 ( 14.5%)
     - main/title.c             :   1 /  15 (  6.7%)
 
-  vm_engine :   13 /  204 functions (  6.37%)
+  vm_engine :   14 /  204 functions (  6.86%)
     - vm_engine/demo_menu.c    :   0 /  34 (  0.0%)
-    - vm_engine/memcard.c      :   0 /   4 (  0.0%)
+    - vm_engine/memcard.c      :   1 /   4 ( 25.0%)
     - vm_engine/portrait_anim.c:   0 /  23 (  0.0%)
     - vm_engine/portrait_select.c:   0 /  19 (  0.0%)
     - vm_engine/taiwa.c        :   0 /  34 (  0.0%)

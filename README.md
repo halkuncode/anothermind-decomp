@@ -12,7 +12,7 @@
         <img src="docs/pics/progress_main.svg" alt="Main Progress" width="260" height="16">
       </p>
       <p>
-        <strong>VM Engine</strong>: 13 / 204 functions (6.37%)<br>
+        <strong>VM Engine</strong>: 14 / 204 functions (6.86%)<br>
         <img src="docs/pics/progress_vm_engine.svg" alt="VM Engine Progress" width="260" height="16">
       </p>
       <p>

@@ -49,6 +49,13 @@ typedef unsigned int* unk_ptr;
 #define SCHEDULE_BARRIER() __asm__ volatile("")
 #endif
 #endif
+#ifndef SET_GLOBAL_FLAG
+#define SET_GLOBAL_FLAG(bit)                                                                                           \
+    do {                                                                                                               \
+        s16 _b = (bit);                                                                                                \
+        ((u8*)g_GlobalVariableTable)[_b / 8] |= 1 << (_b % 8);                                                         \
+    } while (0)
+#endif
 
 #include "game.h"
 

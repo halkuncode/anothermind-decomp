@@ -25,6 +25,18 @@ typedef struct {
 
 extern SaveSlotHeader g_SaveSlotIndex[];
 
+INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/memcard", WriteSaveMetadataBlock);
+
+INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/memcard", LoadSaveSlotIconsToVram);
+
+INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/memcard", LoadMemoryCardSaveHeaders);
+
+INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/memcard", LoadSaveSlotNamesFromMemoryCard);
+
+INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/memcard", PackSaveDataBuffer);
+
+INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/memcard", ExecuteSaveGame);
+
 INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/memcard", TryLoadGameFromMemoryCard);
 
 INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/memcard", LoadPortraitAnimationScript);
@@ -34,11 +46,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/memcard", RunDebugChapterSelectionMen
 extern s16 g_GlobalVariableTable[];
 extern s16 D_80130CD0[];
 
-#define SET_GLOBAL_FLAG(bit)                                                                                           \
-    do {                                                                                                               \
-        s16 _b = (bit);                                                                                                \
-        ((u8*)g_GlobalVariableTable)[_b / 8] |= 1 << (_b % 8);                                                         \
-    } while (0)
+
 
 void EnableInitialGlobalVars(void) {
     s16 i;

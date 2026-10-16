@@ -55,15 +55,3 @@ INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", ProcessTaiwaStateMachine)
 INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", TestGpuAndCdromEventState);
 
 INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", CheckGpuEventStatus);
-
-INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", WriteSaveMetadataBlock);
-
-INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", LoadSaveSlotIconsToVram);
-
-INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", LoadMemoryCardSaveHeaders);
-
-INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", LoadSaveSlotNamesFromMemoryCard);
-
-INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", PackSaveDataBuffer);
-
-INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/demo_menu", ExecuteSaveGame);

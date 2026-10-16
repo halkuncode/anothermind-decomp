@@ -97,7 +97,7 @@ NewsMode* SetNews(void) {
     return news;
 }
 
-void ClearNewsState(void) { ResetNewsSystem(); }
+void ClearNewsState(void) { ResetTaiwaNewsSystem(); }
 
 INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/vm_main", SetNewsValue);
 
@@ -173,7 +173,7 @@ void InitPortraitSlotMsgBoxType(PortraitSlot* slot) {
 void ClearPortraitSlotStateAndUploadClut(PortraitSlot* slot) {
     slot->unk36 = 0;
     slot->unk3E = 0;
-    UploadPortraitClutToVram(slot);
+    UploadFaceClutToVram(slot);
 }
 
 INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/vm_main", PreparePortraitSlotAndLoadAsset);

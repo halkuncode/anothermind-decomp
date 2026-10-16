@@ -7,6 +7,8 @@
 extern volatile s32 g_AudioInitialized; // voltile need for critical loop per style.md
 extern s16 g_AkaoPitchMulMusicSlideSteps;
 extern s32 g_AkaoPitchMulMusic;
+extern s16 g_AkaoTempoMulMusicSlideSteps;
+extern s32 g_AkaoTempoMulMusic;
 extern s32 g_SeLoopBufferMain;
 extern s32 g_SeLoopChannelState;
 extern s32 g_SeLoopMixBuffer;
@@ -386,9 +388,6 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoResetChannelPitchSlide);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoApplyChannelPitchSlide);
 
-extern s16 g_AkaoTempoMulMusicSlideSteps;
-extern s32 g_AkaoTempoMulMusic;
-
 void AkaoCmd_D0_SetTempo(AkaoTempoPitchSlide* cmd) {
     s32 start = cmd->start;
     g_AkaoTempoMulMusicSlideSteps = 0;
@@ -456,7 +455,7 @@ void AkaoDummySub_80034134(s32* src, s32* dst, u32 count) {
     count >>= 2;
     do {
         *dst++ = *src++;
-    } while (--count != 0);
+    } while (--count);
 }
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/akao", AkaoUpdateGlobalSlides);
@@ -594,7 +593,7 @@ void AkaoOp_DA_PortamentoOn(AkaoChannel* track) {
     track->akaoSequencePointer = seq + 1;
 
     track->portamentoSteps = val;
-    if (val == 0) {
+    if (!val) {
         track->portamentoSteps = 0x100;
     }
     track->transposeStored = 0;

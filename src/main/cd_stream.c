@@ -8,6 +8,7 @@ extern s32 g_CdState;
 extern s32 g_CdReadStartSector;
 extern s32 g_CdReadByteCount;
 extern s32 g_CdReadTargetAddr;
+extern s32 g_CurrentFrameNum[5];
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/cd_stream", LoadChapterEndGraphic);
 
@@ -109,8 +110,6 @@ void StubResetStreamRing(void) {}
 void StopScriptedMovieDecoder(void) { ShutdownMovieDecoder(); }
 
 s32 IsMovieDecoderActive(void) { return g_MovieDecoderActive; }
-
-extern s32 g_CurrentFrameNum[5];
 
 s32 GetCurrentMovieFrame(void) { return g_CurrentFrameNum[0]; }
 

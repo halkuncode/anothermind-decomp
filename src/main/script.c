@@ -34,6 +34,9 @@ extern s8 g_FaceSlotResetState[];
 extern u8 g_SoundEffectBuffer[SOUND_EFFECT_BUFFFER_SIZE];
 extern u8 g_MusicBuffer[MUSIC_BUFFER_SIZE];
 extern u8 g_AudioStreamBuffer[AUDIO_STREAM_BUFFER_SIZE];
+extern u8* g_ScriptInstructionPointer;
+extern char g_LogBuffer[];
+extern char g_ActiveScriptLabel[];
 
 typedef struct {
     /* 0x00 */ u8 compilerMonth;
@@ -537,8 +540,6 @@ void Cmd_greaterThan(void) { ExecuteEquationOpcode(EQ_OP_GT); }
 
 void Cmd_graterThanOrEqualTo(void) { ExecuteEquationOpcode(EQ_OP_GTEQ); }
 
-extern u8* g_ScriptInstructionPointer;
-
 s32 ReadScript16bitBE(void) {
     u32 b1 = *g_ScriptInstructionPointer++;
     u32 b2 = *g_ScriptInstructionPointer++;
@@ -581,12 +582,10 @@ INCLUDE_ASM("asm/jp/nonmatchings/main/script", LogHexNumber);
 
 INCLUDE_ASM("asm/jp/nonmatchings/main/script", LogCommand);
 
-extern char g_LogBuffer[];
 extern char* strcat(char*, const char*);
 
 void LogArgumentString(char* argumentString) { strcat(g_LogBuffer, argumentString); }
 
-extern char g_ActiveScriptLabel[];
 extern char* strcpy(char*, const char*);
 
 void SetActiveScriptLabel(const char* label) { strcpy(g_ActiveScriptLabel, label); }

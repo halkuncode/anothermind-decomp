@@ -8,6 +8,9 @@
 ## Coding convention
 
 ```c
+// Defines, enums, struct declarations,
+// typedefs, and global externs go at
+// the top of the C file. 
 #define SOME_MACRO
 
 enum EnumName {

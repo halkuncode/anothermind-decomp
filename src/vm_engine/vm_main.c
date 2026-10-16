@@ -30,6 +30,9 @@ extern s16 g_TaiwaBarX;
 extern TaiwaState g_TaiwaState;
 extern NewsMode g_NewsMode;
 extern s16 g_CurrentKanjiSet;
+extern s16 g_CurrentMenuRequest;
+extern s32 g_PortraitSlotIndex;
+extern u8 g_MessageBoxType;
 
 INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/vm_main", RunSaveLoadMenu);
 
@@ -105,8 +108,6 @@ void LoadKanjiById(s32 kanjiSet) {
 
 INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/vm_main", ResetPortraitCacheStatus);
 
-extern s16 g_CurrentMenuRequest;
-
 void OpenMenuById(s32 menuId) {
     g_CurrentMenuRequest = menuId;
     if (menuId < 3) {
@@ -120,8 +121,6 @@ void PlayMovie(void) { StartPlayMovie(); }
 INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/vm_main", SetupExtendedMovieFlashEffect);
 
 INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/vm_main", TriggerMovieFlashEffect);
-
-extern s32 g_PortraitSlotIndex;
 
 s32 GetPackedDisplayHeightOffset(void) { return (g_PortraitSlotIndex << 8) | 0x01400000; }
 
@@ -163,8 +162,6 @@ INCLUDE_ASM("asm/jp/nonmatchings/vm_engine/vm_main", PlayPortraitCancelSfx);
 
 // This changes the Portrait slot to state (expresion?) 3
 void SetPortraitSlotStateTo3(PortraitSlot* slot) { slot->state = 3; }
-
-extern u8 g_MessageBoxType;
 
 void InitPortraitSlotMsgBoxType(PortraitSlot* slot) {
     if (g_MessageBoxType >= 8) {

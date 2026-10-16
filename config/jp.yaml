@@ -41,7 +41,7 @@ overlays:
         subsegments:
           - [0xD53B0, rodata]
           - [0xD5CE8, c, engine/display]
-          - [0xD9120, c, engine/font]
+          - [0xD80B0, c, engine/tim]
           - [0xD996C, c, engine/portrait]
           - [0xDC620, c, engine/scene]
           - [0xE4CA8, c, engine/debug]

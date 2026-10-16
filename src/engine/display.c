@@ -35,17 +35,3 @@ INCLUDE_ASM("asm/jp/nonmatchings/engine/display", SubmitFrameOrderingTable);
 INCLUDE_ASM("asm/jp/nonmatchings/engine/display", StubbedOnFrameUpdate);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/display", StepFrameAndSwapBuffers);
-
-INCLUDE_ASM("asm/jp/nonmatchings/engine/display", LoadTimToVram);
-
-INCLUDE_ASM("asm/jp/nonmatchings/engine/display", LoadPortraitImageToSlot);
-
-INCLUDE_ASM("asm/jp/nonmatchings/engine/display", LoadTimAssetToVram);
-
-INCLUDE_ASM("asm/jp/nonmatchings/engine/display", LoadPortraitAssetToSlot);
-
-INCLUDE_ASM("asm/jp/nonmatchings/engine/display", LoadKanjiTimImages);
-
-INCLUDE_ASM("asm/jp/nonmatchings/engine/display", Load8x8DebugFont);
-
-INCLUDE_ASM("asm/jp/nonmatchings/engine/display", LoadBrainGraphic);

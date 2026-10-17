@@ -25,6 +25,10 @@ typedef struct {
 
 extern SaveSlotHeader g_SaveSlotIndex[];
 
+INCLUDE_ASM("asm/jp/nonmatchings/engine/memcard", TestGpuAndCdromEventState);
+
+INCLUDE_ASM("asm/jp/nonmatchings/engine/memcard", CheckGpuEventStatus);
+
 INCLUDE_ASM("asm/jp/nonmatchings/engine/memcard", WriteSaveMetadataBlock);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/memcard", LoadSaveSlotIconsToVram);

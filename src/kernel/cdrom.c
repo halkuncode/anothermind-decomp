@@ -5,8 +5,18 @@ typedef struct {
     /* 0x04 */ s32 byteCount;
 } CdFileSectorInfo; // size:0x08
 
+extern const char s_CdControlState[];  // "CD CONTROL STATE = "
+extern const char s_CdControlHeader[]; // "--- CD CONTROL ---\n"
 extern s32 g_FileGroupOffsetTable[];
 extern char s_cdFileName[];
+extern const char s_NoUse[];  // "NO USE\n"
+extern const char s_Load[];   // "LOAD\n"
+extern const char s_LoadF[];  // "LOADF\n"
+extern const char s_Movie[];  // "MOVIE\n"
+extern const char s_MovieF[]; // "MOVIEF\n"
+extern const char s_Da[];     // "DA\n"
+extern const char s_SeekB[];  // "SEEKB\n"
+extern const char s_SeekF[];  // "SEEKF\n"
 extern s32 g_CdState;
 extern s32 g_CdReadStartSector;
 extern s32 g_CdReadByteCount;
@@ -16,8 +26,27 @@ extern s32 g_MovieDecoderActive;
 extern s32 g_CdTransferReady;
 extern s32 g_CurrentFrameNum[5];
 
+void DbgScreenPrintString(const char*);
+
 CdFileSectorInfo GetCdFileSectorInfo(s32 fileId, s32 groupId);
 void ShutdownMovieDecoder(void);
+
+INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010968);
+INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010980);
+INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010994);
+INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_800109A8);
+INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_800109B4);
+INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_800109C0);
+INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_800109CC);
+INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_800109D8);
+INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_800109E8);
+INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_800109F4);
+INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010A04);
+INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010A14);
+INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010A28);
+INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010A38);
+INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010A44);
+INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010A50);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/cdrom", LoadChapterEndGraphic);
 
@@ -88,6 +117,10 @@ INCLUDE_ASM("asm/jp/nonmatchings/kernel/cdrom", ProcessMovieInterruptAndDecode);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/cdrom", UpdateMoviePlaybackFrame);
 
+INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010A80);
+INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010A8C);
+INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010A9C);
+
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/cdrom", DisplayMovieDebugPanel);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/cdrom", InitMoviePlaybackContext);
@@ -144,7 +177,14 @@ INCLUDE_ASM("asm/jp/nonmatchings/kernel/cdrom", PlayMovieStreamLooping);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/cdrom", AbortAndShutdownMovieDecoder);
 
+INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010AEC);
+
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/cdrom", SetCdBusyStatus);
+
+INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", s_CdControlState);
+INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", s_CdControlHeader);
+INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", jtbl_80010B5C);
+INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", jtbl_80010B7C);
 
 void ResetCdTransferReadyFlag(void) { g_CdTransferReady = 0; }
 
@@ -154,4 +194,33 @@ s32 IsCdTransferReady(void) { return g_CdTransferReady; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/cdrom", ClearMovieDecoderActiveFlag);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/cdrom", DisplayCdControlStatusToDebugScreen);
+void DisplayCdControlStatusToDebugScreen(void) {
+    DbgScreenPrintString(s_CdControlHeader); // "--- CD CONTROL ---\n"
+    DbgScreenPrintString(s_CdControlState);  // "CD CONTROL STATE = "
+    switch (g_CdTransferReady) {
+    case 0:
+        DbgScreenPrintString(s_NoUse); // "NO USE\n"
+        break;
+    case 1:
+        DbgScreenPrintString(s_Load); // "LOAD\n"
+        break;
+    case 2:
+        DbgScreenPrintString(s_LoadF); // "LOADF\n"
+        break;
+    case 3:
+        DbgScreenPrintString(s_Movie); // "MOVIE\n"
+        break;
+    case 4:
+        DbgScreenPrintString(s_MovieF); // "MOVIEF\n"
+        break;
+    case 5:
+        DbgScreenPrintString(s_Da); // "DA\n"
+        break;
+    case 6:
+        DbgScreenPrintString(s_SeekB); // "SEEKB\n"
+        break;
+    case 7:
+        DbgScreenPrintString(s_SeekF); // "SEEKF\n"
+        break;
+    }
+}

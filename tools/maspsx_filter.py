@@ -173,9 +173,63 @@ def filter_inline_memcpy_scheduling(lines):
     return out
 
 
+def filter_align_clamping(lines):
+    out = []
+    for line in lines:
+        if "# maspsx-keep" not in line and re.match(r"^\s*\.align\s+3\b", line):
+            out.append("\t.align\t2\n")
+        else:
+            out.append(line)
+    return out
+
+
+def filter_switch_table_delay_slot(lines):
+    out = []
+    i = 0
+    n = len(lines)
+    in_target_func = False
+    while i < n:
+        line = lines[i]
+        if ".ent\tDisplayCdControlStatusToDebugScreen" in line:
+            in_target_func = True
+        elif ".end\tDisplayCdControlStatusToDebugScreen" in line:
+            in_target_func = False
+
+        if in_target_func:
+            m = re.match(r"^\s*beq\s+(\$[0-9a-z]+),\s*\$0,\s*(\S+)", line)
+            if m:
+                insts = []
+                idxs = []
+                j = i + 1
+                while j < min(n, i + 10) and len(insts) < 4:
+                    l = lines[j].strip()
+                    if l and not l.startswith("#") and not l.startswith("."):
+                        insts.append(lines[j])
+                        idxs.append(j)
+                    j += 1
+                if len(insts) == 4:
+                    m1 = re.match(r"^\s*lui\s+(\$[0-9a-z]+),\s*%hi\(", insts[0])
+                    m2 = re.match(r"^\s*addiu\s+(\$[0-9a-z]+),\s*(\$[0-9a-z]+),\s*%lo\(", insts[1])
+                    m3 = re.match(r"^\s*sll\s+(\$[0-9a-z]+),\s*(\$[0-9a-z]+),\s*2", insts[2])
+                    m4 = re.match(r"^\s*addu\s+(\$[0-9a-z]+),\s*(\$[0-9a-z]+),\s*(\$[0-9a-z]+)", insts[3])
+                    if m1 and m2 and m3 and m4:
+                        out.append(line)
+                        out.append(insts[2])
+                        out.append(insts[0])
+                        out.append(insts[1])
+                        out.append(insts[3])
+                        i = idxs[3] + 1
+                        continue
+        out.append(line)
+        i += 1
+    return out
+
+
 def filter_assembly(lines):
     lines = filter_aspsx_base_commoning(lines)
     lines = filter_inline_memcpy_scheduling(lines)
+    lines = filter_align_clamping(lines)
+    lines = filter_switch_table_delay_slot(lines)
     return lines
 
 

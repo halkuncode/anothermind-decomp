@@ -42,6 +42,11 @@ extern u8 g_AudioStreamBuffer[AUDIO_STREAM_BUFFER_SIZE];
 extern s8 g_FaceSlotResetState[];
 extern char g_LogBuffer[];
 extern char g_ActiveScriptLabel[];
+extern u8 g_DebugLoggingEnabled[];
+extern char g_StrThreadstop[];
+extern u8 g_ThreadActive;
+extern u8 g_ScriptCanAdvance;
+void LogCommand(const char* cmd);
 
 typedef struct {
     /* 0x00 */ u8 compilerMonth;
@@ -347,7 +352,13 @@ INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_03_return);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_53_threadret);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_54_threadstop);
+void Cmd_54_threadstop(void) {
+    if (*g_DebugLoggingEnabled) {
+        LogCommand(g_StrThreadstop);
+    }
+    g_ThreadActive = 0;
+    g_ScriptCanAdvance = 1;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", Cmd_06_bg);
 

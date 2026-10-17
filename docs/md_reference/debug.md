@@ -106,8 +106,8 @@ spcno 0007/0075  mc.0000/0000  sss  srl.flag: 0000  srl.show: 0001  srl.file: 01
 | **`spcno`** | `0007/0075` | `g_DebugDrawPrimitiveIndex` / Max `0x4B` (75) | **Screen Primitive Count**: Active ordering-table primitive packets used vs. maximum hardware allocation (75). |
 | **`mc.`** | `0000/0000` | `LoadMemoryCardSaveHeaders()` | **Memory Card Status**: Available save headers / valid game slots detected on Memory Card. |
 | **`sss`** | `sss` | `g_Sss` (`0x8012C97C`) | **System Sub-State**: VM engine internal execution sub-state (normally `0`). |
-| **`srl.flag`** | `0000` | `g_ScriptFlag` (`0x80130D10`) | **Active Scenario Script Flag**: Current branch condition/state flag within the scenario script. |
-| **`srl.show`** | `0001` | `g_ScriptShowFlag` (`0x80130D12`) | **Script Display Visibility State**: Controls whether script elements/layers are currently visible. |
+| **`srl.flag`** | `0000` | `g_SrlFlag` (`0x80130D10`) | **Active Scenario Script Flag**: Current branch condition/state flag within the scenario script. |
+| **`srl.show`** | `0001` | `g_SrlShow` (`0x80130D12`) | **Script Display Visibility State**: Controls whether script elements/layers are currently visible. |
 | **`srl.file`** | `0100` | `g_ValidFunctionArgument` / `scriptFileId` | **Loaded Script Asset ID**: Numeric identifier of the currently loaded scenario script block. |
 | **Mode** | `/ 8BIT` or `/ 16BIT` | `s_Debug8BitMode` / `s_Debug16BitMode` | **Color / Data Depth Mode**: Current frame buffer render depth mode. |
 
@@ -264,8 +264,8 @@ Below is the verified inventory of authentic debug routines remaining in the bin
 * `DrawTaiwaDebugOverlay`: Master renderer for the debug text buffer, header line, and page router.
 * `DisplayVMDebugPanel`: Renders Page 0 Main Menu and formats the top `spcno / mc. / srl` header.
 * `UpdateDebugMenuState`: Processes controller input when `g_DebugFlag == 1` to change pages (L2/R2) and backgrounds (L1/R1).
-* `DrawPortraitSlotDebug`: Renders character debug info (`CHR FILE %d`, `XY = %d,%d`, `SIZE=%d,%d`, `speed=%d / NORMAL / NEXT`).
-* `DrawFaceSlotBoxDebug`: Renders text box bounding borders (`CHR %d MESSAGE`).
+* `DrawChrSlotDebug`: Renders character debug info (`CHR FILE %d`, `XY = %d,%d`, `SIZE=%d,%d`, `speed=%d / NORMAL / NEXT`).
+* `DrawChrMsgBoxDebug`: Renders text box bounding borders (`CHR %d MESSAGE`).
 * `DrawDebugHorizontalCursorMarker`: Draws interactive horizontal selection line marker.
 * `Load8x8DebugFont`: Loads PlayStation 8x8 ASCII debug font textures into VRAM.
 * `DbgScreenPrintString` / `DbgScreenPrintInt` / `DbgScreenPrintBinary`: Low-level ASCII print formatters into the debug overlay buffer.

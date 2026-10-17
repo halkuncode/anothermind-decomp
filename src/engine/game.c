@@ -26,22 +26,103 @@ typedef struct {
     /* 0x190 */ s16 newsFadeSlot2;
 } TaiwaState; // size:0x192
 
+typedef struct {
+    /* 0x00 */ u8 pad00[4];
+    /* 0x04 */ s16 mode;
+    /* 0x06 */ u8 pad06[0x18 - 0x06];
+} DrawBufferParam; // size:0x18
+
+extern s16 g_DebugViewMode;
 extern u8 g_MessageBoxType;
+extern const char s_DebugSpcNoLabel[];
+extern const char s_DebugSlash[];
+extern const char s_DebugMcLabel[];
+extern const char s_DebugSssLabel[];
+extern const char s_DebugSrlFlagLabel[];
+extern const char s_DebugSrlShowLabel[];
+extern const char s_DebugSrlFileLabel[];
+extern const char s_DebugCacheHeader[];
+extern const char s_DebugSceneScriptHeader[];
+extern const char s_DebugBgFilePrefix[];
+extern const char s_Debug8BitMode[];
+extern const char s_Debug16BitMode[];
 extern s16 g_CacheSlotStatus[];
-extern s32 g_PortraitSlotIndex;
+extern u8 g_DebugTextBuffer[];
+extern s32 g_DrawBufferIndex;
+extern s16 g_Sss;
+extern s32 g_DebugDisplayPageId;
+extern s32 g_DebugTextCursorOffset;
 extern u16 g_SavedScriptState;
 extern u16 g_ScriptCurrentState;
 extern s16 g_TaiwaBarX;
+extern s16 g_ValidFunctionArgument;
 extern s32 g_FunctionTableIndex;
+extern s16 g_DemoFrameControlFlag;
+extern s16 g_ScriptTimingFrameCount;
 extern s16 g_CurrentMenuRequest;
+extern s16 g_DebugMemoryCardSaveHeaderCount;
+extern s16 g_DebugMemoryCardSaveBlockCount;
 extern NewsMode g_NewsMode;
+extern s16 g_SrlFlag;
+extern s16 g_SrlShow;
+extern s16 g_SrlFile;
 extern s16 g_CurrentKanjiSet;
+extern DrawBufferParam g_DrawBufferParams[];
+extern PortraitSlot g_PortraitSlots[];
+extern PortraitSlot D_80130D94;
 extern s32 g_MoviePlaybackId;
 extern s32 g_MoviePlaybackMode;
 extern TaiwaState g_TaiwaState;
+extern s16 g_DebugDrawPrimitiveIndex;
 extern s16 g_PortraitCacheSlot2Status;
 extern s16 g_PortraitCacheSlot1Status;
 extern s16 g_PortraitCacheSlot0Status;
+
+void DisplaySystemDebugPanel(void);
+char* GetFilename(void);
+void StartPlayMovie(void);
+void SetupDebugOptionMenu(void);
+void DbgScreenPrintInt(s32);
+void DbgScreenPrintHex(s32);
+void LoadKanjiTimData(s32);
+void UploadFaceClutToVram(PortraitSlot*);
+void ResetNewsSystem(void);
+void DispatchInGameMenu(void);
+void RunGameLoop(void);
+void DrawDebugHorizontalCursorMarker(void);
+void DrawChrSlotDebug(PortraitSlot*);
+void DrawChrMsgBoxDebug(PortraitSlot*, s32);
+void PrintCacheSlotStatus(s32);
+void DisplayVMDebugPanel(void);
+
+static inline void AdvanceDebugCursor(void) {
+    s32 row = (g_DebugTextCursorOffset / DEBUG_TEXT_COLUMNS) + 1;
+    if (row < DEBUG_TEXT_MAX_ROWS) {
+        g_DebugTextCursorOffset = row * DEBUG_TEXT_COLUMNS;
+    } else {
+        g_DebugTextCursorOffset = DEBUG_TEXT_BOTTOM_ROW_OFFSET;
+    }
+}
+
+static inline void WriteCharToDebugBuffer(s16 c) {
+    if (c == '\n') {
+        AdvanceDebugCursor();
+    } else {
+        if (g_DebugTextCursorOffset < DEBUG_TEXT_BUFFER_SIZE) {
+            if ((u16)(c - 'a') < 26) {
+                c -= 0x20;
+            }
+            g_DebugTextBuffer[g_DebugTextCursorOffset] = c;
+            g_DebugTextCursorOffset++;
+        }
+    }
+}
+
+static inline void PrintDebugString(const char* str) {
+    while (*str) {
+        WriteCharToDebugBuffer(*str++);
+    }
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game", RunSaveLoadMenu);
 
@@ -79,15 +160,113 @@ INCLUDE_ASM("asm/jp/nonmatchings/engine/game", ResetVMEngineRuntimeState);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game", DrawDebugHorizontalCursorMarker);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game", DrawPortraitSlotDebug);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game", DrawChrSlotDebug);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game", DrawFaceSlotBoxDebug);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/game", DrawChrMsgBoxDebug);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game", PrintCacheSlotStatus);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game", DisplayVMDebugPanel);
+void DisplayVMDebugPanel(void) {
+    // Screen primitive packet count: active OT packets vs. hardware limit (0x4B = 75)
+    PrintDebugString(s_DebugSpcNoLabel);
+    DbgScreenPrintInt(g_DebugDrawPrimitiveIndex);
+    PrintDebugString(s_DebugSlash);
+    DbgScreenPrintInt(DEBUG_MAX_DRAW_PRIMITIVES);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game", DrawTaiwaDebugOverlay);
+    // Memory Card diagnostics: available save headers and detected save block count
+    PrintDebugString(s_DebugMcLabel);
+    DbgScreenPrintInt(g_DebugMemoryCardSaveHeaderCount);
+    PrintDebugString(s_DebugSlash);
+    DbgScreenPrintInt(g_DebugMemoryCardSaveBlockCount);
+    AdvanceDebugCursor();
+
+    // System Sub-State: VM engine internal execution sub-state (rendered in hex)
+    PrintDebugString(s_DebugSssLabel);
+    DbgScreenPrintHex(g_Sss);
+    AdvanceDebugCursor();
+
+    // Scenario Script (srl) Reel execution state:
+    // - srl.flag: Active scenario branch condition / state flag
+    // - srl.show: Script display visibility state (layer toggle)
+    // - srl.file: Currently loaded scenario script asset ID (.ZZS)
+    PrintDebugString(s_DebugSrlFlagLabel);
+    DbgScreenPrintInt(g_SrlFlag);
+    AdvanceDebugCursor();
+    PrintDebugString(s_DebugSrlShowLabel);
+    DbgScreenPrintInt(g_SrlShow);
+    AdvanceDebugCursor();
+    PrintDebugString(s_DebugSrlFileLabel);
+    DbgScreenPrintInt(g_SrlFile);
+    AdvanceDebugCursor();
+
+    // Script cache slots: display status script cache slots 0, 1, and 2
+    PrintDebugString(s_DebugCacheHeader);
+    PrintCacheSlotStatus(0);
+    PrintCacheSlotStatus(1);
+    PrintCacheSlotStatus(2);
+    AdvanceDebugCursor();
+
+    // Launch interactive Page 0 VM debug options menu (step, watch, memory flags)
+    SetupDebugOptionMenu();
+}
+
+void DrawDebugOverlay(void) {
+    char* buf;
+    s32 i;
+
+    g_DebugTextCursorOffset = 0;
+    buf = (char*)g_DebugTextBuffer;
+    for (i = 0; i < DEBUG_TEXT_BUFFER_SIZE; i++) {
+        *buf++ = ' ';
+    }
+
+    if (g_DebugViewMode == DEBUG_VIEW_VM) {
+        DisplayVMDebugPanel();
+    }
+    if (g_DebugViewMode == DEBUG_VIEW_SYSTEM) {
+        DisplaySystemDebugPanel();
+    }
+
+    if (g_DebugDisplayPageId == DEBUG_PAGE_SCENE_SCRIPT) {
+        PrintDebugString(s_DebugSceneScriptHeader);
+        DrawDebugHorizontalCursorMarker();
+    }
+
+    if (g_DebugDisplayPageId == DEBUG_PAGE_BACKGROUND) {
+        s32 mode;
+
+        PrintDebugString(s_DebugBgFilePrefix);
+        DbgScreenPrintInt(g_ValidFunctionArgument);
+        mode = g_DrawBufferParams[g_DrawBufferIndex].mode;
+        if (mode == COLOR_MODE_8BIT) {
+            PrintDebugString(s_Debug8BitMode);
+        }
+        if (mode == COLOR_MODE_16BIT) {
+            PrintDebugString(s_Debug16BitMode);
+        }
+        AdvanceDebugCursor();
+        PrintDebugString(GetFilename());
+        AdvanceDebugCursor();
+        DrawDebugHorizontalCursorMarker();
+    }
+
+    if (g_DebugDisplayPageId == DEBUG_PAGE_CHR_SLOT0) {
+        DrawChrSlotDebug(&g_PortraitSlots[0]);
+    }
+    if (g_DebugDisplayPageId == DEBUG_PAGE_CHR_SLOT1) {
+        DrawChrSlotDebug(&D_80130D94);
+    }
+    if (g_DebugDisplayPageId == DEBUG_PAGE_MSG_BOX_SLOT0) {
+        DrawChrMsgBoxDebug(&g_PortraitSlots[0], 0);
+    }
+    if (g_DebugDisplayPageId == DEBUG_PAGE_MSG_BOX_SLOT1) {
+        DrawChrMsgBoxDebug(&D_80130D94, 1);
+    }
+
+    if (g_ScriptTimingFrameCount && !g_DemoFrameControlFlag) {
+        DispatchInGameMenu();
+    }
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game", SendPortraitCommand);
 
@@ -106,7 +285,7 @@ NewsMode* SetNews(void) {
     return news;
 }
 
-void ClearNewsState(void) { ResetTaiwaNewsSystem(); }
+void ClearNewsState(void) { ResetNewsSystem(); }
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game", SetNewsValue);
 
@@ -143,7 +322,7 @@ void TriggerMovieFlashEffect(s32 effectParam1, s32 effectParam2) {
     g_SavedScriptState = g_ScriptCurrentState;
 }
 
-s32 GetPackedDisplayHeightOffset(void) { return (g_PortraitSlotIndex << 8) | 0x01400000; }
+s32 GetPackedDisplayHeightOffset(void) { return (g_DrawBufferIndex << 8) | 0x01400000; }
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game", ClearScreenAndResetDisplay);
 

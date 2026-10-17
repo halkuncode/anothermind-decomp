@@ -179,6 +179,7 @@ typedef enum {
     AKAO_OP_VOICE_BUS_ROUTING_ON = 0xE0,
     AKAO_STOP_STREAM = 0xE2,
     AKAO_SET_REVERB_MUL = 0xE4,
+    AKAO_SET_REVERB_PARAM = 0xE6,
     AKAO_STOP_MUSIC = 0xF0,
     AKAO_STOP_ALL_SOUNDS = 0xF1,
     AKAO_CLEAR_SAVED_MUSIC0 = 0xF2,
@@ -376,7 +377,13 @@ typedef struct {
     /* 0x5A */ u16 condition;
     /* 0x5C */ u16 reverbDepthSlideSteps;
     /* 0x5E */ u16 timerTopCur;
-} AkaoChannelConfig; // size:0x60
+    /* 0x60 */ u16 timeSignatureBeats;
+    /* 0x62 */ u16 timeSignatureBeatCounter;
+    /* 0x64 */ u16 timeSignatureTicks;
+    /* 0x66 */ u16 timeSignatureTickCounter;
+    /* 0x68 */ u16 measureNumber;
+    /* 0x6A */ u8 pad6A[0xE];
+} AkaoChannelConfig; // size:0x78
 
 extern AkaoChannelConfig* g_AkaoChannelConfig;
 
@@ -472,6 +479,20 @@ void AkaoStreamIrqChain0(void);
 void AkaoStreamIrqChain1(void);
 void AkaoStreamIrqHalf0(void);
 void AkaoStreamIrqHalf1(void);
+
+void AkaoCmd_F0_StopMusic(void);
+void AkaoInitInstrumentTuning(AkaoChannel* track, s32 instId);
+void AkaoPlayMusicSequence(s32 volume, s32 pan);
+void OverrideMusicLayerTrack(s32 duration, s32 layer);
+void ReleaseMusicLayerTrack(s32 duration, s32 layer);
+void SendSoundConfigCommand(s32 param0, s32 param1, s32 param2);
+void SetActiveMusicBuffer(s32 volume);
+void SetMusicLayerTrack(s32 duration, s32 layer);
+void SetSecondaryMusicBuffer(s32 volume);
+void AkaoReleaseVoice(AkaoChannel* channels, u32 voiceId);
+u32 AkaoGetStreamStatus(u32* counter);
+void AkaoOp_EC_DrumModeOn(AkaoChannel* channel);
+void AkaoOp_FD_TimeSignature(AkaoChannel* channel);
 
 // SPU Hardware Registers & Macros
 #define SPU_VOICE_REG(voice, offset) (*(u16*)(0x1F801C00 + (offset) + ((voice) * 0x10)))

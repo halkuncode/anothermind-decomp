@@ -6,7 +6,7 @@ INCLUDE_ASM("asm/jp/nonmatchings/engine/taiwa", ResetTaiwaMenu);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/taiwa", InitTaiwaSelection);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/taiwa", ResetTaiwaNewsSystem);
+INCLUDE_ASM("asm/jp/nonmatchings/engine/taiwa", ResetNewsSystem);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/taiwa", DrawTaiwaCursor);
 

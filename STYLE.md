@@ -32,15 +32,21 @@ extern s32 g_PublicVarFromSomewhereElse;
 s32 g_PublicVarFromThisFile;
 static mytype privateVar; // short comment
 
-static void FunctionLocalOnlyToTheSourcFile(s32 param) {
+static void FunctionLocalOnlyToTheSourceFile(s32 param) {
     int localVar;
     ...
 }
+
+// When a string constant must be referenced by variable (e.g. lives in .sdata or shared static array),
+// prefix the variable name with s_ and include the literal string in a trailing comment:
+printf(s_HelloWorld); // "Hello World!"
+
 ```
 
 ## Naming conventions
 
 * **Functions and global variables**: Use `PascalCase` (global variables must still be prefixed with `g_`, e.g., `g_DebugLockState`).
+* **Static string constants**: Use `s_PascalCase` (e.g., `s_HelloWorld`).
 * **Local variables and struct members**: Use `camelCase`.
 * **Descriptive names**: Do not use vague single- or two-letter variable names unless their use is traditional for loop counters (`i`, `j`, `k`).
 

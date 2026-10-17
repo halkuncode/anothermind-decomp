@@ -9,7 +9,7 @@ typedef struct {
     /* 0x0A */ s16 scriptId;
     /* 0x0C */ s16 dataLength;
     /* 0x0E */ s16 expectedChecksum;
-} SaveFileMetadata; /* size = 0x10 (16 bytes) */
+} SaveFileMetadata; // size:0x10
 
 typedef struct {
     /* 0x00 */ s16 slotIndex;
@@ -21,7 +21,7 @@ typedef struct {
     /* 0x0C */ s16 flags2;
     /* 0x0E */ s16 typeCode;
     /* 0x10 */ s16 pad10;
-} SaveSlotHeader; /* size = 0x12 (18 bytes) */
+} SaveSlotHeader; // size:0x12
 
 extern SaveSlotHeader g_SaveSlotIndex[];
 

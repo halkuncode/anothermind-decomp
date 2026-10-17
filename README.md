@@ -12,7 +12,7 @@
         <img src="docs/pics/progress_engine.svg" alt="Engine Progress" width="260" height="16">
       </p>
       <p>
-        <strong>Kernel</strong>: 174 / 696 functions (25.00%)<br>
+        <strong>Kernel</strong>: 189 / 696 functions (27.16%)<br>
         <img src="docs/pics/progress_kernel.svg" alt="Kernel Progress" width="260" height="16">
       </p>
       <p>

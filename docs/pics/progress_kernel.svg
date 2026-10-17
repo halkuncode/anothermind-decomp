@@ -9,5 +9,5 @@
     </clipPath>
   </defs>
   <rect width="260" height="16" rx="8" fill="#21262d" stroke="#30363d" stroke-width="1"/>
-  <rect width="65" height="16" fill="url(#bar-grad)" clip-path="url(#bar-clip)"/>
+  <rect width="70" height="16" fill="url(#bar-grad)" clip-path="url(#bar-clip)"/>
 </svg>

@@ -76,7 +76,7 @@
 typedef struct {
     /* 0x00 */ s32 stereoMode;
     /* 0x04 */ s32 updateFlags;
-} AkaoControl;
+} AkaoControl; // size:0x08
 
 extern AkaoControl g_AkaoControl;
 
@@ -91,6 +91,7 @@ void AkaoStopStream(void);
 
 typedef enum {
     AKAO_PLAY_MUSIC = 0x10,
+    AKAO_PLAY_MUSIC_FADE = 0x12,
     AKAO_PLAY_MUSIC_SAVE_CURR = 0x14,
     AKAO_PLAY_MUSIC_SWAP_SAVED = 0x15,
     AKAO_FADE_PLAY_MUSIC = 0x18,
@@ -195,26 +196,27 @@ typedef union {
         s16 lo;
         s16 hi;
     } i;
-} AkaoCdVol; /* size = 0x4 */
+} AkaoCdVol; // size:0x04
 
 extern AkaoCdVol g_AkaoCdVol;
+extern volatile s32 g_SoundStatusFlags;
 
 typedef struct {
-    /* 0x0 */ s32 opcode;
-    /* 0x4 */ s8 start;
-    /* 0x5 */ s8 pad5[3];
-    /* 0x8 */ s32 steps;
-    /* 0xC */ s8 target;
-} AkaoTempoPitchSlide;
+    /* 0x00 */ s32 opcode;
+    /* 0x04 */ s8 start;
+    /* 0x05 */ s8 pad5[3];
+    /* 0x08 */ s32 steps;
+    /* 0x0C */ s8 target;
+} AkaoTempoPitchSlide; // size:0x10
 
 typedef struct {
-    /* 0x00 */ u32 voice_id;
+    /* 0x00 */ u32 voiceId;
     /* 0x04 */ u32 mask;
     /* 0x08 */ u32 addr;
-    /* 0x0C */ u32 loop_addr;
-    /* 0x10 */ s32 a_mode;
-    /* 0x14 */ s32 s_mode;
-    /* 0x18 */ s32 r_mode;
+    /* 0x0C */ u32 loopAddr;
+    /* 0x10 */ s32 aMode;
+    /* 0x14 */ s32 sMode;
+    /* 0x18 */ s32 rMode;
     /* 0x1C */ u16 pitch;
     /* 0x1E */ u16 ar;
     /* 0x20 */ u16 dr;
@@ -222,10 +224,10 @@ typedef struct {
     /* 0x24 */ s16 sr;
     /* 0x26 */ u16 rr;
     /* 0x28 */ u16 drumKey;
-    /* 0x2A */ s16 vol_l;
-    /* 0x2C */ s16 vol_r;
+    /* 0x2A */ s16 volL;
+    /* 0x2C */ s16 volR;
     /* 0x2E */ u16 pad2E;
-} AkaoVoiceAttr; /* size = 0x30 */
+} AkaoVoiceAttr; // size:0x30
 
 typedef struct {
     /* 0x00 */ u32 addr;
@@ -239,11 +241,11 @@ typedef struct {
     /* 0x3D */ u8 aMode;
     /* 0x3E */ u8 sMode;
     /* 0x3F */ u8 rMode;
-} AkaoInstrument; /* size = 0x40 */
+} AkaoInstrument; // size:0x40
 
 extern AkaoInstrument g_AkaoInstruments[];
 
-typedef struct AkaoChannel {
+typedef struct {
     /* 0x00 */ u8* akaoSequencePointer;
     /* 0x04 */ u8* loopPoint[4];
     /* 0x14 */ u8* drumOffset;
@@ -337,14 +339,14 @@ typedef struct AkaoChannel {
     /* 0xF0 */ s16 tremoloVol;
     /* 0xF2 */ s16 panLfoVol;
     /* 0xF4 */ AkaoVoiceAttr voiceAttr;
-} AkaoChannel; /* size = 0x124 */
+} AkaoChannel; // size:0x124
 
 extern AkaoChannel g_AkaoChannels[];
 
 // Each sound effect slot occupies a stereo voice pair (2 audio channels, 0x248 bytes).
 typedef struct {
     AkaoChannel voices[2];
-} AkaoSoundSlot; /* size = 0x248 */
+} AkaoSoundSlot; // size:0x248
 
 typedef struct {
     /* 0x00 */ u32 stereoMono;
@@ -374,7 +376,7 @@ typedef struct {
     /* 0x5A */ u16 condition;
     /* 0x5C */ u16 reverbDepthSlideSteps;
     /* 0x5E */ u16 timerTopCur;
-} AkaoChannelConfig;
+} AkaoChannelConfig; // size:0x60
 
 extern AkaoChannelConfig* g_AkaoChannelConfig;
 
@@ -388,78 +390,79 @@ typedef struct {
     /* 0x18 */ s32 param5;
     /* 0x1C */ s32 param6;
     /* 0x20 */ s32 param7;
-} AkaoQueuedCommand; /* size = 0x24 */
+} AkaoQueuedCommand; // size:0x24
 
 extern AkaoQueuedCommand g_AkaoCommand;
 
 typedef struct {
-    /* 0x0 */ u32 opcode;
-    /* 0x4 */ s32 steps;
-    /* 0x8 */ s32 targetVol;
-} AkaoVolSlideFromCurr;
+    /* 0x00 */ u32 opcode;
+    /* 0x04 */ s32 steps;
+    /* 0x08 */ s32 targetVol;
+} AkaoVolSlideFromCurr; // size:0x0C
 
 typedef struct {
-    /* 0x0 */ u32 opcode;
-    /* 0x4 */ s32 steps;
-    /* 0x8 */ s32 startVol;
-    /* 0xC */ s32 targetVol;
-} AkaoVolSlideBetweenTargets;
+    /* 0x00 */ u32 opcode;
+    /* 0x04 */ s32 steps;
+    /* 0x08 */ s32 startVol;
+    /* 0x0C */ s32 targetVol;
+} AkaoVolSlideBetweenTargets; // size:0x10
 
 typedef struct {
-    /* 0x0 */ u32 opcode;
-    /* 0x4 */ s32 steps;
-    /* 0x8 */ u16 targetVol;
-} AkaoCdVolSlideFromCurr;
+    /* 0x00 */ u32 opcode;
+    /* 0x04 */ s32 steps;
+    /* 0x08 */ u16 targetVol;
+} AkaoCdVolSlideFromCurr; // size:0x0C
 
 typedef struct {
-    /* 0x0 */ u32 opcode;
-    /* 0x4 */ s32 steps;
-    /* 0x8 */ u16 startVol;
-    /* 0xA */ u16 padA;
-    /* 0xC */ u16 targetVol;
-    /* 0xE */ u16 padE;
-} AkaoCdVolSlideBetweenTargets;
+    /* 0x00 */ u32 opcode;
+    /* 0x04 */ s32 steps;
+    /* 0x08 */ u16 startVol;
+    /* 0x0A */ u16 padA;
+    /* 0x0C */ u16 targetVol;
+    /* 0x0E */ u16 padE;
+} AkaoCdVolSlideBetweenTargets; // size:0x10
 
 typedef struct {
-    /* 0x0 */ s32 opcode;
-    /* 0x4 */ s32 steps;
-    /* 0x8 */ s8 target;
-} AkaoSlideFromCurr;
+    /* 0x00 */ s32 opcode;
+    /* 0x04 */ s32 steps;
+    /* 0x08 */ s8 target;
+} AkaoSlideFromCurr; // size:0x0C
 
 typedef struct {
-    /* 0x0 */ u32 opcode;
-    /* 0x4 */ u16 pan;
-} AkaoSetReverbPan;
+    /* 0x00 */ u32 opcode;
+    /* 0x04 */ u16 pan;
+} AkaoSetReverbPan; // size:0x08
 
 typedef struct {
-    /* 0x0 */ u32 opcode;
-    /* 0x4 */ u8 mul;
-} AkaoSetReverbMul;
+    /* 0x00 */ u32 opcode;
+    /* 0x04 */ u8 mul;
+} AkaoSetReverbMul; // size:0x08
 
 typedef struct {
-    /* 0x0 */ s32 pitchSlide;
-    /* 0x4 */ s32 volSlide;
-    /* 0x8 */ s16 currentKey;
-    /* 0xA */ s16 padA;
-} AkaoVoiceWork; /* size = 0xC */
+    /* 0x00 */ s32 pitchSlide;
+    /* 0x04 */ s32 volSlide;
+    /* 0x08 */ s16 currentKey;
+    /* 0x0A */ s16 padA;
+} AkaoVoiceWork; // size:0x0C
 
 typedef struct {
     /* 0x00 */ u8 pad00[8];
     /* 0x08 */ u32 flags;
     /* 0x0C */ u8 pad0C[0x28 - 0x0C];
     /* 0x28 */ s32 trackId;
-} AkaoStreamContext;
+} AkaoStreamContext; // size:0x2C
 
 extern AkaoStreamContext g_AkaoStreamContext;
 
 typedef struct {
-    /* 0x0 */ u32 opcode;
-    /* 0x4 */ s32 soundId1;
-    /* 0x8 */ s32 soundId2;
-} AkaoPlayTwoSoundsCommand;
+    /* 0x00 */ u32 opcode;
+    /* 0x04 */ s32 soundId1;
+    /* 0x08 */ s32 soundId2;
+} AkaoPlayTwoSoundsCommand; // size:0x0C
 
 void AkaoPlaySoundPair(s32 soundId1, s32 soundId2);
 void AkaoCmd_21_PlayTwoSounds(AkaoPlayTwoSoundsCommand* cmd);
+void AkaoUpdateCdVolume(void);
 
 void AkaoStreamFeedBlock(s32 bufStart, s32 bufMid, s32 blockSize, void (*nextIrq)(void));
 void AkaoStreamPumpBuffer(s32 bufStart, s32 bufMid, s32 blockSize, void (*nextIrq)(void));

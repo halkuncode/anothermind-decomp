@@ -1,7 +1,7 @@
 #include "common.h"
 
 // keep structs in c file
-typedef struct PortraitSlot {
+typedef struct {
     /* 0x00 */ u8 pad00[2];
     /* 0x02 */ s16 state;
     /* 0x04 */ u8 pad04[0x22 - 0x04];
@@ -10,21 +10,21 @@ typedef struct PortraitSlot {
     /* 0x36 */ s16 unk36;
     /* 0x38 */ u8 pad38[0x3E - 0x38];
     /* 0x3E */ s16 unk3E;
-    /* 0x40 */ u8 pad40[0x44 - 0x40]; // total size 0x44 (68 bytes)
-} PortraitSlot;
+    /* 0x40 */ u8 pad40[0x44 - 0x40];
+} PortraitSlot; // size:0x44
 
-typedef struct NewsMode {
+typedef struct {
     /* 0x00 */ s16 newsModeActive;
     /* 0x02 */ s16 newsDisplayMode;
-} NewsMode;
+} NewsMode; // size:0x04
 
-typedef struct TaiwaState {
+typedef struct {
     /* 0x000 */ u8 highlightSlotEnabled;
     /* 0x001 */ u8 pad01[0x17C - 0x001];
     /* 0x17C */ s16 newsFadeSlot1;
     /* 0x17E */ u8 pad17E[0x190 - 0x17E];
     /* 0x190 */ s16 newsFadeSlot2;
-} TaiwaState;
+} TaiwaState; // size:0x192
 
 extern u8 g_MessageBoxType;
 extern s16 g_CacheSlotStatus[];
@@ -36,12 +36,12 @@ extern s32 g_FunctionTableIndex;
 extern s16 g_CurrentMenuRequest;
 extern NewsMode g_NewsMode;
 extern s16 g_CurrentKanjiSet;
-extern s32 D_80130E38;
-extern s32 D_80130E3C;
+extern s32 g_MoviePlaybackId;
+extern s32 g_MoviePlaybackMode;
 extern TaiwaState g_TaiwaState;
-extern s16 D_8017E804;
-extern s16 D_8018F004;
-extern s16 D_8019F804;
+extern s16 g_PortraitCacheSlot2Status;
+extern s16 g_PortraitCacheSlot1Status;
+extern s16 g_PortraitCacheSlot0Status;
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game", RunSaveLoadMenu);
 
@@ -117,10 +117,10 @@ void LoadKanjiById(s32 kanjiSet) {
 
 void ResetPortraitCacheStatus(void) {
     g_CacheSlotStatus[0] = 0;
-    D_8019F804 = 0;
-    D_8018F004 = 0;
+    g_PortraitCacheSlot0Status = 0;
+    g_PortraitCacheSlot1Status = 0;
     g_CacheSlotStatus[1] = 0;
-    D_8017E804 = 0;
+    g_PortraitCacheSlot2Status = 0;
     g_CacheSlotStatus[2] = 0;
 }
 
@@ -137,8 +137,8 @@ void PlayMovie(void) { StartPlayMovie(); }
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game", SetupExtendedMovieFlashEffect);
 
 void TriggerMovieFlashEffect(s32 effectParam1, s32 effectParam2) {
-    D_80130E38 = effectParam1;
-    D_80130E3C = effectParam2;
+    g_MoviePlaybackId = effectParam1;
+    g_MoviePlaybackMode = effectParam2;
     g_FunctionTableIndex = 0x14;
     g_SavedScriptState = g_ScriptCurrentState;
 }

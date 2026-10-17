@@ -1,7 +1,7 @@
 #include "common.h"
 
 extern s16 g_GlobalVariableTable[];
-extern s16 D_80130CD0[];
+extern s16 g_TitleSelectionSettings[];
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/title", LoadPortraitAnimationScript);
 
@@ -26,10 +26,10 @@ void EnableInitialGlobalVars(void) {
 
     table = (u8*)g_GlobalVariableTable;
     i = 0;
-    D_80130CD0[2] = 7;
-    D_80130CD0[9] = 3;
-    D_80130CD0[11] = 15;
-    D_80130CD0[17] = 17;
+    g_TitleSelectionSettings[2] = 7;
+    g_TitleSelectionSettings[9] = 3;
+    g_TitleSelectionSettings[11] = 15;
+    g_TitleSelectionSettings[17] = 17;
     *(s16*)(table + 0x250) = 3;
 
     do {

@@ -13,13 +13,13 @@
 
 #define LOGO_FADE_BUFFER_SIZE 0xCC
 
-typedef struct LogoFadeBuffer {
-    DRAWENV draw;
-    DISPENV disp;
-    u_long ot[1];
-    SPRT sprt[2];
-    u8 pad9C[LOGO_FADE_BUFFER_SIZE - 0x9C];
-} LogoFadeBuffer;
+typedef struct {
+    /* 0x00 */ DRAWENV draw;
+    /* 0x5C */ DISPENV disp;
+    /* 0x70 */ u_long ot[1];
+    /* 0x74 */ SPRT sprt[2];
+    /* 0x9C */ u8 pad9C[LOGO_FADE_BUFFER_SIZE - 0x9C];
+} LogoFadeBuffer; // size:0xCC
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/splashscreen", DisplayChapterTitle);
 

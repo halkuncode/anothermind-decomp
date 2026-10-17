@@ -88,11 +88,15 @@ func Rank(target string, topCount int, cliExcludes []string) error {
 		if instrs == 0 {
 			return nil
 		}
+		displayPath, err := filepath.Rel(asmBase, path)
+		if err != nil {
+			displayPath = rel
+		}
 		entries = append(entries, entry{
 			score:        score,
 			instructions: instrs,
 			name:         funcName,
-			path:         rel,
+			path:         displayPath,
 		})
 		return nil
 	})
@@ -125,11 +129,11 @@ func Rank(target string, topCount int, cliExcludes []string) error {
 		header += fmt.Sprintf(" in %s", target)
 	}
 	fmt.Printf("%s (out of %d total):\n", header, len(entries))
-	fmt.Printf("%-5s  %-6s  %-6s  %-30s  %s\n", "Rank", "Score", "Instrs", "Function", "Path")
-	fmt.Println(strings.Repeat("-", 80))
+	fmt.Printf("%-5s  %-6s  %-14s  %-30s  %s\n", "Rank", "Score", "Level (Instrs)", "Function", "Path")
+	fmt.Println(strings.Repeat("-", 88))
 	for i := 0; i < count; i++ {
 		e := entries[i]
-		fmt.Printf("%-5d  %-6.3f  %-6d  %-30s  %s\n", i+1, e.score, e.instructions, e.name, e.path)
+		fmt.Printf("%-5d  %-6.3f  %-14d  %-30s  %s\n", i+1, e.score, e.instructions, e.name, e.path)
 	}
 	return nil
 }

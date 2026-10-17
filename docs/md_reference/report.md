@@ -1,7 +1,7 @@
 # Decompilation Progress Report
 
 ```text
-Decompiled: 190 / 900 functions (21.11%)
+Decompiled: 205 / 900 functions (22.78%)
 
   engine    :   16 /  204 functions (  7.84%)
     - engine/debug.c           :   0 /  28 (  0.0%)
@@ -14,11 +14,11 @@ Decompiled: 190 / 900 functions (21.11%)
     - engine/tim.c             :   0 /  11 (  0.0%)
     - engine/title.c           :   1 /   5 ( 20.0%)
 
-  kernel    :  174 /  696 functions ( 25.00%)
-    - kernel/akao.c            :  92 / 315 ( 29.2%)
+  kernel    :  189 /  696 functions ( 27.16%)
+    - kernel/akao.c            : 106 / 315 ( 33.7%)
     - kernel/cdrom.c           :  17 /  65 ( 26.2%)
     - kernel/main.c            :  16 /  16 (100.0%)
-    - kernel/name.c            :  11 /  53 ( 20.8%)
+    - kernel/name.c            :  12 /  53 ( 22.6%)
     - kernel/opcodes.c         :  34 / 214 ( 15.9%)
     - kernel/splashscreen.c    :   4 /  33 ( 12.1%)
 ```

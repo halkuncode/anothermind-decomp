@@ -14,6 +14,9 @@ extern s32 g_VibrationSegmentIndex[4];
 extern u8 g_ControllerPort1Buffer[];
 extern u8 g_ControllerPort2Buffer[];
 
+extern void InitControllerIRQSystem(u8* port1Buf, u8* port2Buf);
+extern void GsResetInterruptHandlers(void);
+
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/name", RunNameEntryScreen);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/name", UpdateNameEntryKeyboardInput);
@@ -89,7 +92,10 @@ void CancelVibrationEffect(void) {
     g_VibrationEffectFrameCount = 0;
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/name", ResetControllerIRQSystem);
+void ResetControllerIRQSystem(void) {
+    InitControllerIRQSystem(g_ControllerPort1Buffer, g_ControllerPort2Buffer);
+    GsResetInterruptHandlers();
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/name", GetRawControllerInput);
 

@@ -51,7 +51,7 @@ typedef struct {
     /* 0x04 */ u16 flags;
     /* 0x06 */ u16 totalFileSize;
     /* 0x08 */ u16 labelCount;
-} ZzsHeader; /* size = 0x0A */
+} ZzsHeader; // size:0x0A
 
 typedef struct {
     /* 0x00 */ char wordStr[17];
@@ -62,27 +62,27 @@ typedef struct {
     /* 0x50 */ u8 tailFlags[3];
     /* 0x53 */ u8 pad53;
     /* 0x54 */ u16 pad54;
-} JDictEntry; /* size = 0x56 */
+} JDictEntry; // size:0x56
 
 typedef struct {
     /* 0x00 */ char prefixStr[17];
     /* 0x11 */ u8 attr;
     /* 0x12 */ u16 nextNodes[10];
-} MDictNode; /* size = 0x26 */
+} MDictNode; // size:0x26
 
 typedef struct {
     /* 0x00 */ char nameStr[10];
     /* 0x0A */ u16 entityIds[3][5];
     /* 0x28 */ u8 slotCounts[3];
     /* 0x2B */ u8 pad2B;
-} NameEntity; /* size = 0x2C */
+} NameEntity; // size:0x2C
 
 typedef struct {
     /* 0x00 */ char formRenyou[15];
     /* 0x0F */ char formMizen[15];
     /* 0x1E */ char formKatei[15];
     /* 0x2D */ char formMeirei[15];
-} KatsuyouRule; /* size = 0x3C */
+} KatsuyouRule; // size:0x3C
 
 extern JDictEntry g_JDictEntries[];
 extern MDictNode g_MDictNodes[];
@@ -93,7 +93,7 @@ typedef struct {
     /* 0x00 */ u16 dialogueScriptOffset;
     /* 0x02 */ u8 characterDialogueLineIndex;
     /* 0x03 */ u8 unk03;
-} ScriptDialogueLine;
+} ScriptDialogueLine; // size:0x04
 
 typedef struct {
     /* 0x00 */ u8* ptr;
@@ -110,7 +110,7 @@ typedef struct {
     /* 0x6D */ u8 faceSlotResetState;
     /* 0x6E */ u16 pad6E;
     /* 0x70 */ u8* returnStack[10];
-} ScriptYPre; /* size = 0x98 */
+} ScriptYPre; // size:0x98
 
 extern ScriptYPre g_ScriptYprePtr;
 
@@ -129,7 +129,7 @@ typedef struct {
     /* 0x13 */ u8 blendMode;
     /* 0x14 */ u8 faceNeedsRedraw;
     /* 0x15 */ u8 windowWidth;
-} ScriptCharacterSlot; /* size = 0x16 */
+} ScriptCharacterSlot; // size:0x16
 
 extern ScriptCharacterSlot g_CharacterSlotTable[];
 
@@ -148,7 +148,7 @@ typedef struct {
     /* 0x28 */ s32 currentX;
     /* 0x2C */ s32 currentY;
     /* 0x30 */ s32 waitCounter;
-} ScriptPmoveState; /* size = 0x34 */
+} ScriptPmoveState; // size:0x34
 
 extern ScriptPmoveState g_PmoveState;
 
@@ -163,7 +163,7 @@ typedef struct {
     /* 0x0D */ u8 timer;
     /* 0x0E */ u8 waitCounter;
     /* 0x0F */ u8 backupPortraitStateTemp;
-} ScriptThread; /* size = 0x10 */
+} ScriptThread; // size:0x10
 
 typedef struct {
     /* 0x00 */ u8* instructionPtr;
@@ -173,7 +173,7 @@ typedef struct {
     /* 0x07 */ u8 portraitWait;
     /* 0x08 */ u8 autoAdvance;
     /* 0x09 */ u8 portraitState;
-} ScriptSavedContext; /* size = 0x0A */
+} ScriptSavedContext; // size:0x0A
 
 void Cmd_setVariableByType(s32 type);
 void ExecuteUnaryOpcode(s32 opcode);

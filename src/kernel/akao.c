@@ -12,6 +12,7 @@ extern s32 g_SeLoopChannelState;
 extern s32 g_SeLoopMixBuffer;
 extern s32 g_AkaoPitchMulMusic;
 extern s32 g_AkaoTempoMulMusic;
+extern s16 g_AkaoCdVolSlideSteps;
 
 s32 InitSoundDriver(void) {
     SetupSpuAndAudioEvents();
@@ -41,9 +42,21 @@ void AkaoCmd_40_SaveChannelState(void) {
     AkaoExec();
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoCmd_12_PlayMusicFade);
+void AkaoCmd_12_PlayMusicFade(s32 trackId, s32 fadeDuration) {
+    g_AkaoCommand.opcode = AKAO_PLAY_MUSIC_FADE;
+    g_AkaoCommand.param0 = trackId;
+    g_AkaoCommand.param1 = fadeDuration;
+    AkaoExec();
+}
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", InitAkao);
+s32 InitAkao(s32 wait) {
+    if (wait) {
+        while (g_SoundStatusFlags & 1)
+            ;
+        return 0;
+    }
+    return g_SoundStatusFlags & 1;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoPlaySoundEffectDefault);
 
@@ -51,7 +64,11 @@ INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoCmd_24_PlayConsecutiveSound);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", StopSoundEffect);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoCmd_30_PlayMenuSound);
+void AkaoCmd_30_PlayMenuSound(s32 soundId) {
+    g_AkaoCommand.opcode = AKAO_PLAY_MENU_SOUND;
+    g_AkaoCommand.param0 = soundId & 0x3FF;
+    AkaoExec();
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoInitSpuVoices);
 
@@ -71,7 +88,11 @@ INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", ApplySoundProfile);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoFlushPendingUpdates);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoCmd_A8_SetPanSlot2);
+void AkaoCmd_A8_SetPanSlot2(s32 pan) {
+    g_AkaoCommand.opcode = AKAO_SET_PAN_SLOT2;
+    g_AkaoCommand.param0 = pan & 0x7F;
+    AkaoExec();
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoCmd_A9_SetPanSlot1);
 
@@ -79,7 +100,11 @@ INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoCmd_A0_SetVolBalanceSlot2);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoCmd_A1_SetVolBalanceSlot1);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoCmd_AA_SetPanSlot0);
+void AkaoCmd_AA_SetPanSlot0(s32 pan) {
+    g_AkaoCommand.opcode = AKAO_SET_PAN_SLOT0;
+    g_AkaoCommand.param0 = pan & 0xFF;
+    AkaoExec();
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoCmd_AB_SetPanSlot3);
 
@@ -87,7 +112,11 @@ INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", PlaySystemSound);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoCmd_A3_SetVolBalanceSlot3);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoCmd_AC_SlidePanSlot2);
+void AkaoCmd_AC_SlidePanSlot2(s32 pan) {
+    g_AkaoCommand.opcode = AKAO_SLIDE_PAN_SLOT2;
+    g_AkaoCommand.param0 = pan & 0xFF;
+    AkaoExec();
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoCmd_AD_SlidePanSlot1);
 
@@ -107,29 +136,50 @@ void AkaoCmd_C8_SetCdVol(s32 volume) {
     AkaoExec();
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoCmd_C9_CdVolSlideFromCurr);
+void AkaoCmd_C9_CdVolSlideFromCurr(s32 volume, s32 duration) {
+    g_AkaoCommand.opcode = AKAO_CD_VOL_SLIDE_FROM_CURR;
+    g_AkaoCommand.param0 = volume;
+    g_AkaoCommand.param1 = duration;
+    AkaoExec();
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", SendSoundConfigCommand);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", SendMusicLayerResetCommand);
+void SendMusicLayerResetCommand(s32 layer) {
+    g_AkaoCommand.opcode = AKAO_SET_TEMPO;
+    g_AkaoCommand.param0 = layer & 0xFF;
+    AkaoExec();
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", SetMusicLayerTrack);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", SetMusicLayerTrackPan);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoSendCmd_D4_SetPitch);
+void AkaoSendCmd_D4_SetPitch(s32 pitch) {
+    g_AkaoCommand.opcode = AKAO_SET_PITCH;
+    g_AkaoCommand.param0 = pitch & 0xFF;
+    AkaoExec();
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", ReleaseMusicLayerTrack);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoSendCmd_D6_PitchSlideBetweenTargets);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", ResetAndStopMusicLayer);
+void ResetAndStopMusicLayer(s32 layer) {
+    g_AkaoCommand.opcode = AKAO_SET_TEMPO_AND_PITCH;
+    g_AkaoCommand.param0 = layer & 0xFF;
+    AkaoExec();
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", OverrideMusicLayerTrack);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", OverrideMusicLayerTrackWithPan);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoSendCmd_F0_StopMusic);
+void AkaoSendCmd_F0_StopMusic(void) {
+    g_AkaoChannelConfig->musicId = 0;
+    g_AkaoCommand.opcode = AKAO_STOP_MUSIC;
+    AkaoExec();
+}
 
 void CutSoundEffect(void) {
     g_AkaoCommand.opcode = AKAO_STOP_ALL_SOUNDS;
@@ -312,7 +362,13 @@ INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoInitChannelState);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoResetChannelVolPan);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AdjustAudioEventAddresses);
+void AdjustAudioEventAddresses(AkaoInstrument* inst, u32 offset, s32 count) {
+    do {
+        inst->addr += offset;
+        inst->loopAddr += offset;
+        inst++;
+    } while (--count);
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoStartSequencePlayback);
 
@@ -367,7 +423,11 @@ INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoStopSfxChannel1);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoStopSfxChannel2);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoSetCdVolumeInstant);
+void AkaoSetCdVolumeInstant(AkaoQueuedCommand* cmd) {
+    g_AkaoCdVolSlideSteps = 0;
+    g_AkaoCdVol.val = (u16)cmd->param0 << 16;
+    AkaoUpdateCdVolume();
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoInitCdVolumeSlide);
 
@@ -566,7 +626,12 @@ void AkaoOp_F6_OverlayVolBalance(AkaoChannel* track) {
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoOp_F7_OverlayVolBalanceSlide);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoOp_AA_SetPan);
+void AkaoOp_AA_SetPan(AkaoChannel* track) {
+    u32 pan = *track->akaoSequencePointer++;
+    track->volPanSlideSteps = 0;
+    track->voiceAttr.mask |= AKAO_UPDATE_SPU_VOICE;
+    track->volPan = ((pan + 0x40) & 0xFF) << 8;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoOp_AB_SetPanSlide);
 
@@ -751,7 +816,7 @@ void AkaoOp_B7_AttackMode(AkaoChannel* track) {
 
     track->akaoSequencePointer = seq;
     track->voiceAttr.mask = mask | SPU_VOICE_ADSR_AMODE;
-    track->voiceAttr.a_mode = val;
+    track->voiceAttr.aMode = val;
 }
 
 void AkaoOp_BB_SustainMode(AkaoChannel* track) {
@@ -761,7 +826,7 @@ void AkaoOp_BB_SustainMode(AkaoChannel* track) {
 
     track->akaoSequencePointer = seq;
     track->voiceAttr.mask = mask | SPU_VOICE_ADSR_SMODE;
-    track->voiceAttr.s_mode = val;
+    track->voiceAttr.sMode = val;
 }
 
 void AkaoOp_BF_ReleaseMode(AkaoChannel* track) {
@@ -771,7 +836,7 @@ void AkaoOp_BF_ReleaseMode(AkaoChannel* track) {
 
     track->akaoSequencePointer = seq;
     track->voiceAttr.mask = mask | SPU_VOICE_ADSR_RMODE;
-    track->voiceAttr.r_mode = val;
+    track->voiceAttr.rMode = val;
 }
 
 void AkaoOp_F8_AltVoiceOn(AkaoChannel* track) {

@@ -23,7 +23,7 @@ typedef enum ControllerCommand {
     CONTROLLER_RUMBLE_MAP = 0x4D,
 } ControllerCommand;
 
-typedef struct ControllerPacket {
+typedef struct {
     /* 0x00 */ u8 status;
     /* 0x01 */ u8 deviceId;
     /* 0x02 */ u8 buttonLo;
@@ -32,7 +32,7 @@ typedef struct ControllerPacket {
     /* 0x05 */ u8 rightY;
     /* 0x06 */ u8 leftX;
     /* 0x07 */ u8 leftY;
-} ControllerPacket;
+} ControllerPacket; // size:0x08
 
 typedef struct ControllerState {
     /* 0x00 */ u8 pad0[0x0C];
@@ -60,22 +60,22 @@ typedef struct ControllerState {
     /* 0x54 */ u8 pad54[0x5D - 0x54];
     /* 0x5D */ u8 buttonData[6];
     /* 0x63 */ u8 pad63[0xF0 - 0x63];
-} ControllerState;
+} ControllerState; // size:0xF0
 
-typedef struct ControllerAttribute {
+typedef struct {
     /* 0x00 */ u8 pad0[0x37];
     /* 0x37 */ u8 currCmdType;
     /* 0x38 */ u8 savedCmdType;
-} ControllerAttribute;
+} ControllerAttribute; // size:0x39
 
 typedef struct ControllerIRQHandler {
     /* 0x00 */ struct ControllerIRQHandler* next;
     /* 0x04 */ void (*mainHandler)(void);
     /* 0x08 */ s32 (*edgeHandler)(void);
     /* 0x0C */ s32 status;
-} ControllerIRQHandler;
+} ControllerIRQHandler; // size:0x10
 
-typedef struct ControllerCallbacks {
+typedef struct {
     /* 0x00 */ void (*onPacketProcessed)(void);
     /* 0x04 */ void (*flushBuffer)(void);
     /* 0x08 */ void (*onBufferFilled)(void);
@@ -87,7 +87,7 @@ typedef struct ControllerCallbacks {
     /* 0x20 */ void (*packetHandler)(void);
     /* 0x24 */ void (*getPlaybackStatus)(void*);
     /* 0x28 */ void (*irqHandler)(void);
-} ControllerCallbacks;
+} ControllerCallbacks; // size:0x2C
 
 extern s32 g_ControllerTimeoutStartTime;
 extern s32 g_ControllerTimeoutDuration;

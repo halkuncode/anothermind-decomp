@@ -8,14 +8,14 @@ typedef struct {
     /* 0x5C */ DISPENV disp;
 } IssueDB; // size:0x70
 
-extern char g_StrBuildupDatePrefix[];
-extern char g_StrPushSelectPrompt[];
-extern char g_StrUnpackErrNoAmpackData[];
-extern char g_StrUnpackDebugHeader[];
-extern s32 g_DebugDummyStringA[];
-extern char g_StrManoNameCount[];
-extern char g_StrHitomiNameCount[];
-extern char g_StrUnpackResultLabel[];
+const char s_BuildupDatePrefix[] = "Buildup:  199";
+const char s_PushSelectPrompt[] = "\n\n\n\n\n\n\n           Push Select";
+const char s_UnpackErrNoAmpackData[] = "Unpack Err:  no Ampack data";
+const char s_UnpackDebugHeader[] = "-----Unpack Debug -------\n";
+const char s_DebugDummyStringA[76] = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+const char s_ManoNameCount[] = "mano name cnt= ";
+const char s_HitomiNameCount[] = "\nhitomi name cnt= ";
+const char s_UnpackResultLabel[] = "unpack =";
 extern char g_StrBuildupUndefine[];
 extern u32 g_ScriptBuildTimestamp;
 extern char g_AsciiConversionTemp1[];
@@ -59,7 +59,7 @@ extern void DbgScreenPrintString(const char*);
 
 void LockoutDebug(s32);
 s32 IntToAscii(s32 value, char* buffer, s32 radix);
-void ReportIssue(char* msg0, char* msg1, char* msg2, char* msg3, char* msg4);
+void ReportIssue(const char* msg0, const char* msg1, const char* msg2, const char* msg3, const char* msg4);
 void DecompressLZSS(u8* source, u8* destination);
 s32 ReadLittleEndian32(u8* data);
 
@@ -128,7 +128,7 @@ char* GetDebugScriptBuildDateString(void) {
         second = g_ScriptBuildTimestamp;
         timestampShifted = (second >> 5) & 0x07FFFFFF;
         year = (timestampShifted >> 20) % 10;
-        __builtin_memcpy(g_DebugStringBuf, g_StrBuildupDatePrefix, 14);
+        __builtin_memcpy(g_DebugStringBuf, s_BuildupDatePrefix, 14);
         second &= 0xF;
         minute = timestampShifted & 0x3F;
         hour = (timestampShifted >> 6) & 0x1F;
@@ -191,7 +191,7 @@ s32 IntToAscii(s32 value, char* buffer, s32 radix) {
     return length;
 }
 
-void ReportIssue(char* msg0, char* msg1, char* msg2, char* msg3, char* msg4) {
+void ReportIssue(const char* msg0, const char* msg1, const char* msg2, const char* msg3, const char* msg4) {
     IssueDB issueBuffers[2];
     s32 unusedPad[2];
     IssueDB* currentBuffer;
@@ -231,7 +231,7 @@ void ReportIssue(char* msg0, char* msg1, char* msg2, char* msg3, char* msg4) {
             FntPrint(msg4);
         }
         if (!(VSync(-1) & 0x20)) {
-            FntPrint(g_StrPushSelectPrompt);
+            FntPrint(s_PushSelectPrompt);
         }
         FntFlush(-1);
         PutDispEnv(&currentBuffer->disp);
@@ -340,7 +340,7 @@ void DebugUnpackAmpack(void) {
     s32 buffer1[250];
     s32 buffer2[250];
 
-    DbgScreenPrintString(g_StrUnpackDebugHeader);
+    DbgScreenPrintString(s_UnpackDebugHeader);
     if (g_RawControllerInputHigh[0] & 0x80) {
         InitNameEntryScreen(1);
     }
@@ -350,25 +350,25 @@ void DebugUnpackAmpack(void) {
             if (DEBUG_UNPACK_SRC_ADDR[1] == AMPACK_MAGIC_1) {
                 DecompressLZSS(DEBUG_UNPACK_SRC_ADDR, PROGDATA_LOAD_ADDR);
             } else {
-                ReportIssue(g_StrUnpackErrNoAmpackData, g_StrDataEquals, 0, 0, 0);
+                ReportIssue(s_UnpackErrNoAmpackData, g_StrDataEquals, 0, 0, 0);
             }
         } else {
-            ReportIssue(g_StrUnpackErrNoAmpackData, 0, 0, 0, 0);
+            ReportIssue(s_UnpackErrNoAmpackData, 0, 0, 0, 0);
         }
     }
     SCHEDULE_BARRIER();
     if (g_InputTransitionMask2P[0] & 0x40) {
-        __builtin_memcpy(buffer2, g_DebugDummyStringA, 73);
+        __builtin_memcpy(buffer2, s_DebugDummyStringA, 73);
     }
     if (g_InputTransitionMask2P[0] & 0x8) {
         DisplayChapterTitle(2);
     }
-    DbgScreenPrintString(g_StrManoNameCount);
+    DbgScreenPrintString(s_ManoNameCount);
     DbgScreenPrintInt(GetHeroEnteredNameLength(2));
-    DbgScreenPrintString(g_StrHitomiNameCount);
+    DbgScreenPrintString(s_HitomiNameCount);
     DbgScreenPrintInt(GetHeroEnteredNameLength(4));
     DbgScreenPrintString(g_StrDebugNewline);
-    DbgScreenPrintString(g_StrUnpackResultLabel);
+    DbgScreenPrintString(s_UnpackResultLabel);
     DbgScreenPrintString((char*)buffer2);
     DbgScreenPrintString(g_StrEndNewline);
     DbgScreenPrintString(g_StrDebugNewline);
@@ -379,10 +379,10 @@ void CheckAndUnpackAmpack(u8* source, u8* destination) {
         if (source[1] == AMPACK_MAGIC_1) {
             DecompressLZSS(source, destination);
         } else {
-            ReportIssue(g_StrUnpackErrNoAmpackData, g_StrDataEquals, 0, 0, 0);
+            ReportIssue(s_UnpackErrNoAmpackData, g_StrDataEquals, 0, 0, 0);
         }
     } else {
-        ReportIssue(g_StrUnpackErrNoAmpackData, 0, 0, 0, 0);
+        ReportIssue(s_UnpackErrNoAmpackData, 0, 0, 0, 0);
     }
 }
 
@@ -400,9 +400,9 @@ void LoadProgdata(s32 fileId, s32 groupId) {
         if (PROGDATA_LOAD_ADDR[1] == AMPACK_MAGIC_1) {
             DecompressLZSS(PROGDATA_LOAD_ADDR, PROGDATA_UNPACK_ADDR);
         } else {
-            ReportIssue(g_StrUnpackErrNoAmpackData, g_StrDataEquals, 0, 0, 0);
+            ReportIssue(s_UnpackErrNoAmpackData, g_StrDataEquals, 0, 0, 0);
         }
     } else {
-        ReportIssue(g_StrUnpackErrNoAmpackData, 0, 0, 0, 0);
+        ReportIssue(s_UnpackErrNoAmpackData, 0, 0, 0, 0);
     }
 }

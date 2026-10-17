@@ -22,15 +22,15 @@ overlays:
         start: 0x800
         vram: 0x80010000
         subsegments:
-          - [0x800, rodata]
-          - [0x8E4, rodata]
-          - [0xCD4, rodata]
-          - [0xE88, rodata]
+          - [0x800, .rodata, kernel/main]
+          - [0x8E4, .rodata, kernel/name]
+          - [0xCD4, .rodata, kernel/chapter_title]
+          - [0xEA8, .rodata, kernel/title]
           - [0x1168, .rodata, kernel/cdrom]
           - [0x13DC, rodata]
-          - [0x25F4, rodata]
+          - [0x25F4, .rodata, kernel/akao]
           - [0x26CC, rodata]
-          - [0x2F8C, rodata]
+          - [0x2F8C, .rodata, lib/dualshock]
           - [0x2FAC, c, kernel/main]
           - [0x3BB8, c, kernel/name]
           - [0x6CA4, c, kernel/chapter_title]
@@ -48,12 +48,12 @@ overlays:
         start: 0xD53B0
         vram: 0x800E4BB0
         subsegments:
-          - [0xD53B0, rodata]
-          - [0xD53D8, rodata]
-          - [0xD5568, rodata]
-          - [0xD58D0, rodata]
-          - [0xD58F0, rodata]
-          - [0xD5A38, rodata]
+          - [0xD53B0, .rodata, engine/scene]
+          - [0xD5568, .rodata, engine/taiwa_state]
+          - [0xD5744, .rodata, engine/memcard]
+          - [0xD5798, .rodata, engine/title]
+          - [0xD58F0, .rodata, engine/taiwa]
+          - [0xD5A38, .rodata, engine/game]
           - [0xD5CE8, c, engine/display]
           - [0xD80B0, c, engine/tim]
           - [0xD996C, c, engine/portrait]

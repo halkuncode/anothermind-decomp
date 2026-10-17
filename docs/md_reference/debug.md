@@ -1,12 +1,65 @@
 # Another Mind - Debug System Architecture & Reference
 
-This document details the internal debug architecture, control flow, debug screens, function inventory, dummied-out development facilities, and related subsystem function specifications for *Another Mind* (Square, 1998, PlayStation).
+This document details how to enable and navigate internal developer debug modes, overlays, and screens in the retail release of *Another Mind* (Square, 1998, PlayStation - SLPS-01600 / SLPS-01601), followed by the technical architecture, keybindings, and engine specifications.
 
 ---
 
-## 1. Executive Summary & Master Debug Flag
+## 1. Quick Start: Enabling Full Debug Mode & Screen Navigation
 
-During retail compilation, Square disabled debug mode by hardcoding a master environment check function to return release status (`-1`). However, virtually all debug UI screens, script watchers, memory viewers, and CD/movie diagnostic panels remain fully functional in the final game code.
+The retail binary contains two primary debug subsystems that can be unlocked via emulator memory modification or GameShark / Action Replay codes:
+1. **Title Screen Extended Debug Menu & Chapter Select**: Unlocks an interactive 9-item title menu allowing warp to any story chapter or developer test stage.
+2. **In-Game Master Debug Engine**: Live script bytecode stepper, variable inspector, character sprite browser, background viewer, natural language dialogue engine inspector, and CD/MDEC hardware telemetry.
+
+### Step-by-Step: Enabling Full Debug Mode (GameShark Codes)
+
+#### Step 1: Enable the In-Game Master Debug Engine
+Gameplay debug facilities are guarded by `g_DebugFlag` at `0x8012C994`. When set to `1`, the in-game HUD, script watchers, sprite/background browsers, and controller keybindings are activated.
+```text
+8012C994 0001
+```
+
+#### Step 2: Unlock the 9-Option Title Menu & Chapter Select
+In the retail binary, [`LoadDebugTitleScreen`](file:///home/halkun/reverse/anothermind/anothermind-decomp/src/kernel/title.c#L71) (`0x80018F38`) was stubbed out to return `0`. Patching its return instruction allows the D-Pad to scroll across all 9 menu items:
+```text
+80018F3C 0001
+80018F3E 2402
+```
+*(Patches `addu $v0, $zero, $zero` at `0x80018F3C` to `addiu $v0, $zero, 1`)*
+
+- **Alternative (Direct Warp to Chapter Select)**: If you only want to enter Chapter Select without patching code instructions, freeze the cursor `g_MenuSelectionIndex` to `2`:
+  ```text
+  80062038 0002
+  ```
+
+#### Step 3: Enable the Title Screen BIOS Font Overlay
+Forces `g_DebugTextEnabled = 1` (`0x80062048`) to render the compilation build date/time and menu labels over the title screen:
+```text
+80062048 0001
+```
+
+---
+
+### Navigation Cheat Sheet: How to Access Each Screen
+
+| Target Screen / Facility | Controller & Action | What It Does |
+|---|---|---|
+| **Title Screen Debug Menu** | Title Screen: **D-Pad Up / Down**, **◯** to select | Scrolls through 9 options: Debug Flag ON/OFF, Chapter Menu, New Game, Load Game, Config, and 3 unused test slots. |
+| **Debug Chapter Select Menu** | Select item **2 (`Chapter Menu`)** on title screen | Warps directly to any chapter (`Chapter 1`–`Chapter A`) or test stage (`Break 1`–`Break 9`). |
+| **VM Script & Memory Debugger** | In-Game (Pad 1): **Start** | Opens **Page 0** main VM inspector: single-step opcodes, memory viewer, variable watchers, label tracer. |
+| **Cycle Debug Screens (Pages 0–6)** | In-Game (Pad 1): **L2 / R2** | Cycles through all live gameplay inspection pages (see below). |
+| ↳ **Page 1: Scene & Background Browser** | In-Game (Pad 1): **L1 / R1** | Browse and display all background images loaded in memory or on disc. |
+| ↳ **Page 2: Character Sprite Viewer 0** | In-Game (Pad 1): **D-Pad**, **$\times$ + D-Pad**, **$\triangle$ / $\bigcirc$** | View/resize/reposition all 810 character sprite assets; adjust animation playback speed. |
+| ↳ **Page 3: Message Box 0 Inspector** | In-Game (Pad 1): **D-Pad**, **$\times$ + D-Pad** | Displays and repositions dialogue text box bounding rectangles and $(X, Y)$ coordinates. |
+| ↳ **Page 5: Character Sprite & Message 1** | In-Game (Pad 1): Same as Pages 2 & 3 | Secondary character slot sprite and message box inspector. |
+| ↳ **Page 6: TAIWA (Natural Language) Inspector** | In-Game (Pad 1): Passive display | Displays live dialogue engine parameters (`LIMIT`, `MMAX`, Japanese verb/noun roots `JN`, `JV`, keyword slots). |
+| **System & Hardware Telemetry Panel** | In-Game (Pad 2): **Start** or **R1** | Displays CD-ROM seek/read sector telemetry, MDEC movie streaming metrics, controller button/vibration diagnostic. |
+| **Exit / Reset Debug Mode** | In-Game (Pad 1): **Start + Select** | Resets VM engine runtime state, clears `g_DebugFlag = 0`, and exits back to title screen. |
+
+---
+
+## 2. Technical Architecture & Master Flags
+
+During retail compilation, Square disabled debug mode by hardcoding the master environment check function `IsDebugDisabled()` to return release status (`-1`). However, virtually all debug UI screens, script watchers, memory viewers, and CD/movie diagnostic panels remain fully functional in the final game code.
 
 * **Master RAM Flag Address**: `0x8012C994` (`g_DebugFlag`)
   * `0`: Normal retail game execution.
@@ -17,7 +70,7 @@ During retail compilation, Square disabled debug mode by hardcoding a master env
 
 ---
 
-## 2. Debug Execution Flow
+## 3. Debug Execution Flow
 
 ```mermaid
 flowchart TD
@@ -69,7 +122,7 @@ flowchart TD
 
 ---
 
-## 3. Debug Controls & Keybindings
+## 4. In-Game Controller Keybindings Reference
 
 ### Controller 1:
 | Button Combination | Action | Notes |
@@ -93,7 +146,7 @@ flowchart TD
 
 ---
 
-## 4. Debug Header Line Specification (`debugheadernote`)
+## 5. Debug Header Line Specification
 
 Across the top of the debug screens, the engine renders a real-time system status line via `DrawTaiwaDebugOverlay` and `DisplayVMDebugPanel`:
 
@@ -113,7 +166,7 @@ spcno 0007/0075  mc.0000/0000  sss  srl.flag: 0000  srl.show: 0001  srl.file: 01
 
 ---
 
-## 5. Debug Screen Pages Reference (`debugnotes`)
+## 6. Debug Screen Pages Reference
 
 When `g_DebugDisplayPageId` is cycled using **L2 / R2**, the display changes between 7 main pages:
 
@@ -176,7 +229,57 @@ Managed by `DisplaySystemDebugPanel`:
 
 ---
 
-## 6. Dummied-Out Functions Analysis
+## 7. Title Screen Debug & Extended Menu Architecture
+
+The title screen binary ([`src/kernel/title.c`](file:///home/halkun/reverse/anothermind/anothermind-decomp/src/kernel/title.c)) contains fully intact routines for a debug text overlay and an extended selection menu.
+
+### Memory Addresses & Variables
+
+| Variable / Target | RAM Address | Type | Description |
+|---|---|---|---|
+| `LoadDebugTitleScreen` | `0x80018F38` | Function | Stubbed function returning `0` in retail; checks if extended debug menu is active |
+| `g_MenuSelectionIndex` | `0x80062038` | `s32` | Current title menu cursor index (`0` through `8`) |
+| `g_DebugTextEnabled` | `0x80062048` | `s32` | Flag enabling title debug text rendering (`0` = Off, `1` = On) |
+
+### Extended Menu Structure (9 Items)
+
+In retail, the menu cursor is clamped between `0` and `2` (New Game, Load Game, Config) because [`LoadDebugTitleScreen`](file:///home/halkun/reverse/anothermind/anothermind-decomp/src/kernel/title.c#L71) returns `0`. When patched to return `1`, the cursor navigates all 9 items:
+
+| Selection Index | Display Label | Behavior / Destination |
+|:---:|---|---|
+| `0` | Debug Flag ON | Sets `g_DebugTextEnabled = 1` |
+| `1` | Debug Flag OFF | Sets `g_DebugTextEnabled = 0` |
+| **`2`** | **Chapter Menu** | **Enters [`RunDebugChapterSelectionMenu`](file:///home/halkun/reverse/anothermind/anothermind-decomp/src/engine/title.c#L33) (Chapter / Test Stage Warp)** |
+| `3` | New Game | Standard New Game intro |
+| `4` | Load Game | Standard Memory Card load screen |
+| `5` | Config | Configuration screen |
+| `6` | Extra 1 | Unused / Fallthrough |
+| `7` | Extra 2 | Unused / Fallthrough |
+| `8` | Extra 3 | Unused / Fallthrough |
+
+### Debug Text Overlay Mechanics
+
+When `g_DebugTextEnabled` is set to `1`, [`UpdateTitleScreenMenuState`](file:///home/halkun/reverse/anothermind/anothermind-decomp/src/kernel/title.c) and [`TitleFadeOutAfterSelection`](file:///home/halkun/reverse/anothermind/anothermind-decomp/src/kernel/title.c) call [`DrawTitleScreenDebugOverlay`](file:///home/halkun/reverse/anothermind/anothermind-decomp/src/kernel/title.c), and [`GoToTitleScreen`](file:///home/halkun/reverse/anothermind/anothermind-decomp/src/kernel/title.c) executes `FntFlush(-1)` each frame.
+
+This renders the following overlay on screen using the built-in PlayStation BIOS font:
+- Build date and timestamp from `GetDebugScriptBuildDateString`
+- Overlay list of menu actions (`Debug Flag ON`, `Debug Flag OFF`, `Chapter Menu`, `New Game`, `Load Game`, `Config`)
+
+### Debug Chapter Selection Menu Details
+
+Entering menu index `2` executes [`RunDebugChapterSelectionMenu`](file:///home/halkun/reverse/anothermind/anothermind-decomp/src/engine/title.c#L33) in `engine/title.c`. This menu provides direct stage select and developer test sequences:
+
+- **Main Chapter Menu**:
+  - `Chapter 1` through `Chapter 9`
+  - `Chapter A` (Final chapter)
+  - `Break Menu` (Minigame / event test sub-menu)
+- **Break Sub-Menu**:
+  - `Break 1` through `Break 9`: Developer minigame and scene test stages.
+  - `Return`: Returns to parent chapter menu.
+
+---
+
+## 8. Dummied-Out Functions Analysis
 
 | Function Symbol | Location | Status | Purpose & Behavior |
 |---|---|---|---|
@@ -192,7 +295,7 @@ Managed by `DisplaySystemDebugPanel`:
 
 ---
 
-## 7. Engine Subsystem Function Directory
+## 9. Engine Subsystem Function Directory
 
 ### A. Dialogue & UI Subsystem (`vm_engine`)
 
@@ -256,7 +359,7 @@ Managed by `DisplaySystemDebugPanel`:
 
 ---
 
-## 8. Master Inventory of True Debug Functions
+## 10. Master Inventory of True Debug Functions
 
 Below is the verified inventory of authentic debug routines remaining in the binary:
 
@@ -269,6 +372,9 @@ Below is the verified inventory of authentic debug routines remaining in the bin
 * `DrawDebugHorizontalCursorMarker`: Draws interactive horizontal selection line marker.
 * `Load8x8DebugFont`: Loads PlayStation 8x8 ASCII debug font textures into VRAM.
 * `DbgScreenPrintString` / `DbgScreenPrintInt` / `DbgScreenPrintBinary`: Low-level ASCII print formatters into the debug overlay buffer.
+* `DrawTitleScreenDebugOverlay`: Renders title screen debug text overlay using PlayStation BIOS font (`FntFlush`).
+* `RunDebugChapterSelectionMenu`: Interactive chapter selection and test stage menu router (`Chapter 1–A`, `Break 1–9`).
+* `LoadDebugTitleScreen`: Environment check stub determining whether extended title debug options are selectable.
 
 ### Script & Variable Debuggers
 * `SetupDebugOptionMenu` / `DoDebugOptionMenu`: Interactive menu loop for the Page 0 VM debugger.

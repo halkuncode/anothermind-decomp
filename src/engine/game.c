@@ -34,18 +34,6 @@ typedef struct {
 
 extern s16 g_DebugViewMode;
 extern u8 g_MessageBoxType;
-extern const char s_DebugSpcNoLabel[];
-extern const char s_DebugSlash[];
-extern const char s_DebugMcLabel[];
-extern const char s_DebugSssLabel[];
-extern const char s_DebugSrlFlagLabel[];
-extern const char s_DebugSrlShowLabel[];
-extern const char s_DebugSrlFileLabel[];
-extern const char s_DebugCacheHeader[];
-extern const char s_DebugSceneScriptHeader[];
-extern const char s_DebugBgFilePrefix[];
-extern const char s_Debug8BitMode[];
-extern const char s_Debug16BitMode[];
 extern s16 g_CacheSlotStatus[];
 extern u8 g_DebugTextBuffer[];
 extern s32 g_DrawBufferIndex;
@@ -157,6 +145,36 @@ INCLUDE_ASM("asm/jp/nonmatchings/engine/game", RenderEngineDebugAndUI);
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game", ResetAndSubmitDebugOverlayPrimitives);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game", ResetVMEngineRuntimeState);
+
+const char s_DebugMarkerA[] = "A";
+const char s_DebugMarkerSpace[] = " ";
+const char s_DebugChrFilePrefix[] = "CHR FILE ";
+const char s_DebugDigit0[] = "0";
+const char s_DebugDigit1[] = "1";
+const char s_DebugSizePrefix[] = "SIZE=";
+const char s_DebugComma[] = ",";
+const char s_DebugXyPrefix[] = "XY  =";
+const char s_DebugSpeedPrefix[] = "sped=";
+const char s_DebugNormalSuffix[] = " / NORMAL";
+const char s_DebugNextSuffix[] = " / NEXT";
+const char s_DebugChrPrefix[] = "CHR ";
+const char s_DebugMessagePrefix[] = " MESSAGE\n";
+const char s_CacheStatusEmptyMarker[] = "- ";
+const char s_CacheStatusWaitingMarker[] = "W ";
+const char s_CacheStatusLoadedMarker[] = "L ";
+const char s_CacheStatusCachedMarker[] = "C ";
+const char s_DebugSpcNoLabel[] = "spcno  ";
+const char s_DebugSlash[] = "/";
+const char s_DebugMcLabel[] = "  mc.";
+const char s_DebugSssLabel[] = "sss    ";
+const char s_DebugSrlFlagLabel[] = "srl.flag ";
+const char s_DebugSrlShowLabel[] = "srl.show ";
+const char s_DebugSrlFileLabel[] = "srl.file ";
+const char s_DebugCacheHeader[] = "CACHE \n";
+const char s_DebugSceneScriptHeader[] = "SCEEN SCRIPT\n";
+const char s_DebugBgFilePrefix[] = "BG FILE ";
+const char s_Debug8BitMode[] = "/ 8BIT";
+const char s_Debug16BitMode[] = "/ 16BIT";
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game", DrawDebugHorizontalCursorMarker);
 

@@ -25,6 +25,14 @@ typedef struct {
 
 extern SaveSlotHeader g_SaveSlotIndex[];
 
+const char s_WildcardString[] = "*";
+const char s_MemoryCardPortPrefix[8] = "bu00:";
+const u32 g_SaveHeaderTemplate[13] = {
+    0x69834183, 0x5B815583, 0x7D834581, 0x93834383, 0x40816883, 0x40837483, 0x8B834383,
+    0x4F824F82, 0x50824081, 0x4081CD8F, 0x4F824F82, 0x4F824681, 0x00004F82,
+};
+const char s_SaveGameTitleIdHeader[] = "BISLPS-01655AMP-S01";
+
 INCLUDE_ASM("asm/jp/nonmatchings/engine/memcard", TestGpuAndCdromEventState);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/memcard", CheckGpuEventStatus);

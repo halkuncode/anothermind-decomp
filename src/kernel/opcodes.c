@@ -29,12 +29,17 @@ typedef enum {
 #define SOUND_EFFECT_BUFFFER_SIZE 0x2000
 #define AUDIO_STREAM_BUFFER_SIZE 0x10000
 
+extern char* strcat(char*, const char*);
+extern char* strcpy(char*, const char*);
+void ConvertIntToAscii(s32 value, char* buffer, s32 radix);
+s32 IntToAscii(s32 value, char* buffer, s32 radix);
+
+extern u8* g_ScriptInstructionPointer;
 extern s8 g_NeedToResetFaceSlots;
-extern s8 g_FaceSlotResetState[];
 extern u8 g_SoundEffectBuffer[SOUND_EFFECT_BUFFFER_SIZE];
 extern u8 g_MusicBuffer[MUSIC_BUFFER_SIZE];
 extern u8 g_AudioStreamBuffer[AUDIO_STREAM_BUFFER_SIZE];
-extern u8* g_ScriptInstructionPointer;
+extern s8 g_FaceSlotResetState[];
 extern char g_LogBuffer[];
 extern char g_ActiveScriptLabel[];
 
@@ -577,17 +582,23 @@ INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", DbgScreenPrintBinary);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", PrintDebugBinaryGroupString);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", LogDecimalNumber);
+void LogDecimalNumber(s32 value) {
+    char numberBuffer[16];
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", LogHexNumber);
+    ConvertIntToAscii(value, numberBuffer, 10);
+    strcat(g_LogBuffer, numberBuffer);
+}
+
+void LogHexNumber(s32 value) {
+    char numberBuffer[16];
+
+    IntToAscii(value, numberBuffer, 16);
+    strcat(g_LogBuffer, numberBuffer);
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", LogCommand);
 
-extern char* strcat(char*, const char*);
-
 void LogArgumentString(char* argumentString) { strcat(g_LogBuffer, argumentString); }
-
-extern char* strcpy(char*, const char*);
 
 void SetActiveScriptLabel(const char* label) { strcpy(g_ActiveScriptLabel, label); }
 
@@ -617,7 +628,12 @@ INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", PreprocessScriptBlock);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", AdvanceScriptOperandPtr);
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/opcodes", ReadLE16FromScript);
+s32 ReadLE16FromScript(void) {
+    u32 byteHigh = *g_ScriptYprePtr.ptr++;
+    u32 byteLow = *g_ScriptYprePtr.ptr++;
+
+    return byteLow | (byteHigh << 8);
+}
 
 void SkipNext8ScriptBytes(void) {
     s32 i;

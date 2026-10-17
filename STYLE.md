@@ -13,11 +13,11 @@
 // the top of the C file. 
 #define SOME_MACRO
 
-enum EnumName {
+typedef enum {
     /* 0x00 */ FIRST,
     /* 0x01 */ SECOND,
     /* 0x10 */ SUDDEN_JUMP = 0x10,
-};
+} EnumName;
 
 typedef struct {
     /* 0x1234 */ fieldOneTwoThree;
@@ -25,11 +25,12 @@ typedef struct {
 
 typedef mytype s32;
 
-// Comments like /* this */ are only used to mark struct offsets or enum values. In addition, extern values must be
+// Comments like /* this */ are only used to mark struct offsets or enum values.
+// In addition, extern values must be
 // declared by their offset in the .map file they come from.
 extern s32 g_PublicVarFromSomewhereElse;
 s32 g_PublicVarFromThisFile;
-static mytype private_var; // short comment
+static mytype privateVar; // short comment
 
 static void FunctionLocalOnlyToTheSourcFile(s32 param) {
     int localVar;

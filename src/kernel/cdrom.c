@@ -5,6 +5,7 @@ typedef struct {
     /* 0x04 */ s32 byteCount;
 } CdFileSectorInfo; // size:0x08
 
+extern s32 g_FileGroupOffsetTable[];
 extern char s_cdFileName[];
 extern s32 g_CdState;
 extern s32 g_CdReadStartSector;
@@ -43,7 +44,9 @@ INCLUDE_ASM("asm/jp/nonmatchings/kernel/cdrom", WaitForCdIdle);
 
 char* GetFilename(void) { return s_cdFileName; }
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/cdrom", GetFileCountInGroup);
+s32 GetFileCountInGroup(s32 groupId) {
+    return g_FileGroupOffsetTable[groupId + 2] - g_FileGroupOffsetTable[groupId + 1];
+}
 
 s32 IsDebugDisabled(void) { return -1; }
 

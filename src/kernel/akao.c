@@ -774,7 +774,19 @@ void AkaoOp_BF_ReleaseMode(AkaoChannel* track) {
     track->voiceAttr.r_mode = val;
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoOp_F8_AltVoiceOn);
+void AkaoOp_F8_AltVoiceOn(AkaoChannel* track) {
+    u8* seq;
+    u32 mask;
+    u16 releaseRate;
+
+    track->updateFlags |= AKAO_UPDATE_ALTERNATIVE;
+    seq = track->akaoSequencePointer;
+    releaseRate = *seq++;
+    mask = track->voiceAttr.mask;
+    track->akaoSequencePointer = seq;
+    track->voiceAttr.mask = mask | SPU_VOICE_ADSR_RR | SPU_VOICE_ADSR_RMODE;
+    track->voiceAttr.rr = releaseRate;
+}
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/akao", AkaoOp_F9_AltVoiceOff);
 

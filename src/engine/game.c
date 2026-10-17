@@ -26,13 +26,22 @@ typedef struct TaiwaState {
     /* 0x190 */ s16 newsFadeSlot2;
 } TaiwaState;
 
+extern u8 g_MessageBoxType;
+extern s16 g_CacheSlotStatus[];
+extern s32 g_PortraitSlotIndex;
+extern u16 g_SavedScriptState;
+extern u16 g_ScriptCurrentState;
 extern s16 g_TaiwaBarX;
-extern TaiwaState g_TaiwaState;
+extern s32 g_FunctionTableIndex;
+extern s16 g_CurrentMenuRequest;
 extern NewsMode g_NewsMode;
 extern s16 g_CurrentKanjiSet;
-extern s16 g_CurrentMenuRequest;
-extern s32 g_PortraitSlotIndex;
-extern u8 g_MessageBoxType;
+extern s32 D_80130E38;
+extern s32 D_80130E3C;
+extern TaiwaState g_TaiwaState;
+extern s16 D_8017E804;
+extern s16 D_8018F004;
+extern s16 D_8019F804;
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game", RunSaveLoadMenu);
 
@@ -106,7 +115,14 @@ void LoadKanjiById(s32 kanjiSet) {
     LoadKanjiTimData(kanjiSet);
 }
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game", ResetPortraitCacheStatus);
+void ResetPortraitCacheStatus(void) {
+    g_CacheSlotStatus[0] = 0;
+    D_8019F804 = 0;
+    D_8018F004 = 0;
+    g_CacheSlotStatus[1] = 0;
+    D_8017E804 = 0;
+    g_CacheSlotStatus[2] = 0;
+}
 
 void OpenMenuById(s32 menuId) {
     g_CurrentMenuRequest = menuId;
@@ -120,7 +136,12 @@ void PlayMovie(void) { StartPlayMovie(); }
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/game", SetupExtendedMovieFlashEffect);
 
-INCLUDE_ASM("asm/jp/nonmatchings/engine/game", TriggerMovieFlashEffect);
+void TriggerMovieFlashEffect(s32 effectParam1, s32 effectParam2) {
+    D_80130E38 = effectParam1;
+    D_80130E3C = effectParam2;
+    g_FunctionTableIndex = 0x14;
+    g_SavedScriptState = g_ScriptCurrentState;
+}
 
 s32 GetPackedDisplayHeightOffset(void) { return (g_PortraitSlotIndex << 8) | 0x01400000; }
 

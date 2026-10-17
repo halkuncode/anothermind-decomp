@@ -5,8 +5,6 @@ typedef struct {
     /* 0x04 */ s32 byteCount;
 } CdFileSectorInfo; // size:0x08
 
-extern const char s_CdControlState[];  // "CD CONTROL STATE = "
-extern const char s_CdControlHeader[]; // "--- CD CONTROL ---\n"
 extern s32 g_FileGroupOffsetTable[];
 extern char s_cdFileName[];
 extern const char s_NoUse[];  // "NO USE\n"
@@ -31,22 +29,22 @@ void DbgScreenPrintString(const char*);
 CdFileSectorInfo GetCdFileSectorInfo(s32 fileId, s32 groupId);
 void ShutdownMovieDecoder(void);
 
-INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010968);
-INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010980);
-INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010994);
-INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_800109A8);
-INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_800109B4);
-INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_800109C0);
-INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_800109CC);
-INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_800109D8);
-INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_800109E8);
-INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_800109F4);
-INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010A04);
-INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010A14);
-INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010A28);
-INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010A38);
-INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010A44);
-INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010A50);
+const char s_NfLoadTestStart[] = "nf_load test start \n";
+const char s_NfLoadTestEnd[] = "nf_load test end \n";
+const char s_FileSizeOver[] = "File Size Over \n";
+const char s_FileNum[] = "FileNum = ";
+const char s_UserId[] = "\nUser ID = ";
+const char s_CdSector[] = "Cd Sector: ";
+const char s_CdSync[] = "Cd Sync:";
+const char s_CdReadSync[] = "Cd Read Sync:";
+const char s_Complete[] = "Complete";
+const char s_DebugNumber[] = "Debug Number:";
+const char s_DebugString[] = "Debug String:";
+const char s_BackGrandLoad[] = "Back Grand Load:";
+const char s_SectorRead[] = "sector read\n";
+const char s_ByteRead[] = "byte  read\n";
+const char s_Abcdefg[] = "abcdefg\n";
+const char s_FileDebugHeader[] = "---  FILE DEBUG    ---\n";
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/cdrom", LoadChapterEndGraphic);
 
@@ -117,9 +115,9 @@ INCLUDE_ASM("asm/jp/nonmatchings/kernel/cdrom", ProcessMovieInterruptAndDecode);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/cdrom", UpdateMoviePlaybackFrame);
 
-INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010A80);
-INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010A8C);
-INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010A9C);
+const char s_MovieLabel[] = "Movief  = ";
+const char s_CurrentFrame[] = "current frame=";
+const char s_MovieNumber[] = "MovieNumber=";
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/cdrom", DisplayMovieDebugPanel);
 
@@ -177,12 +175,12 @@ INCLUDE_ASM("asm/jp/nonmatchings/kernel/cdrom", PlayMovieStreamLooping);
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/cdrom", AbortAndShutdownMovieDecoder);
 
-INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", D_80010AEC);
+const char s_CdHeadErr[] = "Cd Head Err\nRequest=";
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/cdrom", SetCdBusyStatus);
 
-INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", s_CdControlState);
-INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", s_CdControlHeader);
+const char s_CdControlState[] = "CD CONTROL STATE = ";
+const char s_CdControlHeader[] = "--- CD CONTROL ---\n";
 INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", jtbl_80010B5C);
 INCLUDE_RODATA("asm/jp/nonmatchings/kernel/cdrom", jtbl_80010B7C);
 

@@ -1,4 +1,4 @@
-# Another Mind Rearc Project
+# Another Mind: Source Code Reconstruction Project
 
 <!-- PROGRESS_START -->
 <table>
@@ -23,7 +23,7 @@
 </table>
 <!-- PROGRESS_END -->
 
-### Squaresoft's Live Action FMV visual novel *Another Mind* : A Rearc* for the PlayStation 1 
+### Squaresoft's Live Action FMV visual novel *Another Mind* : A Source Code Reconstruction for the PlayStation 1 
 ---
 
 Set in modern-day Japan, you wake up as a voice inside the head of 16-year-old high school student named Hitomi Hayama. Together, you are put into the center of a mystery involving a murder, suicide attempts, and an attempted bombing. 
@@ -32,7 +32,7 @@ You communicate with Hitomi using the "Taiwa" dialogue system, constructing your
 
 This game was never released outside Japan.
 
-<sup>[What is a Rearc? <sup>[?]</sup>](docs/md_reference/rearc.md)</sup>
+<sup>[What is Source Code Reconstruction? <sup>[?]</sup>](docs/md_reference/source_code_reconstruction.md)</sup>
 
 | | |
 |:---:|:---:|

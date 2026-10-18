@@ -26,6 +26,18 @@ type moduleStats struct {
 	files      []fileStats
 }
 
+func isFunctionAsm(filePath string) bool {
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		return false
+	}
+	content := string(data)
+	if strings.Contains(content, ".section .rodata") && !strings.Contains(content, ".section .text") {
+		return false
+	}
+	return true
+}
+
 // Report prints a terminal summary comparing decompiled functions against remaining INCLUDE_ASM stubs.
 func Report(version string) error {
 	if version == "" {
@@ -90,7 +102,9 @@ func Report(version string) error {
 		if entries, err := os.ReadDir(matchFolder); err == nil {
 			for _, e := range entries {
 				if !e.IsDir() && strings.HasSuffix(e.Name(), ".s") {
-					allFuncs[e.Name()] = struct{}{}
+					if isFunctionAsm(filepath.Join(matchFolder, e.Name())) {
+						allFuncs[e.Name()] = struct{}{}
+					}
 				}
 			}
 		}
@@ -99,7 +113,9 @@ func Report(version string) error {
 		if entries, err := os.ReadDir(nonmatchFolder); err == nil {
 			for _, e := range entries {
 				if !e.IsDir() && strings.HasSuffix(e.Name(), ".s") {
-					allFuncs[e.Name()] = struct{}{}
+					if isFunctionAsm(filepath.Join(nonmatchFolder, e.Name())) {
+						allFuncs[e.Name()] = struct{}{}
+					}
 				}
 			}
 		}

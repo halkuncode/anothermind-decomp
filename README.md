@@ -1,4 +1,4 @@
-# Another Mind: Source Code Reconstruction Project
+# Another Mind (アナザー・マインド)<br>Source Code Reconstruction Project
 
 <!-- PROGRESS_START -->
 <table>
@@ -8,11 +8,11 @@
     </td>
     <td valign="middle">
       <p>
-        <strong>Engine</strong>: 86 / 268 functions (32.09%)<br>
+        <strong>Engine</strong>: 22 / 204 functions (10.78%)<br>
         <img src="docs/pics/progress_engine.svg" alt="Engine Progress" width="260" height="16">
       </p>
       <p>
-        <strong>Kernel</strong>: 282 / 774 functions (36.43%)<br>
+        <strong>Kernel</strong>: 204 / 696 functions (29.31%)<br>
         <img src="docs/pics/progress_kernel.svg" alt="Kernel Progress" width="260" height="16">
       </p>
       <p>
@@ -23,7 +23,7 @@
 </table>
 <!-- PROGRESS_END -->
 
-### Squaresoft's Live Action FMV visual novel *Another Mind* : A Source Code Reconstruction for the PlayStation 1 
+### A Source Code Reconstruction of Squaresoft's Live Action FMV visual novel *Another Mind* <br>for the PlayStation 1 
 ---
 
 Set in modern-day Japan, you wake up as a voice inside the head of 16-year-old high school student named Hitomi Hayama. Together, you are put into the center of a mystery involving a murder, suicide attempts, and an attempted bombing. 

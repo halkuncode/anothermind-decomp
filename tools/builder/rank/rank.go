@@ -214,7 +214,7 @@ func rankFunction(path string) (float32, int, error) {
 	contentStr := content.String()
 
 	// Skip files that only contain rodata (no actual code)
-	if strings.Contains(contentStr, ".section .rodata") && !strings.Contains(contentStr, "glabel") {
+	if strings.Contains(contentStr, ".section .rodata") && !strings.Contains(contentStr, ".section .text") {
 		return 0, 0, nil
 	}
 

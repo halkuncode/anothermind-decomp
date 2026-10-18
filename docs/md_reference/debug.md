@@ -161,8 +161,8 @@ spcno 0007/0075  mc.0000/0000  sss  srl.flag: 0000  srl.show: 0001  srl.file: 01
 | **`sss`** | `sss` | `g_Sss` (`0x8012C97C`) | **System Sub-State**: VM engine internal execution sub-state (normally `0`). |
 | **`srl.flag`** | `0000` | `g_SrlFlag` (`0x80130D10`) | **Active Scenario Script Flag**: Current branch condition/state flag within the scenario script. |
 | **`srl.show`** | `0001` | `g_SrlShow` (`0x80130D12`) | **Script Display Visibility State**: Controls whether script elements/layers are currently visible. |
-| **`srl.file`** | `0100` | `g_ValidFunctionArgument` / `scriptFileId` | **Loaded Script Asset ID**: Numeric identifier of the currently loaded scenario script block. |
-| **Mode** | `/ 8BIT` or `/ 16BIT` | `s_Debug8BitMode` / `s_Debug16BitMode` | **Color / Data Depth Mode**: Current frame buffer render depth mode. |
+| **`srl.file`** | `0100` | `g_CurrentBgFileId` / `bgFileId` | **Loaded Background / Asset File ID**: Numeric identifier of the currently loaded background or asset file. |
+| **Mode** | `/ 8BIT` or `/ 16BIT` | `s_Debug8BitMode` / `s_Debug16BitMode` | **Variable Memory View Width**: Toggles variable display width for memory viewer (8-bit vs. 16-bit wide variables). |
 
 ---
 
@@ -191,7 +191,7 @@ Triggered with **Pad 1 Start**. Managed by `DisplayVMDebugPanel` and `DoDebugOpt
 ### Page 1: SCREEN SCRIPT (Background Inspector)
 * Displays `SCENE SCRIPT` header and `BG FILE [ID]`.
 * Allows cycling through all background image files loaded from the game disc or dev drive using **L1 / R1**.
-* Displays bit depth (`/ 8BIT` or `/ 16BIT`).
+* Displays variable memory view width (`/ 8BIT` or `/ 16BIT`).
 
 ### Page 2: CHR FILE 0 (Character Sprite Viewer - Slot 0)
 * Displays `CHR FILE 0` with current character asset index (0–810).

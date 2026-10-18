@@ -28,7 +28,7 @@ typedef struct {
 
 typedef struct {
     /* 0x00 */ u8 pad00[4];
-    /* 0x04 */ s16 mode;
+    /* 0x04 */ s16 memViewWidth; // 8-bit vs 16-bit variable width for memory viewer
     /* 0x06 */ u8 pad06[0x18 - 0x06];
 } DrawBufferParam; // size:0x18
 
@@ -43,7 +43,7 @@ extern s32 g_DebugTextCursorOffset;
 extern u16 g_SavedScriptState;
 extern u16 g_ScriptCurrentState;
 extern s16 g_TaiwaBarX;
-extern s16 g_ValidFunctionArgument;
+extern s16 g_CurrentBgFileId;
 extern s32 g_FunctionTableIndex;
 extern s16 g_DemoFrameControlFlag;
 extern s16 g_ScriptTimingFrameCount;
@@ -57,7 +57,6 @@ extern s16 g_SrlFile;
 extern s16 g_CurrentKanjiSet;
 extern DrawBufferParam g_DrawBufferParams[];
 extern PortraitSlot g_PortraitSlots[];
-extern PortraitSlot D_80130D94;
 extern s32 g_MoviePlaybackId;
 extern s32 g_MoviePlaybackMode;
 extern TaiwaState g_TaiwaState;
@@ -186,20 +185,20 @@ INCLUDE_ASM("asm/jp/nonmatchings/engine/game", PrintCacheSlotStatus);
 
 void DisplayVMDebugPanel(void) {
     // Screen primitive packet count: active OT packets vs. hardware limit (0x4B = 75)
-    PrintDebugString(s_DebugSpcNoLabel);
+    PrintDebugString(s_DebugSpcNoLabel); // "spcno  "
     DbgScreenPrintInt(g_DebugDrawPrimitiveIndex);
-    PrintDebugString(s_DebugSlash);
+    PrintDebugString(s_DebugSlash); // "/"
     DbgScreenPrintInt(DEBUG_MAX_DRAW_PRIMITIVES);
 
     // Memory Card diagnostics: available save headers and detected save block count
-    PrintDebugString(s_DebugMcLabel);
+    PrintDebugString(s_DebugMcLabel); // "  mc."
     DbgScreenPrintInt(g_DebugMemoryCardSaveHeaderCount);
-    PrintDebugString(s_DebugSlash);
+    PrintDebugString(s_DebugSlash); // "/"
     DbgScreenPrintInt(g_DebugMemoryCardSaveBlockCount);
     AdvanceDebugCursor();
 
     // System Sub-State: VM engine internal execution sub-state (rendered in hex)
-    PrintDebugString(s_DebugSssLabel);
+    PrintDebugString(s_DebugSssLabel); // "sss    "
     DbgScreenPrintHex(g_Sss);
     AdvanceDebugCursor();
 
@@ -207,18 +206,18 @@ void DisplayVMDebugPanel(void) {
     // - srl.flag: Active scenario branch condition / state flag
     // - srl.show: Script display visibility state (layer toggle)
     // - srl.file: Currently loaded scenario script asset ID (.ZZS)
-    PrintDebugString(s_DebugSrlFlagLabel);
+    PrintDebugString(s_DebugSrlFlagLabel); // "srl.flag "
     DbgScreenPrintInt(g_SrlFlag);
     AdvanceDebugCursor();
-    PrintDebugString(s_DebugSrlShowLabel);
+    PrintDebugString(s_DebugSrlShowLabel); // "srl.show "
     DbgScreenPrintInt(g_SrlShow);
     AdvanceDebugCursor();
-    PrintDebugString(s_DebugSrlFileLabel);
+    PrintDebugString(s_DebugSrlFileLabel); // "srl.file "
     DbgScreenPrintInt(g_SrlFile);
     AdvanceDebugCursor();
 
     // Script cache slots: display status script cache slots 0, 1, and 2
-    PrintDebugString(s_DebugCacheHeader);
+    PrintDebugString(s_DebugCacheHeader); // "CACHE \n"
     PrintCacheSlotStatus(0);
     PrintCacheSlotStatus(1);
     PrintCacheSlotStatus(2);
@@ -246,21 +245,21 @@ void DrawDebugOverlay(void) {
     }
 
     if (g_DebugDisplayPageId == DEBUG_PAGE_SCENE_SCRIPT) {
-        PrintDebugString(s_DebugSceneScriptHeader);
+        PrintDebugString(s_DebugSceneScriptHeader); // "SCEEN SCRIPT\n"
         DrawDebugHorizontalCursorMarker();
     }
 
     if (g_DebugDisplayPageId == DEBUG_PAGE_BACKGROUND) {
         s32 mode;
 
-        PrintDebugString(s_DebugBgFilePrefix);
-        DbgScreenPrintInt(g_ValidFunctionArgument);
-        mode = g_DrawBufferParams[g_DrawBufferIndex].mode;
-        if (mode == COLOR_MODE_8BIT) {
-            PrintDebugString(s_Debug8BitMode);
+        PrintDebugString(s_DebugBgFilePrefix); // "BG FILE "
+        DbgScreenPrintInt(g_CurrentBgFileId);
+        mode = g_DrawBufferParams[g_DrawBufferIndex].memViewWidth;
+        if (mode == MEM_VIEW_8BIT) {
+            PrintDebugString(s_Debug8BitMode); // "/ 8BIT"
         }
-        if (mode == COLOR_MODE_16BIT) {
-            PrintDebugString(s_Debug16BitMode);
+        if (mode == MEM_VIEW_16BIT) {
+            PrintDebugString(s_Debug16BitMode); // "/ 16BIT"
         }
         AdvanceDebugCursor();
         PrintDebugString(GetFilename());
@@ -272,13 +271,13 @@ void DrawDebugOverlay(void) {
         DrawChrSlotDebug(&g_PortraitSlots[0]);
     }
     if (g_DebugDisplayPageId == DEBUG_PAGE_CHR_SLOT1) {
-        DrawChrSlotDebug(&D_80130D94);
+        DrawChrSlotDebug(&g_PortraitSlots[1]);
     }
     if (g_DebugDisplayPageId == DEBUG_PAGE_MSG_BOX_SLOT0) {
         DrawChrMsgBoxDebug(&g_PortraitSlots[0], 0);
     }
     if (g_DebugDisplayPageId == DEBUG_PAGE_MSG_BOX_SLOT1) {
-        DrawChrMsgBoxDebug(&D_80130D94, 1);
+        DrawChrMsgBoxDebug(&g_PortraitSlots[1], 1);
     }
 
     if (g_ScriptTimingFrameCount && !g_DemoFrameControlFlag) {

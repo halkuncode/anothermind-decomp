@@ -67,8 +67,8 @@ typedef enum VibrationEffectId {
 #define DEBUG_PAGE_CHR_SLOT1 5     // Page 5: Character slot 1 sprite viewer
 #define DEBUG_PAGE_MSG_BOX_SLOT1 6 // Page 6: Character 1 message box layout
 
-// Frame buffer / background color depth modes
-#define COLOR_MODE_8BIT 1
-#define COLOR_MODE_16BIT 2
+// Variable / memory inspection bit-width modes (8-bit vs 16-bit wide variables)
+#define MEM_VIEW_8BIT 1
+#define MEM_VIEW_16BIT 2
 
 #endif

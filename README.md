@@ -8,11 +8,11 @@
     </td>
     <td valign="middle">
       <p>
-        <strong>Engine</strong>: 21 / 204 functions (10.29%)<br>
+        <strong>Engine</strong>: 86 / 268 functions (32.09%)<br>
         <img src="docs/pics/progress_engine.svg" alt="Engine Progress" width="260" height="16">
       </p>
       <p>
-        <strong>Kernel</strong>: 228 / 720 functions (31.67%)<br>
+        <strong>Kernel</strong>: 282 / 774 functions (36.43%)<br>
         <img src="docs/pics/progress_kernel.svg" alt="Kernel Progress" width="260" height="16">
       </p>
       <p>

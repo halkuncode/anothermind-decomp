@@ -128,7 +128,7 @@ char* GetDebugScriptBuildDateString(void) {
         second = g_ScriptBuildTimestamp;
         timestampShifted = (second >> 5) & 0x07FFFFFF;
         year = (timestampShifted >> 20) % 10;
-        __builtin_memcpy(g_DebugStringBuf, s_BuildupDatePrefix, 14);
+        __builtin_memcpy(g_DebugStringBuf, s_BuildupDatePrefix, 14); // "Buildup:  199"
         second &= 0xF;
         minute = timestampShifted & 0x3F;
         hour = (timestampShifted >> 6) & 0x1F;
@@ -231,7 +231,7 @@ void ReportIssue(const char* msg0, const char* msg1, const char* msg2, const cha
             FntPrint(msg4);
         }
         if (!(VSync(-1) & 0x20)) {
-            FntPrint(s_PushSelectPrompt);
+            FntPrint(s_PushSelectPrompt); // "\n\n\n\n\n\n\n           Push Select"
         }
         FntFlush(-1);
         PutDispEnv(&currentBuffer->disp);
@@ -340,7 +340,7 @@ void DebugUnpackAmpack(void) {
     s32 buffer1[250];
     s32 buffer2[250];
 
-    DbgScreenPrintString(s_UnpackDebugHeader);
+    DbgScreenPrintString(s_UnpackDebugHeader); // "-----Unpack Debug -------\n"
     if (g_RawControllerInputHigh[0] & 0x80) {
         InitNameEntryScreen(1);
     }
@@ -350,25 +350,26 @@ void DebugUnpackAmpack(void) {
             if (DEBUG_UNPACK_SRC_ADDR[1] == AMPACK_MAGIC_1) {
                 DecompressLZSS(DEBUG_UNPACK_SRC_ADDR, PROGDATA_LOAD_ADDR);
             } else {
-                ReportIssue(s_UnpackErrNoAmpackData, g_StrDataEquals, 0, 0, 0);
+                ReportIssue(s_UnpackErrNoAmpackData, g_StrDataEquals, 0, 0, 0); // "Unpack Err:  no Ampack data"
             }
         } else {
-            ReportIssue(s_UnpackErrNoAmpackData, 0, 0, 0, 0);
+            ReportIssue(s_UnpackErrNoAmpackData, 0, 0, 0, 0); // "Unpack Err:  no Ampack data"
         }
     }
     SCHEDULE_BARRIER();
     if (g_InputTransitionMask2P[0] & 0x40) {
-        __builtin_memcpy(buffer2, s_DebugDummyStringA, 73);
+        __builtin_memcpy(buffer2, s_DebugDummyStringA,
+                         73); // "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
     }
     if (g_InputTransitionMask2P[0] & 0x8) {
         DisplayChapterTitle(2);
     }
-    DbgScreenPrintString(s_ManoNameCount);
+    DbgScreenPrintString(s_ManoNameCount); // "mano name cnt= "
     DbgScreenPrintInt(GetHeroEnteredNameLength(2));
-    DbgScreenPrintString(s_HitomiNameCount);
+    DbgScreenPrintString(s_HitomiNameCount); // "\nhitomi name cnt= "
     DbgScreenPrintInt(GetHeroEnteredNameLength(4));
     DbgScreenPrintString(g_StrDebugNewline);
-    DbgScreenPrintString(s_UnpackResultLabel);
+    DbgScreenPrintString(s_UnpackResultLabel); // "unpack ="
     DbgScreenPrintString((char*)buffer2);
     DbgScreenPrintString(g_StrEndNewline);
     DbgScreenPrintString(g_StrDebugNewline);
@@ -379,10 +380,10 @@ void CheckAndUnpackAmpack(u8* source, u8* destination) {
         if (source[1] == AMPACK_MAGIC_1) {
             DecompressLZSS(source, destination);
         } else {
-            ReportIssue(s_UnpackErrNoAmpackData, g_StrDataEquals, 0, 0, 0);
+            ReportIssue(s_UnpackErrNoAmpackData, g_StrDataEquals, 0, 0, 0); // "Unpack Err:  no Ampack data"
         }
     } else {
-        ReportIssue(s_UnpackErrNoAmpackData, 0, 0, 0, 0);
+        ReportIssue(s_UnpackErrNoAmpackData, 0, 0, 0, 0); // "Unpack Err:  no Ampack data"
     }
 }
 
@@ -400,9 +401,9 @@ void LoadProgdata(s32 fileId, s32 groupId) {
         if (PROGDATA_LOAD_ADDR[1] == AMPACK_MAGIC_1) {
             DecompressLZSS(PROGDATA_LOAD_ADDR, PROGDATA_UNPACK_ADDR);
         } else {
-            ReportIssue(s_UnpackErrNoAmpackData, g_StrDataEquals, 0, 0, 0);
+            ReportIssue(s_UnpackErrNoAmpackData, g_StrDataEquals, 0, 0, 0); // "Unpack Err:  no Ampack data"
         }
     } else {
-        ReportIssue(s_UnpackErrNoAmpackData, 0, 0, 0, 0);
+        ReportIssue(s_UnpackErrNoAmpackData, 0, 0, 0, 0); // "Unpack Err:  no Ampack data"
     }
 }

@@ -71,8 +71,10 @@ INCLUDE_ASM("asm/jp/nonmatchings/engine/scene", DrawConditionalDialogHighlight);
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/scene", UpdateDialogSelectionEffects);
 
+// "demo.bin\0\0\0\0" followed by developer credit "小久保\0" (Yasushi Kokubo)
 const u32 s_DemoFileName[6] = {
-    0x6F6D6564, 0x6E69622E, 0x00000000, 0x768BAC8F, 0x0000DB95, 0x00000000,
+    0x6F6D6564, 0x6E69622E, 0x00000000, // ASCII: "demo.bin\0"
+    0x768BAC8F, 0x0000DB95, 0x00000000, // Shift-JIS: "小久保\0" (0x8FAC, 0x8B76, 0x95DB)
 };
 
 INCLUDE_ASM("asm/jp/nonmatchings/engine/scene", DrawScreenUI);

@@ -37,17 +37,17 @@ const u32 s_ChapterTitlePrimitiveData2[39] = {
     0x00000000, 0x00001478, 0x00000000, 0x00000000, 0x00001478, 0x00000000, 0x00000000, 0x00001478,
     0x00000000, 0x00000000, 0x00001478, 0x00000000, 0x00000000, 0x00001478, 0x00000000,
 };
-const u32 s_ChapterTitleTextureConfigA[10] = {
-    0xFFFFFFFF, 0x000000E3, 0x0000013E, 0x000001BF, 0x00000279,
-    0x00000294, 0x0000024E, 0x000003B6, 0xFFFFFFFF, 0x0000024D,
+// Chapter Title movie start frame offsets for Chapters 1-10 (-1 = no movie offset)
+const s32 s_ChapterTitleTextureConfigA[10] = {
+    -1, 227, 318, 447, 633, 660, 590, 950, -1, 589,
 };
+// Chapter Title sound/movie stream IDs for Chapters 1-10
 const u32 s_ChapterTitleTextureConfigB[10] = {
-    0x0000000B, 0x0000000C, 0x0000000D, 0x0000000E, 0x0000000F,
-    0x00000010, 0x00000011, 0x00000012, 0x00000013, 0x00000011,
+    11, 12, 13, 14, 15, 16, 17, 18, 19, 17,
 };
+// Chapter Title texture IDs for Chapters 1-10
 const u32 s_ChapterTitleTextureConfigC[10] = {
-    0x00000014, 0x00000015, 0x00000016, 0x00000017, 0x00000018,
-    0x00000019, 0x0000001A, 0x0000001B, 0x0000001C, 0x0000001A,
+    20, 21, 22, 23, 24, 25, 26, 27, 28, 26,
 };
 
 INCLUDE_ASM("asm/jp/nonmatchings/kernel/chapter_title", DisplayChapterTitle);
